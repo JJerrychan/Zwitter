@@ -1,11 +1,10 @@
 {
-  "name": "cs-554-lab6-backend",
+  "name": "cs-554-final-backend",
   "version": "1.0.0",
-  "author": "Xiangyu Zhou 20006757",
+  "author": "",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "devStart": "nodemon app.js"
+    "start": "node app.js"
   },
   "license": "MIT",
   "dependencies": {
