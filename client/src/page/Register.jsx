@@ -9,13 +9,13 @@ const Register = () => {
       const displayName = e.target[1].value;
       const password = e.target[2].value;
       const email = e.target[3].value;
-      const file = e.target[4].value;
+      const file = e.target[4].files[0];
       const user = {
         account: e.target[0].value,
         displayName: e.target[1].value,
         password: e.target[2].value,
         email: e.target[3].value,
-        file: e.target[4].value,
+        file: e.target[4].files[0],
         isAdmin: false,
       };
       console.log(user);
