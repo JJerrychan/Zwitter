@@ -2,7 +2,18 @@ const express = require("express");
 const cors = require('cors')
 const app = express();
 const routesConstructor = require("./routes");
+const multer = require("multer");
 
+
+const multerMid = multer({
+  storage: multer.memoryStorage(),
+  limits:{
+    fileSize: 5* 1024 * 1024
+  }
+});
+
+app.disable('x-powered-by');
+app.use(multerMid.array('file'));
 
 app.use(cors())
 app.use(express.json());

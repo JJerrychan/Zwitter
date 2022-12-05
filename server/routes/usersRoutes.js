@@ -13,8 +13,9 @@ router.post("/signup", async (req, res) => {
     const account = req.body.account;
     const isAdmin = req.body.isAdmin;
     const password = req.body.password;
-    const file = req.body.file;
-    
+    const file = req.files[0];
+    console.log(file);
+
     // Create user
     // const res = await createUserWithEmailAndPassword(
     //   auth,
@@ -23,8 +24,7 @@ router.post("/signup", async (req, res) => {
     // );
     // Create a unique image name
     const date = new Date().getTime();
-    const storageRef = ref(storage, `${account + date}`);
-    // console.log(file);  
+    const storageRef = ref(storage, `${account + date}`); 
     await uploadBytesResumable(storageRef, file).then(() => {
       getDownloadURL(storageRef).then(async (downloadURL) => {
         try {

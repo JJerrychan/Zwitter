@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "axios";
+import axios, { toFormData } from "axios";
 
 const Register = () => {
   const handleSubmit = async (e) => {
@@ -10,17 +10,25 @@ const Register = () => {
       const password = e.target[2].value;
       const email = e.target[3].value;
       const file = e.target[4].files[0];
-      const user = {
-        account: e.target[0].value,
-        displayName: e.target[1].value,
-        password: e.target[2].value,
-        email: e.target[3].value,
-        file: e.target[4].files[0],
+      console.log(file)
+      const formData = toFormData({
+        account: account,
+        displayName: displayName,
+        password: password,
+        email: email,
         isAdmin: false,
-      };
-      console.log(user);
+      });
+      formData.append('file', file)
+      // const user = {
+      //   account: account,
+      //   displayName: displayName,
+      //   password: password,
+      //   email: email,
+      //   file: formData,
+      //   isAdmin: false,
+      // };
       const url = `http://localhost:4000/users/signup`;
-      await axios.post(url, user);
+      await axios.post(url, formData);
     } catch (error) {
       console.log(error);
     }
