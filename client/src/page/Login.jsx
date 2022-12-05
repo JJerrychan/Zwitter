@@ -1,20 +1,22 @@
 import React from "react";
-import axios from "axios";
-import {Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase";
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
       const email = e.target[0].value;
       const password = e.target[1].value;
-
-      const user = {
-        email: email,
-        password: password,
-      };
-      const url = `http://localhost:4000/users/login`;
-      await axios.post(url, user);
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        navigate("/");
+      } catch (error) {
+        console.log(error);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -30,8 +32,13 @@ const Login = () => {
           <input required type="password" placeholder="password" />
           <button type="submit"> Login</button>
         </form>
-        <p>You don't have an account? <Link to="/register">Sign up</Link></p>
-        <p> <Link to="/">Home page</Link></p>
+        <p>
+          You don't have an account? <Link to="/register">Sign up</Link>
+        </p>
+        <p>
+          {" "}
+          <Link to="/">Home page</Link>
+        </p>
       </div>
     </div>
   );

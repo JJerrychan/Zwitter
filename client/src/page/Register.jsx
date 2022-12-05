@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 // import Add from "../img/addAvatar.png";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db, storage } from "../firebase";
@@ -14,6 +14,9 @@ import {
 import { useNavigate, Link } from "react-router-dom";
 
 const Register = () => {
+
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
@@ -67,6 +70,7 @@ const Register = () => {
 
             // //create empty user chats on firestore
             await setDoc(doc(db, "userChats", result.user.uid), {});
+            navigate("/login")
           } catch (error) {
             console.log(error);
           }

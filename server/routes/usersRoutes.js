@@ -1,4 +1,5 @@
 const {
+  getAuth,
   createUserWithEmailAndPassword,
   updateProfile,
 } = require("firebase/auth");
