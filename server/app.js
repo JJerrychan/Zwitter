@@ -3,6 +3,8 @@ const cors = require('cors')
 const app = express();
 const routesConstructor = require("./routes");
 const multer = require("multer");
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
 
 
 const multerMid = multer({
@@ -17,11 +19,21 @@ app.use(multerMid.array('file'));
 
 app.use(cors())
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
 
 
 routesConstructor(app);
+
+app.use(
+  session({
+    name: "AuthCookie",
+    secret: "some secret string",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 
 app.use('*', (req, res) => {
   res.status(404).json({ error: 'Page Not found' });
