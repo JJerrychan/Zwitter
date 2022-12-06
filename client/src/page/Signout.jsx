@@ -1,18 +1,13 @@
-import React from "react";
-import { getAuth, signOut } from "firebase/auth";
-// import { Link } from "react-router-dom";
+import React, { useContext } from "react";
+import { signOut } from "firebase/auth";
+import { auth } from '../firebase'
+import { AuthContext } from '../context/AuthContext'
+
 
 const Signout = () => {
-    const auth = getAuth();
-    signOut(auth).then(() => {
-    // Sign-out successful.
-    }).catch((error) => {
-    // An error happened.
-    });
+  const {currentUser} = useContext(AuthContext);
   return (
-    <div>
-      <p>homepage</p>
-    </div>
+    <button style={{ display: currentUser==null ? "none" : "block" }}  onClick={()=>signOut(auth)}>logout</button>
   );
 };
 

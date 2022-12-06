@@ -12,7 +12,11 @@ const Login = () => {
       const email = e.target[0].value;
       const password = e.target[1].value;
       try {
-        await signInWithEmailAndPassword(auth, email, password);
+        // console.log(auth);
+        await signInWithEmailAndPassword(auth, email, password).then(() => {
+          // Signed in
+          // ...
+        });
         navigate("/");
       } catch (error) {
         console.log(error);
