@@ -96,10 +96,6 @@ const Register = () => {
         <p>
           You do have an account? <Link to="/login">Login</Link>
         </p>
-        <p>
-          {" "}
-          <Link to="/">Home page</Link>
-        </p>
       </div>
     </div>
   );

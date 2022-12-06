@@ -35,10 +35,7 @@ const Login = () => {
         <p>
           You don't have an account? <Link to="/register">Sign up</Link>
         </p>
-        <p>
-          {" "}
-          <Link to="/">Home page</Link>
-        </p>
+        <Link to="/signout"> Sign out </Link>
       </div>
     </div>
   );
