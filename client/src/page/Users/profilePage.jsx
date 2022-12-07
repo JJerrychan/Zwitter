@@ -1,23 +1,30 @@
-import React, { useState } from "react";
-// import { Link } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { Link } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
+import Password from "./resetPassword";
 
 const User = () => {
-//   const { form1 } = this.state;
+  const { currentUser } = useContext(AuthContext);
   const [form1, setForm1] = useState(false);
   const handlePassword = () => {
     setForm1(true);
   };
+  const handleName = () => {
+
+  }
   return (
     <div>
-      <p>Profile</p>
-      <div>
-        {/* <Link to="/user/password">forgot password&emsp;</Link> */}
-        <button onClick={handlePassword}>forgot password</button>
-        <form style={{ display: form1 ? "block" : "none" }}>
-            <p>11</p>
-        </form>
+      <p style={{ display: currentUser != null ? "none" : "block" }}>Please login first</p>
+      <div style={{ display: currentUser == null ? "none" : "block" }}>
+        <p>Profile</p>
+        <div>
+          <button onClick={handlePassword}>reset password</button>
+          <button onClick={handleName}>change name</button>
+          <div style={{ display: form1 ? "block" : "none" }}>
+            <Password style={{ display: form1 ? "block" : "none" }}/>
+          </div>
+        </div>
       </div>
-      {/* <Link to="/login">Login&emsp;</Link> */}
     </div>
   );
 };

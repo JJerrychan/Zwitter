@@ -1,4 +1,5 @@
 import React from "react";
+import Password from "./Users/resetPassword";
 // import Add from "../img/addAvatar.png";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db, storage } from "../firebase";
@@ -95,7 +96,8 @@ const Register = () => {
         </form>
         <p>
           You do have an account? <Link to="/login">Login</Link>
-        </p>
+        </p>            
+        <Link to="/user/password"> Forgot your password?</Link>
       </div>
     </div>
   );

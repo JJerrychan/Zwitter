@@ -1,13 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
+import { AuthContext } from "../context/AuthContext";
+
 
 const Login = () => {
+  const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     try {
+      if (currentUser != null) throw "Please log out first";
       e.preventDefault();
       const email = e.target[0].value;
       const password = e.target[1].value;
@@ -15,9 +19,11 @@ const Login = () => {
         // console.log(auth);
         await signInWithEmailAndPassword(auth, email, password).then(() => {
           // Signed in
+          navigate("/");
           // ...
+        }).catch((error) => {
+            console.log(error);
         });
-        navigate("/");
       } catch (error) {
         console.log(error);
       }
@@ -27,8 +33,11 @@ const Login = () => {
   };
 
   return (
-    <div className="formContainer">
-      <div className="formWrapper">
+    <div>
+      <p style={{ display: currentUser == null ? "none" : "block" }}>
+        Please log out first
+      </p>
+      <div style={{ display: currentUser != null ? "none" : "block" }}>
         <span className="logo">Zwitter</span>
         <span className="title">Login</span>
         <form onSubmit={handleSubmit}>
@@ -39,7 +48,7 @@ const Login = () => {
         <p>
           You don't have an account? <Link to="/register">Sign up</Link>
         </p>
-        <Link to="/signout"> Sign out </Link>
+        <Link to="/user/password"> Forgot your password?</Link>
       </div>
     </div>
   );

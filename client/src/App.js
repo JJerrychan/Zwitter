@@ -5,7 +5,7 @@ import Home from "./page/Home";
 import User from "./page/Users/profilePage";
 // import Signout from "./page/Signout";
 import Header from "./page/Header";
-import Password from "./page/Users/changePassword";
+import Password from "./page/Users/resetPassword";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "./context/AuthContext";
