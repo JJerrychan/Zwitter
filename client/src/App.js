@@ -9,11 +9,13 @@ import Password from "./components/Users/resetPassword";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import React, { useContext } from "react";
 import { AuthContext } from "./context/AuthContext";
+import SideBar from "./components/SideBar";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
   return (
     <BrowserRouter>
+      <SideBar />
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
