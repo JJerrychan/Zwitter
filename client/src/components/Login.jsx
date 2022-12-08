@@ -1,11 +1,24 @@
 import React, { useContext } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 import { AuthContext } from "../context/AuthContext";
 
+import firebase from "firebase/compat/app";
+import * as firebaseui from "firebaseui";
 
 const Login = () => {
+  // // Initialize the FirebaseUI Widget using Firebase.
+  // const ui = new firebaseui.auth.AuthUI(firebase.auth());
+  //
+  // ui.start("#firebaseui-auth-container", {
+  //   signInOptions: [
+  //     {
+  //       provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+  //     },
+  //   ],
+  // });
+
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -17,11 +30,13 @@ const Login = () => {
       const password = e.target[1].value;
       try {
         // console.log(auth);
-        await signInWithEmailAndPassword(auth, email, password).then(() => {
-          navigate("/");
-        }).catch((error) => {
+        await signInWithEmailAndPassword(auth, email, password)
+          .then(() => {
+            navigate("/");
+          })
+          .catch((error) => {
             console.log(error);
-        });
+          });
       } catch (error) {
         console.log(error);
       }
@@ -32,6 +47,7 @@ const Login = () => {
 
   return (
     <div>
+      <div id="#firebaseui-auth-container"></div>
       <p style={{ display: currentUser == null ? "none" : "block" }}>
         Please log out first
       </p>
