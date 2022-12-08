@@ -1,6 +1,10 @@
 import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from "firebase/auth";
 import { auth } from "../firebase";
 import { AuthContext } from "../context/AuthContext";
 
@@ -21,6 +25,7 @@ const Login = () => {
 
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
+  const provider = new GoogleAuthProvider();
 
   const handleSubmit = async (e) => {
     try {
@@ -45,6 +50,34 @@ const Login = () => {
     }
   };
 
+  const handleGoogle = async (e) => {
+    try {
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          console.log(1);
+          const credential = GoogleAuthProvider.credentialFromResult(result);
+          const token = credential.accessToken;
+          // The signed-in user info.
+          const user = result.user;
+          console.log(2);
+
+          // ...
+        })
+        .catch((error) => {
+          // Handle Errors here.
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorMessage);
+          // The email of the user's account used.
+          const email = error.customData.email;
+          // The AuthCredential type that was used.
+          const credential = GoogleAuthProvider.credentialFromError(error);
+          // ...
+        });
+    } catch (error) {}
+  };
+
   return (
     <div>
       <div id="#firebaseui-auth-container"></div>
@@ -53,12 +86,14 @@ const Login = () => {
       </p>
       <div style={{ display: currentUser != null ? "none" : "block" }}>
         <span className="logo">Zwitter</span>
-        <span className="title">Login</span>
-        <form onSubmit={handleSubmit}>
-          <input required type="text" placeholder="email" />
-          <input required type="password" placeholder="password" />
-          <button type="submit"> Login</button>
-        </form>
+        <div>
+          <form onSubmit={handleSubmit}>
+            <input required type="text" placeholder="email" />
+            <input required type="password" placeholder="password" />
+            <button type="submit"> Login</button>
+          </form>
+          <Link onClick={handleGoogle}>Log in with Google account</Link>
+        </div>
         <p>
           You don't have an account? <Link to="/register">Sign up</Link>
         </p>
