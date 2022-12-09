@@ -11,17 +11,17 @@ import StyledFirebaseAuth from "./StyledFirebaseAuth";
 import firebase from "firebase/compat/app";
 
 const Login = () => {
-  const uiConfig = {
-    // Popup signin flow rather than redirect flow.
-    signInFlow: "popup",
-    // Redirect to /signedIn after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
-    signInSuccessUrl: "/signedIn",
-    // We will display Google and Facebook as auth providers.
-    signInOptions: [
-      firebase.auth.EmailAuthProvider.PROVIDER_ID,
-      firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-    ],
-  };
+  // const uiConfig = {
+  //   // Popup signin flow rather than redirect flow.
+  //   signInFlow: "popup",
+  //   // Redirect to /signedIn after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
+  //   signInSuccessUrl: "/signedIn",
+  //   // We will display Google and Facebook as auth providers.
+  //   signInOptions: [
+  //     firebase.auth.EmailAuthProvider.PROVIDER_ID,
+  //     firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+  //   ],
+  // };
 
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -60,8 +60,6 @@ const Login = () => {
           const token = credential.accessToken;
           // The signed-in user info.
           const user = result.user;
-          console.log(2);
-
           // ...
         })
         .catch((error) => {
@@ -80,7 +78,7 @@ const Login = () => {
 
   return (
     <div>
-      <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />
+      {/* <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} /> */}
       <p style={{ display: currentUser == null ? "none" : "block" }}>
         Please log out first
       </p>

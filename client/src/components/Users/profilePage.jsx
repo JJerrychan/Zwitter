@@ -11,6 +11,7 @@ const User = () => {
   const [form2, setForm2] = useState(false);
   const [form3, setForm3] = useState(false);
   const handleName = () => {
+    console.log(currentUser);
     setForm1(false);
     setForm2(true);
     setForm3(false);
