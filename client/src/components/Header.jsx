@@ -1,6 +1,5 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { auth } from "../firebase";
 import Signout from "./Signout";
 import { AuthContext } from "../context/AuthContext";
 
@@ -14,10 +13,9 @@ const Header = () => {
           style={{ display: currentUser == null ? "block" : "none" }}
           to="/login"
         >
-          Log in
+          Login
         </Link>
-        <Link to="/register">Register&emsp;</Link>
-        <Link to="/user">Profile&emsp;</Link>
+        <Link to="/register">Register</Link>
 
         <Signout />
       </header>

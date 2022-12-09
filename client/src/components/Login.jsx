@@ -7,21 +7,21 @@ import {
 } from "firebase/auth";
 import { auth } from "../firebase";
 import { AuthContext } from "../context/AuthContext";
-
+import StyledFirebaseAuth from "./StyledFirebaseAuth";
 import firebase from "firebase/compat/app";
-import * as firebaseui from "firebaseui";
 
 const Login = () => {
-  // // Initialize the FirebaseUI Widget using Firebase.
-  // const ui = new firebaseui.auth.AuthUI(firebase.auth());
-  //
-  // ui.start("#firebaseui-auth-container", {
-  //   signInOptions: [
-  //     {
-  //       provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
-  //     },
-  //   ],
-  // });
+  const uiConfig = {
+    // Popup signin flow rather than redirect flow.
+    signInFlow: "popup",
+    // Redirect to /signedIn after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
+    signInSuccessUrl: "/signedIn",
+    // We will display Google and Facebook as auth providers.
+    signInOptions: [
+      firebase.auth.EmailAuthProvider.PROVIDER_ID,
+      firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+    ],
+  };
 
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -80,7 +80,7 @@ const Login = () => {
 
   return (
     <div>
-      <div id="#firebaseui-auth-container"></div>
+      <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />
       <p style={{ display: currentUser == null ? "none" : "block" }}>
         Please log out first
       </p>
