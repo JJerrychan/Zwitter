@@ -2,21 +2,33 @@ import React from "react";
 import { Box, Stack, Typography,Button } from "@mui/material";
 // import { Button } from "@mui/material-next";
 import { Email, Google } from "@mui/icons-material";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { auth } from "../../firebase";
+import { GoogleAuthProvider, signInWithPopup, updateProfile } from "firebase/auth";
+import { auth, db, storage } from "../../firebase";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  setDoc,
+} from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
+
 
 export default function AuthCard() {
+  const navigate = useNavigate();
 
   const provider = new GoogleAuthProvider();
   const handleGoogle = async () => {
     try {
-      signInWithPopup(auth, provider)
+      await signInWithPopup(auth, provider)
         .then((result) => {
           // This gives you a Google Access Token. You can use it to access the Google API.
           const credential = GoogleAuthProvider.credentialFromResult(result);
           const token = credential.accessToken;
           // The signed-in user info.
-          const user = result.user;
+          // const user = result.user;
         })
         .catch((error) => {
           // Handle Errors here.
@@ -24,6 +36,47 @@ export default function AuthCard() {
           const errorMessage = error.message;
           console.error(`${errorCode}:${errorMessage}`);
         });
+
+        let user = auth.currentUser;
+        const q2 = query(collection(db, "users"), where("email", "==", user.email));
+        let newAccount = true;
+        let querySnapshot = await getDocs(q2);
+        querySnapshot.forEach((doc) => {
+          newAccount = false;
+        });
+
+        if(newAccount){
+          const date = new Date().getTime();
+          const storageRef = ref(storage, `${user.displayName + date}`);
+          const displayName = user.displayName;
+          const email = user.email;
+          console.log(1);
+
+          // await uploadBytesResumable(storageRef, file).then(() => {
+          //   getDownloadURL(storageRef).then(async (downloadURL) => {
+          //     try {
+          //       //Update profile
+          //       await updateProfile(user, {
+          //         displayName,
+          //         photoURL: downloadURL,
+          //       });
+          //       //create user on firestore
+          //       // await setDoc(doc(db, "users", user.uid), {
+          //       //   uid: user.uid,
+          //       //   displayName,
+          //       //   email,
+          //       //   photoURL: downloadURL,
+          //       // });
+    
+          //       // await setDoc(doc(db, "userChats", user.uid), {});
+          //       // navigate("/");
+          //     } catch (error) {
+          //       console.log(error);
+          //     }
+          //   });
+          // });
+        }
+
     } catch (error) {}
   };
 

@@ -24,7 +24,7 @@ const Register = () => {
       const password = e.target[1].value;
       const email = e.target[2].value;
       const file = e.target[3].files[0];
-      // const isAdmin = false;
+
       //Check user exist
       // const q1 = query(
       //   collection(db, "users"),
@@ -51,7 +51,7 @@ const Register = () => {
       const date = new Date().getTime();
       const storageRef = ref(storage, `${displayName + date}`);
 
-      await uploadBytesResumable(storageRef, file.buffer).then(() => {
+      await uploadBytesResumable(storageRef, file).then(() => {
         getDownloadURL(storageRef).then(async (downloadURL) => {
           try {
             //Update profile
