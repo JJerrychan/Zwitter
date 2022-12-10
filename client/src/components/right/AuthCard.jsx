@@ -7,13 +7,8 @@ import {
   signInWithPopup,
   updateProfile,
 } from "firebase/auth";
-import { auth, db, storage } from "../../firebase";
-import {
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-  getStorage,
-} from "firebase/storage";
+import { auth, db } from "../../firebase";
+
 import {
   collection,
   query,
@@ -22,19 +17,14 @@ import {
   doc,
   setDoc,
 } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
 
 export default function AuthCard() {
-  const navigate = useNavigate();
-
   const provider = new GoogleAuthProvider();
   const handleGoogle = async () => {
     try {
       await signInWithPopup(auth, provider)
         .then((result) => {
           // This gives you a Google Access Token. You can use it to access the Google API.
-          const credential = GoogleAuthProvider.credentialFromResult(result);
-          const token = credential.accessToken;
         })
         .catch((error) => {
           // Handle Errors here.
@@ -55,7 +45,6 @@ export default function AuthCard() {
       });
 
       if (newAccount) {
-        const date = new Date().getTime();
         const displayName = user.displayName;
         const email = user.email;
         const downloadURL = "https://firebasestorage.googleapis.com/v0/b/zwitter-e1db4.appspot.com/o/111670652146542?alt=media&token=3cb69685-ebcb-48b2-a4ae-7133b35485a1"
