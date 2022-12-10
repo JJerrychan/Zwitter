@@ -12,6 +12,7 @@ import SideBar from "./components/left/SideBar";
 import { Grid } from "@mui/material";
 import RightPanel from "./components/right/RightPanel";
 import Signout from "./components/Signout";
+import Header from "./components/Header";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -22,6 +23,7 @@ function App() {
           <SideBar />
         </Grid>
         <Grid item component="main" xs={7}>
+        <Header/>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
