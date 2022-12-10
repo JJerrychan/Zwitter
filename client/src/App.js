@@ -28,7 +28,7 @@ function App() {
         <Grid item component="header" xs={2}>
           <SideBar />
         </Grid>
-        <Grid item component="main" xs={8}>
+        <Grid item component="main" xs={7}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
@@ -39,7 +39,7 @@ function App() {
             <Route path="/user/password" element={<Password />} />
           </Routes>
         </Grid>
-        <Grid item component="footer" xs={2}>
+        <Grid item component="footer" xs={3}>
           <RightPanel />
         </Grid>
       </Grid>
