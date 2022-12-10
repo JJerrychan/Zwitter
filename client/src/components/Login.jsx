@@ -1,28 +1,14 @@
 import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
+  GoogleAuthProvider,
   signInWithEmailAndPassword,
   signInWithPopup,
-  GoogleAuthProvider,
 } from "firebase/auth";
 import { auth } from "../firebase";
 import { AuthContext } from "../context/AuthContext";
-// import StyledFirebaseAuth from "./StyledFirebaseAuth";
-// import firebase from "firebase/compat/app";
 
 const Login = () => {
-  // const uiConfig = {
-  //   // Popup signin flow rather than redirect flow.
-  //   signInFlow: "popup",
-  //   // Redirect to /signedIn after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
-  //   signInSuccessUrl: "/signedIn",
-  //   // We will display Google and Facebook as auth providers.
-  //   signInOptions: [
-  //     firebase.auth.EmailAuthProvider.PROVIDER_ID,
-  //     firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-  //   ],
-  // };
-
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const provider = new GoogleAuthProvider();

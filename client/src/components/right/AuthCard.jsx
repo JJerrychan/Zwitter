@@ -1,9 +1,32 @@
 import React from "react";
-import { Box, Stack, Typography } from "@mui/material";
-import { Button } from "@mui/material-next";
+import { Box, Stack, Typography,Button } from "@mui/material";
+// import { Button } from "@mui/material-next";
 import { Email, Google } from "@mui/icons-material";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "../../firebase";
 
 export default function AuthCard() {
+
+  const provider = new GoogleAuthProvider();
+  const handleGoogle = async () => {
+    try {
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          const credential = GoogleAuthProvider.credentialFromResult(result);
+          const token = credential.accessToken;
+          // The signed-in user info.
+          const user = result.user;
+        })
+        .catch((error) => {
+          // Handle Errors here.
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.error(`${errorCode}:${errorMessage}`);
+        });
+    } catch (error) {}
+  };
+
   return (
     <Box
       component="section"
@@ -26,8 +49,9 @@ export default function AuthCard() {
           size="small"
           variant="outlined"
           startIcon={<Google />}
+          onClick={handleGoogle}
         >
-          Sign in/up with Google
+          Sign in with Google
         </Button>
         <Button
           sx={{ fontWeight: "bold" }}
