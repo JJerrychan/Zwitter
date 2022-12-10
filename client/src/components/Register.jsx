@@ -15,7 +15,6 @@ import {
 import { useNavigate, Link } from "react-router-dom";
 
 const Register = () => {
-
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -25,19 +24,19 @@ const Register = () => {
       const password = e.target[1].value;
       const email = e.target[2].value;
       const file = e.target[3].files[0];
-      const isAdmin = false;
+      // const isAdmin = false;
       //Check user exist
-      const q1 = query(
-        collection(db, "users"),
-        where("displayName", "==", displayName)
-      );
+      // const q1 = query(
+      //   collection(db, "users"),
+      //   where("displayName", "==", displayName)
+      // );
       const q2 = query(collection(db, "users"), where("email", "==", email));
-      let querySnapshot = await getDocs(q1);
+      // let querySnapshot = await getDocs(q1);
 
-      querySnapshot.forEach((doc) => {
-        throw "account exist";
-      });
-      querySnapshot = await getDocs(q2);
+      // querySnapshot.forEach((doc) => {
+      //   throw "account exist";
+      // });
+      let querySnapshot = await getDocs(q2);
       querySnapshot.forEach((doc) => {
         throw "email exist";
       });
@@ -65,13 +64,13 @@ const Register = () => {
               uid: result.user.uid,
               displayName,
               email,
-              isAdmin,
+              // isAdmin,
               photoURL: downloadURL,
             });
 
             // //create empty user chats on firestore
             await setDoc(doc(db, "userChats", result.user.uid), {});
-            navigate("/login")
+            navigate("/login");
           } catch (error) {
             console.log(error);
           }
@@ -96,7 +95,7 @@ const Register = () => {
         </form>
         <p>
           You do have an account? <Link to="/login">Login</Link>
-        </p>            
+        </p>
         <Link to="/user/password"> Forgot your password?</Link>
       </div>
     </div>

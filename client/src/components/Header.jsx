@@ -8,7 +8,7 @@ const Header = () => {
 
   return (
     <div>
-      <header style={{display: "flex", position: "absolute", right: "0px"}}>
+      <header>
         <Link
           style={{ display: currentUser == null ? "block" : "none" }}
           to="/login"
