@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+// import { useNavigate } from "react-router-dom";
 // import { doc, updateDoc } from "firebase/firestore";
 // import { db } from "../../firebase";
 import { auth } from "../../firebase";
@@ -7,7 +7,7 @@ import { linkWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 const DisplayName = () => {
   const googleProvider = new GoogleAuthProvider();
-  const navigate = useNavigate();
+//   const navigate = useNavigate();
 
   const LinkToGoogleAccount = async (e) => {
     try {

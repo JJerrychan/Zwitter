@@ -3,7 +3,7 @@ import Register from "./components/Register";
 import Login from "./components/Login";
 import Home from "./components/Home";
 import User from "./components/Users/profilePage";
-// import Signout from "./components/Signout";
+import Message from "./components/messages/Messenger";
 import Header from "./components/Header";
 import Password from "./components/Users/resetPassword";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -11,6 +11,7 @@ import React, { useContext } from "react";
 import { AuthContext } from "./context/AuthContext";
 import SideBar from "./components/SideBar";
 import { Grid, Link, Typography } from "@mui/material";
+// import { Message } from "@mui/icons-material";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -34,6 +35,7 @@ function App() {
             {/* <Route path="/signout" element={<Signout />} /> */}
             <Route path="/register" element={<Register />} />
             <Route path="/user" element={<User />} />
+            <Route path="/messages" element={<Message />} />
             <Route path="/user/password" element={<Password />} />
           </Routes>
         </Grid>

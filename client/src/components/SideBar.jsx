@@ -5,7 +5,7 @@ import { Chat, OtherHouses, Person, Twitter } from "@mui/icons-material";
 
 export default function SideBar() {
   return (
-    <Container component="header" maxWidth="xs">
+    <Container component="header" maxWidth="xs" style={{position:"fixed", top:"0"}}>
       <IconButton aria-label="logo" color="primary" size="large">
         <Twitter />Zwitter
       </IconButton>
