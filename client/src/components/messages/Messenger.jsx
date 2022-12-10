@@ -1,6 +1,7 @@
 import "./Messenger.css";
 import Conversation from "./Conversations";
 import Message from "./Message";
+import ChatOneline from "./ChatOnline";
 // import { format } from "timeago.js";
 
 const Messenger = () => {
@@ -10,6 +11,8 @@ const Messenger = () => {
       <div className="chatMenu">
         <div className="chatMenuWrapper">
           <input placeholder="Search for friends" className="chatMenuInput" />
+          <Conversation />
+          <Conversation />
           <Conversation />
         </div>
       </div>
@@ -33,7 +36,8 @@ const Messenger = () => {
 
       <div className="chatOnline">
         <div className="chatOnlineWrapper">
-          
+          <ChatOneline/>
+          <ChatOneline/>
         </div>
       </div>
     </div>
