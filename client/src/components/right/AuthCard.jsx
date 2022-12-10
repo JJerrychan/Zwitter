@@ -1,10 +1,19 @@
 import React from "react";
-import { Box, Stack, Typography,Button } from "@mui/material";
+import { Box, Stack, Typography, Button } from "@mui/material";
 // import { Button } from "@mui/material-next";
 import { Email, Google } from "@mui/icons-material";
-import { GoogleAuthProvider, signInWithPopup, updateProfile } from "firebase/auth";
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  updateProfile,
+} from "firebase/auth";
 import { auth, db, storage } from "../../firebase";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import {
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+  getStorage,
+} from "firebase/storage";
 import {
   collection,
   query,
@@ -14,7 +23,6 @@ import {
   setDoc,
 } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-
 
 export default function AuthCard() {
   const navigate = useNavigate();
@@ -27,8 +35,6 @@ export default function AuthCard() {
           // This gives you a Google Access Token. You can use it to access the Google API.
           const credential = GoogleAuthProvider.credentialFromResult(result);
           const token = credential.accessToken;
-          // The signed-in user info.
-          // const user = result.user;
         })
         .catch((error) => {
           // Handle Errors here.
@@ -37,46 +43,42 @@ export default function AuthCard() {
           console.error(`${errorCode}:${errorMessage}`);
         });
 
-        let user = auth.currentUser;
-        const q2 = query(collection(db, "users"), where("email", "==", user.email));
-        let newAccount = true;
-        let querySnapshot = await getDocs(q2);
-        querySnapshot.forEach((doc) => {
-          newAccount = false;
-        });
+      let user = auth.currentUser;
+      const q2 = query(
+        collection(db, "users"),
+        where("email", "==", user.email)
+      );
+      let newAccount = true;
+      let querySnapshot = await getDocs(q2);
+      querySnapshot.forEach((doc) => {
+        newAccount = false;
+      });
 
-        if(newAccount){
-          const date = new Date().getTime();
-          const storageRef = ref(storage, `${user.displayName + date}`);
-          const displayName = user.displayName;
-          const email = user.email;
-          console.log(1);
+      if (newAccount) {
+        const date = new Date().getTime();
+        const displayName = user.displayName;
+        const email = user.email;
+        const downloadURL = "https://firebasestorage.googleapis.com/v0/b/zwitter-e1db4.appspot.com/o/111670652146542?alt=media&token=3cb69685-ebcb-48b2-a4ae-7133b35485a1"
+        
+        try {
+          //Update profile
+          await updateProfile(user, {
+            displayName,
+            photoURL: downloadURL,
+          });
+          //create user on firestore
+          await setDoc(doc(db, "users", user.uid), {
+            uid: user.uid,
+            displayName,
+            email,
+            photoURL: downloadURL,
+          });
 
-          // await uploadBytesResumable(storageRef, file).then(() => {
-          //   getDownloadURL(storageRef).then(async (downloadURL) => {
-          //     try {
-          //       //Update profile
-          //       await updateProfile(user, {
-          //         displayName,
-          //         photoURL: downloadURL,
-          //       });
-          //       //create user on firestore
-          //       // await setDoc(doc(db, "users", user.uid), {
-          //       //   uid: user.uid,
-          //       //   displayName,
-          //       //   email,
-          //       //   photoURL: downloadURL,
-          //       // });
-    
-          //       // await setDoc(doc(db, "userChats", user.uid), {});
-          //       // navigate("/");
-          //     } catch (error) {
-          //       console.log(error);
-          //     }
-          //   });
-          // });
+          await setDoc(doc(db, "userChats", user.uid), {});
+        } catch (error) {
+          console.log(error);
         }
-
+      }
     } catch (error) {}
   };
 
