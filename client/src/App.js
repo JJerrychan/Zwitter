@@ -9,8 +9,10 @@ import Password from "./components/Users/resetPassword";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import React, { useContext } from "react";
 import { AuthContext } from "./context/AuthContext";
-import SideBar from "./components/SideBar";
+import SideBar from "./components/left/SideBar";
 import { Grid, Link, Typography } from "@mui/material";
+import AuthCard from "./components/right/AuthCard";
+import RightPanel from "./components/right/RightPanel";
 // import { Message } from "@mui/icons-material";
 
 function App() {
@@ -22,13 +24,11 @@ function App() {
         container
         direction="row"
         justifyContent="center"
-        alignItems="center"
       >
         <Grid item component="header" xs={2}>
           <SideBar />
         </Grid>
         <Grid item component="main" xs={8}>
-          <Header />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
@@ -40,16 +40,7 @@ function App() {
           </Routes>
         </Grid>
         <Grid item component="footer" xs={2}>
-          <Typography component="span" fontSize={1}>
-            © Zwitter Contributors ·{" "}
-            <Link
-              underline="hover"
-              target="_blank"
-              href="https://github.com/JJerrychan/Zwitter"
-            >
-              Link to Github
-            </Link>
-          </Typography>
+          <RightPanel />
         </Grid>
       </Grid>
     </BrowserRouter>

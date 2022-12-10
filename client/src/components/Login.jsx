@@ -7,8 +7,8 @@ import {
 } from "firebase/auth";
 import { auth } from "../firebase";
 import { AuthContext } from "../context/AuthContext";
-import StyledFirebaseAuth from "./StyledFirebaseAuth";
-import firebase from "firebase/compat/app";
+// import StyledFirebaseAuth from "./StyledFirebaseAuth";
+// import firebase from "firebase/compat/app";
 
 const Login = () => {
   // const uiConfig = {
@@ -79,6 +79,7 @@ const Login = () => {
   return (
     <div>
       {/* <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} /> */}
+
       <p style={{ display: currentUser == null ? "none" : "block" }}>
         Please log out first
       </p>
