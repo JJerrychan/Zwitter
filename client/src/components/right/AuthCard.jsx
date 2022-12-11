@@ -1,6 +1,17 @@
-import React from "react";
-import { Box, Stack, Typography, Button } from "@mui/material";
-// import { Button } from "@mui/material-next";
+import React, { useState } from "react";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Link,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Email, Google } from "@mui/icons-material";
 import {
   GoogleAuthProvider,
@@ -8,18 +19,31 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth, db } from "../../firebase";
-
 import {
   collection,
-  query,
-  where,
-  getDocs,
   doc,
+  getDocs,
+  query,
   setDoc,
+  where,
 } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 export default function AuthCard() {
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [isReg, setIsReg] = useState(true);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const provider = new GoogleAuthProvider();
+
   const handleGoogle = async () => {
     try {
       await signInWithPopup(auth, provider)
@@ -47,8 +71,9 @@ export default function AuthCard() {
       if (newAccount) {
         const displayName = user.displayName;
         const email = user.email;
-        const downloadURL = "https://firebasestorage.googleapis.com/v0/b/zwitter-e1db4.appspot.com/o/111670652146542?alt=media&token=3cb69685-ebcb-48b2-a4ae-7133b35485a1"
-        
+        const downloadURL =
+          "https://firebasestorage.googleapis.com/v0/b/zwitter-e1db4.appspot.com/o/111670652146542?alt=media&token=3cb69685-ebcb-48b2-a4ae-7133b35485a1";
+
         try {
           //Update profile
           await updateProfile(user, {
@@ -81,6 +106,99 @@ export default function AuthCard() {
         border: "1px solid #eff3f4",
       }}
     >
+      <Dialog open={open} onClose={handleClose}>
+        {isReg ? (
+          <Box component="form" onSubmit={handleClose} minWidth={600}>
+            <DialogTitle>Sign up to Zwitter</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Already hava an account?{" "}
+                <Link underline="hover" onClick={() => setIsReg(false)}>
+                  Sign in
+                </Link>
+              </DialogContentText>
+              <TextField
+                variant="standard"
+                margin="normal"
+                required
+                fullWidth
+                type="email"
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+              />
+              <TextField
+                variant="standard"
+                margin="normal"
+                required
+                fullWidth
+                id="displayName"
+                label="Nickname"
+                name="displayName"
+                autoComplete="name"
+              />
+              <TextField
+                variant="standard"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="new-password"
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button size="large" sx={{ margin: "auto" }} type="submit">
+                Next
+              </Button>
+            </DialogActions>
+          </Box>
+        ) : (
+          <Box component="form" onSubmit={handleClose} minWidth={600}>
+            <DialogTitle>Sign in to Zwitter</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Don't hava an account? {" "}
+                <Link underline="hover" onClick={() => setIsReg(true)}>
+                  Sign up
+                </Link>
+              </DialogContentText>
+              <TextField
+                  variant="standard"
+                  margin="normal"
+                  required
+                  fullWidth
+                  type="email"
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                  autoFocus
+              />
+              <TextField
+                variant="standard"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button type="submit">Next</Button>
+              <Button onClick={handleClose}>Forget Password?</Button>
+            </DialogActions>
+          </Box>
+        )}
+      </Dialog>
+
       <Stack spacing={1}>
         <Typography fontWeight="bold" variant="h5" component="h2">
           New to Zwitter?
@@ -95,21 +213,14 @@ export default function AuthCard() {
           startIcon={<Google />}
           onClick={handleGoogle}
         >
-          Sign in with Google
+          Sign up with Google
         </Button>
         <Button
           sx={{ fontWeight: "bold" }}
           size="small"
           variant="outlined"
           startIcon={<Email />}
-        >
-          Sign in with Email
-        </Button>
-        <Button
-          sx={{ fontWeight: "bold" }}
-          size="small"
-          variant="outlined"
-          startIcon={<Email />}
+          onClick={handleClickOpen}
         >
           Sign up with Email
         </Button>
