@@ -15,6 +15,7 @@ import {
 import { Email, Google } from "@mui/icons-material";
 import {
   GoogleAuthProvider,
+  signInWithEmailAndPassword,
   signInWithPopup,
   updateProfile,
 } from "firebase/auth";
@@ -40,6 +41,28 @@ export default function AuthCard() {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleLogin = async (e) => {
+    try {
+      e.preventDefault();
+      const email = e.target[0].value;
+      const password = e.target[1].value;
+      try {
+        await signInWithEmailAndPassword(auth, email, password)
+          .then(() => {
+            navigate("/");
+          })
+          .catch((error) => {
+            console.log(error.code);
+            console.error(error);
+          });
+      } catch (error) {
+        console.error(error);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const provider = new GoogleAuthProvider();
@@ -151,33 +174,33 @@ export default function AuthCard() {
                 autoComplete="new-password"
               />
             </DialogContent>
-            <DialogActions>
-              <Button size="large" sx={{ margin: "auto" }} type="submit">
+            <DialogActions sx={{ alignItems: "center" }}>
+              <Button size="large" type="submit">
                 Next
               </Button>
             </DialogActions>
           </Box>
         ) : (
-          <Box component="form" onSubmit={handleClose} minWidth={600}>
+          <Box component="form" onSubmit={handleLogin} minWidth={600}>
             <DialogTitle>Sign in to Zwitter</DialogTitle>
             <DialogContent>
               <DialogContentText>
-                Don't hava an account? {" "}
+                Don't hava an account?{" "}
                 <Link underline="hover" onClick={() => setIsReg(true)}>
                   Sign up
                 </Link>
               </DialogContentText>
               <TextField
-                  variant="standard"
-                  margin="normal"
-                  required
-                  fullWidth
-                  type="email"
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  autoFocus
+                variant="standard"
+                margin="normal"
+                required
+                fullWidth
+                type="email"
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
               />
               <TextField
                 variant="standard"
