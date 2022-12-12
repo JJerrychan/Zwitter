@@ -18,8 +18,9 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   updateProfile,
+  createUserWithEmailAndPassword,
 } from "firebase/auth";
-import { auth, db } from "../../firebase";
+import { auth, db, storage } from "../../firebase";
 import {
   collection,
   doc,
@@ -28,6 +29,7 @@ import {
   setDoc,
   where,
 } from "firebase/firestore";
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 
 export default function AuthCard() {
@@ -69,6 +71,63 @@ export default function AuthCard() {
       handleErrorOpen();
       if (error === "auth/wrong-password") setError("password is uncorrect");
       else if (error === "auth/user-not-found") setError("user not found");
+      else setError(error);
+    }
+  };
+
+  const handleSignup = async (e) => {
+    try {
+      e.preventDefault();
+      const email = e.target[0].value;
+      const displayName = e.target[1].value;
+      const password = e.target[2].value;
+      const file = e.target[3].files[0];
+      
+      
+      const q2 = query(collection(db, "users"), where("email", "==", email));
+
+      let querySnapshot = await getDocs(q2);
+      querySnapshot.forEach((doc) => {
+        throw "email exist";
+      });
+
+      console.log(password);
+      // Create user
+      const result = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      ).catch((error) => {
+        const errorCode = error.code;
+        throw errorCode;
+      });
+      // Create a unique image name
+      const date = new Date().getTime();
+      const storageRef = ref(storage, `${displayName + date}`);
+
+      await uploadBytesResumable(storageRef, file).then(() => {
+        getDownloadURL(storageRef).then(async (downloadURL) => {
+          //Update profile
+          await updateProfile(result.user, {
+            displayName,
+            photoURL: downloadURL,
+          });
+          //create user on firestore
+          await setDoc(doc(db, "users", result.user.uid), {
+            uid: result.user.uid,
+            displayName,
+            email,
+            // isAdmin,
+            photoURL: downloadURL,
+          });
+
+          // //create empty user chats on firestore
+          await setDoc(doc(db, "userChats", result.user.uid), {});
+        });
+      });
+    } catch (error) {
+      handleErrorOpen();
+      if(error === "auth/weak-password") setError("Password must be at least 6 characters")
       else setError(error);
     }
   };
@@ -121,7 +180,8 @@ export default function AuthCard() {
           await setDoc(doc(db, "userChats", user.uid), {});
         } catch (error) {
           handleErrorOpen();
-          if (error === "auth/wrong-password") setError("password is uncorrect");
+          if (error === "auth/wrong-password")
+            setError("password is uncorrect");
           else if (error === "auth/user-not-found") setError("user not found");
           else setError(error);
         }
@@ -141,7 +201,7 @@ export default function AuthCard() {
     >
       <Dialog open={open} onClose={handleClose}>
         {isReg ? (
-          <Box component="form" onSubmit={handleClose} minWidth={600}>
+          <Box component="form" onSubmit={handleSignup} minWidth={600}>
             <DialogTitle>Sign up to Zwitter</DialogTitle>
             <DialogContent>
               <DialogContentText>
@@ -183,6 +243,7 @@ export default function AuthCard() {
                 id="password"
                 autoComplete="new-password"
               />
+              <input required type="file" id="file" />
             </DialogContent>
             <DialogActions sx={{ alignItems: "center" }}>
               <Button size="large" type="submit">
