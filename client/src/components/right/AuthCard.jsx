@@ -12,13 +12,13 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Email, ErrorSharp, Google } from "@mui/icons-material";
+import { Email, Google, PhotoCamera } from "@mui/icons-material";
 import {
+  createUserWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithEmailAndPassword,
   signInWithPopup,
   updateProfile,
-  createUserWithEmailAndPassword,
 } from "firebase/auth";
 import { auth, db, storage } from "../../firebase";
 import {
@@ -29,29 +29,22 @@ import {
   setDoc,
   where,
 } from "firebase/firestore";
-import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 
 export default function AuthCard() {
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
+  const [emailDialog, setEmailDialog] = useState(false);
   const [isReg, setIsReg] = useState(true);
-  const [openError, setOpenError] = useState(false);
-  const [error, setError] = useState();
+  const [errorDialog, setErrorDialog] = useState(false);
+  const [authError, setAuthError] = useState("");
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const handleDialogOpen = () => {
+    setEmailDialog(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleErrorOpen = () => {
-    setOpenError(true);
-  };
-  const handleErrorClose = () => {
-    setOpenError(false);
+  const handleDialogClose = () => {
+    setEmailDialog(false);
   };
 
   const handleLogin = async (e) => {
@@ -64,14 +57,13 @@ export default function AuthCard() {
           navigate("/");
         })
         .catch((error) => {
-          const errorCode = error.code;
-          throw errorCode;
+          throw error.code;
         });
     } catch (error) {
-      handleErrorOpen();
-      if (error === "auth/wrong-password") setError("password is uncorrect");
-      else if (error === "auth/user-not-found") setError("user not found");
-      else setError(error);
+      if (error === "auth/wrong-password" || error === "auth/user-not-found")
+        setAuthError("Incorrect email address or password, please try again!");
+      else setAuthError(error.substring(error.indexOf("/") + 1));
+      setErrorDialog(true);
     }
   };
 
@@ -82,24 +74,19 @@ export default function AuthCard() {
       const displayName = e.target[1].value;
       const password = e.target[2].value;
       const file = e.target[3].files[0];
-      
-      
-      const q2 = query(collection(db, "users"), where("email", "==", email));
-
-      let querySnapshot = await getDocs(q2);
-      querySnapshot.forEach((doc) => {
-        throw "email exist";
-      });
-
-      console.log(password);
-      // Create user
+      // const q2 = query(collection(db, "users"), where("email", "==", email));
+      // let querySnapshot = await getDocs(q2);
+      // querySnapshot.forEach((doc) => {
+      //   throw "email exist";
+      // });
+      //
+      // // Create user
       const result = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       ).catch((error) => {
-        const errorCode = error.code;
-        throw errorCode;
+        throw error.code;
       });
       // Create a unique image name
       const date = new Date().getTime();
@@ -120,15 +107,15 @@ export default function AuthCard() {
             // isAdmin,
             photoURL: downloadURL,
           });
-
           // //create empty user chats on firestore
           await setDoc(doc(db, "userChats", result.user.uid), {});
         });
       });
     } catch (error) {
-      handleErrorOpen();
-      if(error === "auth/weak-password") setError("Password must be at least 6 characters")
-      else setError(error);
+      if (error === "auth/weak-password")
+        setAuthError("Password must be at least 6 characters");
+      else setAuthError(error.toString());
+      setErrorDialog(true);
     }
   };
 
@@ -179,11 +166,12 @@ export default function AuthCard() {
 
           await setDoc(doc(db, "userChats", user.uid), {});
         } catch (error) {
-          handleErrorOpen();
-          if (error === "auth/wrong-password")
-            setError("password is uncorrect");
-          else if (error === "auth/user-not-found") setError("user not found");
-          else setError(error);
+          // if (error === "auth/wrong-password")
+          //   setAuthError("password is uncorrect");
+          // else if (error === "auth/user-not-found")
+          //   setAuthError("user not found");
+          // else setAuthError(error);
+          // setErrorDialog(true);
         }
       }
     } catch (error) {}
@@ -199,7 +187,7 @@ export default function AuthCard() {
         border: "1px solid #eff3f4",
       }}
     >
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={emailDialog} onClose={handleDialogClose}>
         {isReg ? (
           <Box component="form" onSubmit={handleSignup} minWidth={600}>
             <DialogTitle>Sign up to Zwitter</DialogTitle>
@@ -243,9 +231,17 @@ export default function AuthCard() {
                 id="password"
                 autoComplete="new-password"
               />
-              <input required type="file" id="file" />
+              <Button
+                sx={{ marginTop: 2 }}
+                variant="contained"
+                component="label"
+                endIcon={<PhotoCamera />}
+              >
+                Upload Avatar
+                <input hidden accept="image/*" type="file" required name="file" id="file"/>
+              </Button>
             </DialogContent>
-            <DialogActions sx={{ alignItems: "center" }}>
+            <DialogActions sx={{ justifyContent: "center" }}>
               <Button size="large" type="submit">
                 Next
               </Button>
@@ -285,20 +281,27 @@ export default function AuthCard() {
                 autoComplete="current-password"
               />
             </DialogContent>
-            <DialogActions>
+            <DialogActions sx={{ justifyContent: "center" }}>
               <Button type="submit">Next</Button>
-              <Button onClick={handleClose}>Forget Password?</Button>
+              <Button onClick={handleDialogClose}>Forget Password?</Button>
             </DialogActions>
           </Box>
         )}
       </Dialog>
 
-      <Dialog open={openError} onClose={handleErrorClose}>
+      <Dialog open={errorDialog} onClose={() => setErrorDialog(false)}>
         <Box minWidth={400}>
-          <DialogTitle>Error</DialogTitle>
-          <DialogContent>{error}</DialogContent>
-          <DialogActions sx={{ alignItems: "center" }}>
-            <Button size="large" onClick={handleErrorClose}>
+          <DialogContent sx={{ display: "flex", justifyContent: "center" }}>
+            <DialogContentText
+              fontSize="large"
+              letterSpacing=".1rem"
+              fontWeight="bold"
+            >
+              {authError}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions sx={{ justifyContent: "center" }}>
+            <Button color="warning" onClick={() => setErrorDialog(false)}>
               Confirm
             </Button>
           </DialogActions>
@@ -326,7 +329,7 @@ export default function AuthCard() {
           size="small"
           variant="outlined"
           startIcon={<Email />}
-          onClick={handleClickOpen}
+          onClick={handleDialogOpen}
         >
           Sign up with Email
         </Button>
