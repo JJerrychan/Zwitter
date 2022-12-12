@@ -290,7 +290,7 @@ export default function AuthCard() {
       </Dialog>
 
       <Dialog open={errorDialog} onClose={() => setErrorDialog(false)}>
-        <Box minWidth={400}>
+        <Box maxWidth={400}>
           <DialogContent sx={{ display: "flex", justifyContent: "center" }}>
             <DialogContentText
               fontSize="large"

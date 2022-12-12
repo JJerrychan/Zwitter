@@ -24,7 +24,7 @@ function App() {
           <SideBar />
         </Grid>
         <Grid item component="main" xs={7}>
-        <Header/>
+          <Header />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
