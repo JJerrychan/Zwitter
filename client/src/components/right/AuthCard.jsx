@@ -12,7 +12,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Email, Google } from "@mui/icons-material";
+import { Email, ErrorSharp, Google } from "@mui/icons-material";
 import {
   GoogleAuthProvider,
   signInWithEmailAndPassword,
@@ -34,6 +34,8 @@ export default function AuthCard() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [isReg, setIsReg] = useState(true);
+  const [openError, setOpenError] = useState(false);
+  const [error, setError] = useState();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -43,25 +45,31 @@ export default function AuthCard() {
     setOpen(false);
   };
 
+  const handleErrorOpen = () => {
+    setOpenError(true);
+  };
+  const handleErrorClose = () => {
+    setOpenError(false);
+  };
+
   const handleLogin = async (e) => {
     try {
       e.preventDefault();
       const email = e.target[0].value;
       const password = e.target[1].value;
-      try {
-        await signInWithEmailAndPassword(auth, email, password)
-          .then(() => {
-            navigate("/");
-          })
-          .catch((error) => {
-            console.log(error.code);
-            console.error(error);
-          });
-      } catch (error) {
-        console.error(error);
-      }
+      await signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          navigate("/");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          throw errorCode;
+        });
     } catch (error) {
-      console.error(error);
+      handleErrorOpen();
+      if (error === "auth/wrong-password") setError("password is uncorrect");
+      else if (error === "auth/user-not-found") setError("user not found");
+      else setError(error);
     }
   };
 
@@ -76,8 +84,7 @@ export default function AuthCard() {
         .catch((error) => {
           // Handle Errors here.
           const errorCode = error.code;
-          const errorMessage = error.message;
-          console.error(`${errorCode}:${errorMessage}`);
+          throw errorCode;
         });
 
       let user = auth.currentUser;
@@ -113,7 +120,10 @@ export default function AuthCard() {
 
           await setDoc(doc(db, "userChats", user.uid), {});
         } catch (error) {
-          console.log(error);
+          handleErrorOpen();
+          if (error === "auth/wrong-password") setError("password is uncorrect");
+          else if (error === "auth/user-not-found") setError("user not found");
+          else setError(error);
         }
       }
     } catch (error) {}
@@ -220,6 +230,18 @@ export default function AuthCard() {
             </DialogActions>
           </Box>
         )}
+      </Dialog>
+
+      <Dialog open={openError} onClose={handleErrorClose}>
+        <Box minWidth={400}>
+          <DialogTitle>Error</DialogTitle>
+          <DialogContent>{error}</DialogContent>
+          <DialogActions sx={{ alignItems: "center" }}>
+            <Button size="large" onClick={handleErrorClose}>
+              Confirm
+            </Button>
+          </DialogActions>
+        </Box>
       </Dialog>
 
       <Stack spacing={1}>
