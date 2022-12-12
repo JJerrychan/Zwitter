@@ -4,6 +4,7 @@ import Login from "./components/Login";
 import Home from "./components/Home";
 import User from "./components/Users/profilePage";
 import Message from "./components/messages/Messenger";
+import MessageTest from "./components/messages/MessengerTest";
 import Password from "./components/Users/resetPassword";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import React, { useContext } from "react";
@@ -31,6 +32,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/user" element={<User />} />
             <Route path="/messages" element={<Message />} />
+            <Route path="/messagesTest" element={<MessageTest />} />
             <Route path="/user/password" element={<Password />} />
           </Routes>
         </Grid>

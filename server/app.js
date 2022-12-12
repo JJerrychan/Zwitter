@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require('cors')
 const app = express();
-const routesConstructor = require("./routes");
+//const routesConstructor = require("./routes");
 const multer = require("multer");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
@@ -24,7 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 
 
 
-routesConstructor(app);
+//routesConstructor(app);
 
 app.use(
   session({
