@@ -238,7 +238,14 @@ export default function AuthCard() {
                 endIcon={<PhotoCamera />}
               >
                 Upload Avatar
-                <input hidden accept="image/*" type="file" required name="file" id="file"/>
+                <input
+                  hidden
+                  accept="image/*"
+                  type="file"
+                  required
+                  name="file"
+                  id="file"
+                />
               </Button>
             </DialogContent>
             <DialogActions sx={{ justifyContent: "center" }}>
@@ -309,7 +316,7 @@ export default function AuthCard() {
       </Dialog>
 
       <Stack spacing={1}>
-        <Typography fontWeight="bold" variant="h5" component="h2">
+        <Typography fontWeight="bold" variant="h5" component="h1">
           New to Zwitter?
         </Typography>
         <Typography color="#536471" variant="body2" component="p">

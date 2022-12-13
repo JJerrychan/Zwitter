@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   Avatar,
   Box,
@@ -10,10 +10,14 @@ import {
 } from "@mui/material";
 import { AuthContext } from "../../context/AuthContext";
 import { Logout, MoreVert, Settings } from "@mui/icons-material";
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase";
+import { useNavigate } from "react-router-dom";
 
 export default function UserCard() {
+  const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -47,6 +51,7 @@ export default function UserCard() {
         title={currentUser.displayName}
         titleTypographyProps={{ fontSize: "1rem", fontWeight: "bold" }}
       />
+
       <Menu
         id="account-menu"
         anchorEl={anchorEl}
@@ -54,12 +59,22 @@ export default function UserCard() {
         onClose={handleClose}
       >
         <MenuItem>
-          <ListItemIcon>
+          <ListItemIcon
+            onClick={() => {
+              navigate("./user");
+              handleClose();
+            }}
+          >
             <Settings fontSize="small" />
           </ListItemIcon>
           Settings
         </MenuItem>
-        <MenuItem>
+        <MenuItem
+          onClick={() => {
+            signOut(auth).then(handleClose);
+            navigate("./");
+          }}
+        >
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
