@@ -1,10 +1,27 @@
 import React, { useContext } from "react";
-import { Avatar, Box, CardHeader, IconButton } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  CardHeader,
+  IconButton,
+  ListItemIcon,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 import { AuthContext } from "../../context/AuthContext";
-import { MoreVert } from "@mui/icons-material";
+import { Logout, MoreVert, Settings } from "@mui/icons-material";
 
 export default function UserCard() {
   const { currentUser } = useContext(AuthContext);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <Box
       component="section"
@@ -23,13 +40,32 @@ export default function UserCard() {
           />
         }
         action={
-          <IconButton aria-label="settings">
+          <IconButton aria-label="settings" onClick={handleClick}>
             <MoreVert />
           </IconButton>
         }
         title={currentUser.displayName}
-        titleTypographyProps={{fontSize:"1rem",fontWeight:"bold"}}
+        titleTypographyProps={{ fontSize: "1rem", fontWeight: "bold" }}
       />
+      <Menu
+        id="account-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+      >
+        <MenuItem>
+          <ListItemIcon>
+            <Settings fontSize="small" />
+          </ListItemIcon>
+          Settings
+        </MenuItem>
+        <MenuItem>
+          <ListItemIcon>
+            <Logout fontSize="small" />
+          </ListItemIcon>
+          Logout
+        </MenuItem>
+      </Menu>
     </Box>
   );
 }
