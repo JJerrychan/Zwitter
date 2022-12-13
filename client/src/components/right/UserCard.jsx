@@ -50,6 +50,7 @@ export default function UserCard() {
         }
         title={currentUser.displayName}
         titleTypographyProps={{ fontSize: "1rem", fontWeight: "bold" }}
+        subheader={"0 Posts"}
       />
 
       <Menu

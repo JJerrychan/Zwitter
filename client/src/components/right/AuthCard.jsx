@@ -12,7 +12,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Email, Google, PhotoCamera } from "@mui/icons-material";
+import { Email, Google } from "@mui/icons-material";
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
@@ -20,7 +20,7 @@ import {
   signInWithPopup,
   updateProfile,
 } from "firebase/auth";
-import { auth, db, storage } from "../../firebase";
+import { auth, db } from "../../firebase";
 import {
   collection,
   doc,
@@ -29,7 +29,6 @@ import {
   setDoc,
   where,
 } from "firebase/firestore";
-// import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 
 export default function AuthCard() {
@@ -62,7 +61,7 @@ export default function AuthCard() {
     } catch (error) {
       if (error === "auth/wrong-password" || error === "auth/user-not-found")
         setAuthError("Incorrect email address or password, please try again!");
-      else setAuthError(error.substring(error.indexOf("/") + 1));
+      else setAuthError(error.substring(error.toString().indexOf("/") + 1));
       setErrorDialog(true);
     }
   };
@@ -98,7 +97,7 @@ export default function AuthCard() {
         email,
         // isAdmin,
         photoURL: "",
-        numZwitter:0
+        numZwitter: 0,
       });
 
       // await uploadBytesResumable(storageRef, file).then(() => {
@@ -124,9 +123,9 @@ export default function AuthCard() {
     } catch (error) {
       if (error === "auth/weak-password")
         setAuthError("Password must be at least 6 characters");
-      if(error == "auth/email-already-in-use")
-        setAuthError("The email has already been used")
-      else setAuthError(error.toString());
+      if (error === "auth/email-already-in-use")
+        setAuthError("The email has already been used");
+      else setAuthError(error.toString().substring(error.indexOf("/") + 1));
       setErrorDialog(true);
     }
   };
@@ -136,12 +135,10 @@ export default function AuthCard() {
   const handleGoogle = async () => {
     try {
       await signInWithPopup(auth, provider)
-        .then((result) => {
-        })
+        .then((result) => {})
         .catch((error) => {
           // Handle Errors here.
-          const errorCode = error.code;
-          throw errorCode;
+          throw error.code;
         });
 
       let user = auth.currentUser;
@@ -173,7 +170,7 @@ export default function AuthCard() {
             displayName,
             email,
             photoURL: "",
-            numZwitter: 0
+            numZwitter: 0,
           });
 
           // await setDoc(doc(db, "userChats", user.uid), {});

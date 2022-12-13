@@ -1,9 +1,9 @@
 import "./App.css";
 import Home from "./components/Home";
-import User from "./components/Users/profilePage";
+import Profile from "./components/users/Profile";
 import Message from "./components/messages/Messenger";
 import MessageTest from "./components/messages/MessengerTest";
-import Password from "./components/Users/resetPassword";
+import Password from "./components/users/resetPassword";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import React, { useContext } from "react";
 import { AuthContext } from "./context/AuthContext";
@@ -19,11 +19,18 @@ function App() {
         <Grid item component="header" xs={2}>
           <SideBar />
         </Grid>
-        <Grid item component="main" xs={7}>
+        <Grid
+          item
+          sx={{
+            borderLeft: "1px solid #eff3f4",
+            borderRight: "1px solid  #eff3f4",
+          }}
+          component="main"
+          xs={7}
+        >
           <Routes>
             <Route path="/" element={<Home />} />
-            {/*<Route path="/register" element={<Register />} />*/}
-            <Route path="/user" element={<User />} />
+            <Route path="/user" element={<Profile />} />
             <Route path="/messages" element={<Message />} />
             <Route path="/messagesTest" element={<MessageTest />} />
             <Route path="/user/password" element={<Password />} />
