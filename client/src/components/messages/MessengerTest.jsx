@@ -12,7 +12,8 @@ const Messenger = () => {
   return (
     <Grid >
         <Card variant='outlined'>
-          <CardActionArea>
+          <Card>
+          {/*<CardActionArea>-*/}
               <h1>Create conversation room:</h1>
                 <h2>Conversation room name:</h2><TextField id="Conversation room name" label="Conversation room name" variant="outlined" />
                 <h2>Conversation room password:</h2><TextField id="Conversation room password" label="Conversation room password" variant="outlined" />
@@ -39,11 +40,16 @@ const Messenger = () => {
                       Create
                     </button>
                   </form>
-          </CardActionArea>
+          {/*</CardActionArea>*/}
+          </Card>
           {
             Object.keys(conversationsRoom.conversationRoomName !== undefined && conversationsRoom.conversationRoomPassword !== undefined).map((room) => {
               return(
-                <Grid container key={room}>
+                <Grid>
+                  <Card>
+                    {conversationsRoom.conversationRoomName}
+                  </Card>
+                {/*<Grid container key={room}>*/}
                   <Typography gutterBottom variant='h6' component='h2'>Room name: {room} 
                   <h2>Conversation room password:</h2><TextField id="Conversation room password" label="Conversation room password" variant="outlined" />
                   <form  className='form' id='add-Conversation-room-password'
