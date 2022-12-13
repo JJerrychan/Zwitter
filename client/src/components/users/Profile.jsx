@@ -12,7 +12,7 @@ import {
   IconButton,
   Stack,
   Tab,
-  Tabs,
+  Tabs, Typography,
 } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 
@@ -45,7 +45,7 @@ const Profile = () => {
   return (
     <Container>
       {currentUser ? (
-        <Card>
+        <Card elevation={0}>
           <CardHeader
             avatar={
               <IconButton size={"small"} sx={{ marginRight: "2rem" }}>
@@ -57,12 +57,13 @@ const Profile = () => {
             subheader={`${currentUser.numZwitter} Posts`}
           />
           <CardContent>
-            <Stack alignItems={"center"} spacing={2}>
+            <Stack alignItems={"center"} spacing={3}>
               <Avatar
                 sx={{ width: 120, height: 120 }}
                 alt={currentUser.displayName}
                 src={currentUser.photoURL}
               />
+              <Typography variant={"h4"}>{currentUser.displayName}</Typography>
               <ButtonGroup color={"info"} disableElevation variant={"outlined"}>
                 <Button>Change Name</Button>
                 <Button>Update Photo</Button>
