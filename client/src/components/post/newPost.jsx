@@ -16,7 +16,7 @@ import {
 } from "firebase/storage";
 import { auth, db, storage } from "../../firebase";
 
-const NewPost = () => {
+const NewPost = ({refresh}) => {
   const { currentUser } = useContext(AuthContext);
   const [show, setShow] = useState(false);
   const [imgUrl, setImgUrl] = useState("")
@@ -35,8 +35,9 @@ const NewPost = () => {
     
     try {
       const displayName = e.target[0].value;
+      debugger
       if (currentUser == null) {
-        // throw "Please login first";
+        throw "Please login first";
       }
 
       //upload img
@@ -46,15 +47,17 @@ const NewPost = () => {
         getDownloadURL(storageRef).then(async (downloadURL) => {
           try {
             const post = {
-              useId: "testUser",
+              useId: currentUser.uid,
               title: title,
               content: content,
               imgUrl: downloadURL,
-              postDate: Timestamp.fromDate(new Date())
+              postDate: Timestamp.fromDate(new Date()),
+              like: []
             }
-
+            canclePost()
             await setDoc(doc(db, "posts", v4()), post);
             alert("Post created!")
+            refresh()
           } catch (error) {
             console.log(error);
           }
@@ -70,6 +73,7 @@ const NewPost = () => {
   }
   function canclePost() {
     setShow(false)
+    setImgUrl("")
   }
 
   function imgChange(e) {

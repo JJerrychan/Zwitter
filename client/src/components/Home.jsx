@@ -1,49 +1,94 @@
 import React, { useContext, useState, useEffect } from "react";
 import NewPost from "./post/newPost";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import PostDetail from "./post/postDetail";
+import { collection, query, where, getDocs, orderBy, doc, setDoc } from "firebase/firestore";
 import { auth, db, storage } from "../firebase";
+import { AuthContext } from "../context/AuthContext";
 // import { Link } from "react-router-dom";
 
 const Home = () => {
-
+  const { currentUser } = useContext(AuthContext);
   const [posts, setPosts] = useState([])
+  // const [showDetail, setShowDetail] = useState(false)
+  const [post, setPost] = useState(null)
 
   useEffect(() => {
-    async function getPosts() {
-      let postList = []
-      try {
-        const querySnapshot = await getDocs(collection(db, "posts"));
-        querySnapshot.forEach((doc) => {
-          // doc.data() is never undefined for query doc snapshots
-          setPosts(postList.push(doc.data()))
-        });
-        console.log(postList);
-        setPosts(postList)
-      } catch (e) {
-        console.log(e);
-      }
-    }
     getPosts();
   }, []);
+
+  async function getPosts() {
+    let postList = []
+    try {
+      const q = query(collection(db, "posts"), orderBy("postDate", "desc"));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        const post = doc.data()
+        post.id = doc.id
+        setPosts(postList.push(post))
+      });
+      console.log(postList);
+      setPosts(postList)
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async function addLike(post) {
+    console.log(post);
+    //check login
+    if (currentUser == null) {
+      throw "Please login first";
+    }
+
+    //check already like
+    if (!post.like.includes(currentUser.uid)) {
+      post.like.push(currentUser.uid)
+      console.log(post);
+      await setDoc(doc(db, "posts", post.id), post);
+      getPosts()
+    }
+  }
+
+  function closeDetail() {
+    // setShowDetail(false)
+    setPost(null)
+  }
   
+  function showPostDetail(post) {
+    // setShowDetail(true)
+    setPost(post)
+  }
 
   return (
     <div>
-      <p>homepage</p>
-      <NewPost></NewPost>
+      {
+        post == null &&
+        <div>
+          <p>homepage</p>
+          <button onClick={getPosts}>refresh</button>
+          <NewPost refresh={getPosts}></NewPost>
 
-      {posts.map((post) => {
-        
-        console.log(post);
-        
-        return (
-          <div>
-            <h1>Title: {post.title}</h1>
-            <p>{post.content}</p>w
-            <img src={post.imgUrl} alt="" width="500" height="500"></img>
-          </div>
-        );
-      })}
+          {posts.map((post) => {        
+            return (
+              <div onClick={() => showPostDetail(post)} key={post.id}>
+                <h1>Title: {post.title}</h1>
+                <p>{post.content}</p>
+                <img src={post.imgUrl} alt="" width="300" height="300"></img>
+                <p>Like: {post.like.length}</p>
+                {
+                  !post.like.includes(currentUser.uid) &&
+                  <button onClick={() => addLike(post)}>like</button>
+                }
+              </div>
+            );
+          })}
+        </div>
+      }
+      {
+        post != null &&
+        <PostDetail closeDetail={closeDetail} post={post}></PostDetail>
+      }
     </div>
   );
 };
