@@ -29,7 +29,7 @@ import {
   setDoc,
   where,
 } from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+// import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 
 export default function AuthCard() {
@@ -73,13 +73,8 @@ export default function AuthCard() {
       const email = e.target[0].value;
       const displayName = e.target[1].value;
       const password = e.target[2].value;
-      const file = e.target[3].files[0];
-      // const q2 = query(collection(db, "users"), where("email", "==", email));
-      // let querySnapshot = await getDocs(q2);
-      // querySnapshot.forEach((doc) => {
-      //   throw "email exist";
-      // });
-      //
+      // const file = e.target[3].files[0];
+
       // // Create user
       const result = await createUserWithEmailAndPassword(
         auth,
@@ -89,31 +84,48 @@ export default function AuthCard() {
         throw error.code;
       });
       // Create a unique image name
-      const date = new Date().getTime();
-      const storageRef = ref(storage, `${displayName + date}`);
+      // const date = new Date().getTime();
+      // const storageRef = ref(storage, `${displayName + date}`);
 
-      await uploadBytesResumable(storageRef, file).then(() => {
-        getDownloadURL(storageRef).then(async (downloadURL) => {
-          //Update profile
-          await updateProfile(result.user, {
-            displayName,
-            photoURL: downloadURL,
-          });
-          //create user on firestore
-          await setDoc(doc(db, "users", result.user.uid), {
-            uid: result.user.uid,
-            displayName,
-            email,
-            // isAdmin,
-            photoURL: downloadURL,
-          });
-          // //create empty user chats on firestore
-          await setDoc(doc(db, "userChats", result.user.uid), {});
-        });
+      await updateProfile(result.user, {
+        displayName,
+        photoURL: "",
       });
+      //create user on firestore
+      await setDoc(doc(db, "users", result.user.uid), {
+        uid: result.user.uid,
+        displayName,
+        email,
+        // isAdmin,
+        photoURL: "",
+        numZwitter:0
+      });
+
+      // await uploadBytesResumable(storageRef, file).then(() => {
+      //   getDownloadURL(storageRef).then(async (downloadURL) => {
+      //     //Update profile
+      //     await updateProfile(result.user, {
+      //       displayName,
+      //       photoURL: downloadURL,
+      //     });
+      //     //create user on firestore
+      //     await setDoc(doc(db, "users", result.user.uid), {
+      //       uid: result.user.uid,
+      //       displayName,
+      //       email,
+      //       // isAdmin,
+      //       photoURL: downloadURL,
+      //       numZwitter:0
+      //     });
+      //     // //create empty user chats on firestore
+      //     await setDoc(doc(db, "userChats", result.user.uid), {});
+      //   });
+      // });
     } catch (error) {
       if (error === "auth/weak-password")
         setAuthError("Password must be at least 6 characters");
+      if(error == "auth/email-already-in-use")
+        setAuthError("The email has already been used")
       else setAuthError(error.toString());
       setErrorDialog(true);
     }
@@ -125,7 +137,6 @@ export default function AuthCard() {
     try {
       await signInWithPopup(auth, provider)
         .then((result) => {
-          // This gives you a Google Access Token. You can use it to access the Google API.
         })
         .catch((error) => {
           // Handle Errors here.
@@ -147,31 +158,32 @@ export default function AuthCard() {
       if (newAccount) {
         const displayName = user.displayName;
         const email = user.email;
-        const downloadURL =
-          "https://firebasestorage.googleapis.com/v0/b/zwitter-e1db4.appspot.com/o/111670652146542?alt=media&token=3cb69685-ebcb-48b2-a4ae-7133b35485a1";
+        // const downloadURL =
+        //   "https://firebasestorage.googleapis.com/v0/b/zwitter-e1db4.appspot.com/o/111670652146542?alt=media&token=3cb69685-ebcb-48b2-a4ae-7133b35485a1";
 
         try {
           //Update profile
           await updateProfile(user, {
             displayName,
-            photoURL: downloadURL,
+            photoURL: "",
           });
           //create user on firestore
           await setDoc(doc(db, "users", user.uid), {
             uid: user.uid,
             displayName,
             email,
-            photoURL: downloadURL,
+            photoURL: "",
+            numZwitter: 0
           });
 
-          await setDoc(doc(db, "userChats", user.uid), {});
+          // await setDoc(doc(db, "userChats", user.uid), {});
         } catch (error) {
-          // if (error === "auth/wrong-password")
-          //   setAuthError("password is uncorrect");
-          // else if (error === "auth/user-not-found")
-          //   setAuthError("user not found");
-          // else setAuthError(error);
-          // setErrorDialog(true);
+          if (error === "auth/wrong-password")
+            setAuthError("password is uncorrect");
+          else if (error === "auth/user-not-found")
+            setAuthError("user not found");
+          else setAuthError(error);
+          setErrorDialog(true);
         }
       }
     } catch (error) {}
@@ -231,7 +243,7 @@ export default function AuthCard() {
                 id="password"
                 autoComplete="new-password"
               />
-              <Button
+              {/* <Button
                 sx={{ marginTop: 2 }}
                 variant="contained"
                 component="label"
@@ -246,7 +258,7 @@ export default function AuthCard() {
                   name="file"
                   id="file"
                 />
-              </Button>
+              </Button> */}
             </DialogContent>
             <DialogActions sx={{ justifyContent: "center" }}>
               <Button size="large" type="submit">
