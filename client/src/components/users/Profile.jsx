@@ -14,7 +14,9 @@ import {
   Tab,
   Typography,
 } from "@mui/material";
-import { TabContext, TabList, TabPanel } from "@mui/lab";
+import TabContext from "@mui/lab";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
 import { ArrowBack } from "@mui/icons-material";
 import { db } from "../../firebase";
 import {
