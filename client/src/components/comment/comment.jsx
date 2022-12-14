@@ -32,7 +32,7 @@ const Comment = ({closeDetail, post}) => {
   async function getComments() {
     let commentList = []
     try {
-      const q = query(collection(db, "comments"), where("postId", "==", post.id), orderBy("commentDate", "desc"));
+      const q = query(collection(db, "comments"), where("postId", "==", post.id), where("parentId", "==", ""), orderBy("commentDate", "desc"));
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach(async (doc) => {
         // doc.data() is never undefined for query doc snapshots
@@ -89,7 +89,7 @@ const Comment = ({closeDetail, post}) => {
         {comments.map((comment) => {     
           return (
             <div key={comment.id}>
-              {/* <p><b>{currentUser.displayName}</b></p> */}
+              <p><b>{comment.postUserName}</b></p>
               <p>{comment.content}</p>
               <button onClick={() => replyComment(comment)}>reply</button>
               {
@@ -97,9 +97,8 @@ const Comment = ({closeDetail, post}) => {
                 comment.reply.map((item) => {        
                   return (
                     <div key={item.id}>
-                      {/* <p><b>{currentUser.displayName}</b></p> */}
+                      <p><b>{item.postUserName}</b></p>
                       <p>{item.content}</p>  
-                      <hr></hr>        
                     </div>
                   );
                 })

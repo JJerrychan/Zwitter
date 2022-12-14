@@ -23,6 +23,7 @@ const AddComment = ({closeAddComment, post, refresh, parentComment}) => {
 
       const comment = {
         useId: currentUser.uid,
+        postUserName: currentUser.displayName,
         postId: post.id,
         content: content,
         parentId: parentId,
