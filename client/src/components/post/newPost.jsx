@@ -27,15 +27,9 @@ const NewPost = ({refresh}) => {
     const title = e.target[0].value
     const content = e.target[1].value
     const file = e.target[2].files[0]
-
-    // console.log(title);
-    // console.log(content);
-    // console.log(file);
-    // console.log("file name: ", file.name);
     
     try {
       const displayName = e.target[0].value;
-      debugger
       if (currentUser == null) {
         throw "Please login first";
       }

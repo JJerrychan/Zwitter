@@ -25,17 +25,16 @@ const Home = () => {
         // doc.data() is never undefined for query doc snapshots
         const post = doc.data()
         post.id = doc.id
-        setPosts(postList.push(post))
+        postList.push(post)
       });
-      console.log(postList);
       setPosts(postList)
     } catch (e) {
       console.log(e);
     }
   }
 
-  async function addLike(post) {
-    console.log(post);
+  async function addLike(e, post) {
+    e.stopPropagation()
     //check login
     if (currentUser == null) {
       throw "Please login first";
@@ -44,19 +43,16 @@ const Home = () => {
     //check already like
     if (!post.like.includes(currentUser.uid)) {
       post.like.push(currentUser.uid)
-      console.log(post);
       await setDoc(doc(db, "posts", post.id), post);
       getPosts()
     }
   }
 
   function closeDetail() {
-    // setShowDetail(false)
     setPost(null)
   }
   
   function showPostDetail(post) {
-    // setShowDetail(true)
     setPost(post)
   }
 
@@ -77,8 +73,9 @@ const Home = () => {
                 <img src={post.imgUrl} alt="" width="300" height="300"></img>
                 <p>Like: {post.like.length}</p>
                 {
+                  currentUser &&
                   !post.like.includes(currentUser.uid) &&
-                  <button onClick={() => addLike(post)}>like</button>
+                  <button onClick={(e) => addLike(e, post)}>like</button>
                 }
               </div>
             );
