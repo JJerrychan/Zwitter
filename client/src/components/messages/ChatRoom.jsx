@@ -11,7 +11,8 @@ const Chatroom1 = () => {
 
   useEffect(() => {
     console.log("useEffect1111");
-    socketRef.current = io("/");
+    socketRef.current = io("ws://localhost:4000");
+    console.log("test"+socketRef.current);
     return () => {
       socketRef.current.disconnect();
     };
@@ -23,12 +24,14 @@ const Chatroom1 = () => {
     socketRef.current.on("message", ({ name, message, roomNum}) => {
       console.log("The server has sent some data to all clients");
       setChat([...chat, { name, message, roomNum}]);
+      console.log("test2"+socketRef.current);
     });
     socketRef.current.on("user_join", function (data) {
       setChat([
         ...chat,
         { name: "ChatBot", message: `${data} has joined the chat` },
       ]);
+      console.log("test3"+socketRef.current);
     });
 
     return () => {
