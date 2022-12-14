@@ -3,6 +3,7 @@ import Home from "./components/Home";
 import Profile from "./components/users/Profile";
 import Message from "./components/messages/Messenger";
 import MessageTest from "./components/messages/MessengerTest";
+import ChatRoom from "./components/messages/ChatRoom";
 import Password from "./components/users/resetPassword";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import React, { useContext } from "react";
@@ -33,6 +34,7 @@ function App() {
             <Route path="/user" element={<Profile />} />
             <Route path="/messages" element={<Message />} />
             <Route path="/messagesTest" element={<MessageTest />} />
+            <Route path="/chatRoom" element={<ChatRoom />} />
             <Route path="/user/password" element={<Password />} />
           </Routes>
         </Grid>

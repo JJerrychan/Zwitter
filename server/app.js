@@ -5,7 +5,8 @@ const app = express();
 const multer = require("multer");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
-
+const http = require("http").createServer(app);
+var io = require("socket.io")(http);
 
 const multerMid = multer({
   storage: multer.memoryStorage(),
@@ -34,6 +35,27 @@ app.use(
     saveUninitialized: true,
   })
 );
+
+io.on("connection", (socket) => {
+  console.log("new client connected", socket.id);
+
+  socket.on("user_join", (name, roomNum) => {
+    console.log("RoomNum: " + roomNum);
+    socket.join(roomNum);
+    socket.to(roomNum).emit("user_join", name, roomNum);
+  });
+
+  socket.on("message", ({ name, message, roomNum }) => {
+    console.log(name, message, socket.id);
+    console.log("room:  " + roomNum);
+    io.to(roomNum).emit("message", { name, message, roomNum });
+  });
+
+  socket.on("disconnect", () => {
+    console.log("Disconnect Fired");
+  });
+});
+
 
 app.use('*', (req, res) => {
   res.status(404).json({ error: 'Page Not found' });

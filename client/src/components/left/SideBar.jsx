@@ -14,6 +14,7 @@ export default function SideBar() {
         <NavItem title="home" to="/" Icon={OtherHouses} />
         <NavItem title="messages" to="/messages" Icon={Chat} />
         <NavItem title="messagesTest" to="/messagesTest" Icon={Chat} />
+        <NavItem title="chatRoom" to="/chatRoom" Icon={Chat} />
         <NavItem title="profile" to="/user" Icon={Person} />
       </Stack>
     </Container>
