@@ -1,24 +1,97 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import {
   Avatar,
+  Box,
   Button,
   ButtonGroup,
   Card,
-  CardActions,
   CardContent,
   CardHeader,
   Container,
   IconButton,
   Stack,
   Tab,
-  Tabs, Typography,
+  Typography,
 } from "@mui/material";
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
 import { ArrowBack } from "@mui/icons-material";
+import { db } from "../../firebase";
+import { collection, query, getDocs, orderBy, doc, setDoc } from "firebase/firestore";
+
 
 const Profile = () => {
   const { currentUser } = useContext(AuthContext);
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState('1');
+  const [posts, setPosts] = useState([])
+  const [likes, setLikes] = useState([])
+  const [post, setPost] = useState(null)
+
+  useEffect(() => {
+    getMyPosts();
+  }, []);
+
+  useEffect(() => {
+    getMyLikes();
+  }, []);
+
+  async function getMyPosts() {
+    let postList = []
+    try {
+      const q = query(collection(db, "posts"), orderBy("postDate", "desc"));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        const post = doc.data()
+        post.id = doc.id
+        if (post.useId === currentUser.uid) {
+          setPosts(postList.push(post))
+        }
+      });
+      console.log(postList);
+      setPosts(postList)
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async function getMyLikes() {
+    let postList = []
+    try {
+      const q = query(collection(db, "posts"), orderBy("postDate", "desc"));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        const post = doc.data()
+        post.id = doc.id
+        if (post.like.includes(currentUser.uid)) {
+          setLikes(postList.push(post))
+        }
+      });
+      console.log(postList);
+      setLikes(postList)
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async function addLike(post) {
+    if (currentUser == null) {
+      throw "Please login first";
+    }
+
+    if (!post.like.includes(currentUser.uid)) {
+      post.like.push(currentUser.uid)
+      console.log(post);
+      await setDoc(doc(db, "posts", post.id), post);
+      getMyPosts()
+    }
+  }
+
+  function showPostDetail(post) {
+    setPost(post)
+  }
+
   const handleTabChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -71,18 +144,46 @@ const Profile = () => {
               </ButtonGroup>
             </Stack>
           </CardContent>
-          <CardActions>
-            <Tabs
-              sx={{ marginX: "auto" }}
-              value={value}
-              onChange={handleTabChange}
-              centered
-            >
-              <Tab label="My Posts" />
-              <Tab label="Item Two" />
-              <Tab label="Item Three" />
-            </Tabs>
-          </CardActions>
+          <TabContext value={value}>
+            <Box sx={{ marginX: "auto", borderBottom: 1, borderColor: 'divider' }}>
+              <TabList onChange={handleTabChange} centered>
+                <Tab label="My Posts" value="1" />
+                <Tab label="My Likes" value="2" />
+              </TabList>
+            </Box>
+            <TabPanel value="1">
+              {posts.map((post) => {
+                return (
+                  <div onClick={() => showPostDetail(post)} key={post.id}>
+                    <h1>Title: {post.title}</h1>
+                    <p>{post.content}</p>
+                    <img src={post.imgUrl} alt="" width="300" height="300"></img>
+                    <p>Like: {post.like.length}</p>
+                    {
+                      !post.like.includes(currentUser.uid) &&
+                      <button onClick={() => addLike(post)}>like</button>
+                    }
+                  </div>
+                );
+              })}
+            </TabPanel>
+            <TabPanel value="2">
+              {likes.map((post) => {
+                return (
+                  <div onClick={() => showPostDetail(post)} key={post.id}>
+                    <h1>Title: {post.title}</h1>
+                    <p>{post.content}</p>
+                    <img src={post.imgUrl} alt="" width="300" height="300"></img>
+                    <p>Like: {post.like.length}</p>
+                    {
+                      !post.like.includes(currentUser.uid) &&
+                      <button onClick={() => addLike(post)}>like</button>
+                    }
+                  </div>
+                );
+              })}
+            </TabPanel>
+          </TabContext>
         </Card>
       ) : (
         <>Please login first!</>
