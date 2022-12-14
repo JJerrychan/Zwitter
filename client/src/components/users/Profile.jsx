@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import {
   Avatar,
@@ -14,68 +14,62 @@ import {
   Tab,
   Typography,
 } from "@mui/material";
-import TabContext from "@mui/lab";
-import TabList from "@mui/lab/TabList";
-import TabPanel from "@mui/lab/TabPanel";
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
 import { ArrowBack } from "@mui/icons-material";
 import { db } from "../../firebase";
-import {
-  collection,
-  doc,
-  getDocs,
-  orderBy,
-  query,
-  setDoc,
-} from "firebase/firestore";
+import { collection, query, getDocs, orderBy, doc, setDoc } from "firebase/firestore";
+
 
 const Profile = () => {
   const { currentUser } = useContext(AuthContext);
-  const [value, setValue] = useState("1");
-  const [posts, setPosts] = useState([]);
-  const [likes, setLikes] = useState([]);
-  const [post, setPost] = useState(null);
+  const [value, setValue] = useState('1');
+  const [posts, setPosts] = useState([])
+  const [likes, setLikes] = useState([])
+  const [post, setPost] = useState(null)
 
-  useEffect(async () => {
-    await getMyPosts();
+  useEffect(() => {
+    getMyPosts();
   }, []);
 
-  useEffect(async () => {
-    await getMyLikes();
+  useEffect(() => {
+    getMyLikes();
   }, []);
 
   async function getMyPosts() {
-    let postList = [];
+    let postList = []
     try {
       const q = query(collection(db, "posts"), orderBy("postDate", "desc"));
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
-        const post = doc.data();
-        post.id = doc.id;
+        const post = doc.data()
+        post.id = doc.id
         if (post.useId === currentUser.uid) {
-          setPosts(postList.push(post));
+          setPosts(postList.push(post))
         }
       });
       console.log(postList);
-      setPosts(postList);
+      setPosts(postList)
     } catch (e) {
       console.log(e);
     }
   }
 
   async function getMyLikes() {
-    let postList = [];
+    let postList = []
     try {
       const q = query(collection(db, "posts"), orderBy("postDate", "desc"));
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
-        const post = doc.data();
-        post.id = doc.id;
+        const post = doc.data()
+        post.id = doc.id
         if (post.like.includes(currentUser.uid)) {
-          setLikes(postList.push(post));
+          setLikes(postList.push(post))
         }
       });
       console.log(postList);
-      setLikes(postList);
+      setLikes(postList)
     } catch (e) {
       console.log(e);
     }
@@ -87,15 +81,15 @@ const Profile = () => {
     }
 
     if (!post.like.includes(currentUser.uid)) {
-      post.like.push(currentUser.uid);
+      post.like.push(currentUser.uid)
       console.log(post);
       await setDoc(doc(db, "posts", post.id), post);
-      getMyPosts();
+      getMyPosts()
     }
   }
 
   function showPostDetail(post) {
-    setPost(post);
+    setPost(post)
   }
 
   const handleTabChange = (event, newValue) => {
@@ -151,9 +145,7 @@ const Profile = () => {
             </Stack>
           </CardContent>
           <TabContext value={value}>
-            <Box
-              sx={{ marginX: "auto", borderBottom: 1, borderColor: "divider" }}
-            >
+            <Box sx={{ marginX: "auto", borderBottom: 1, borderColor: 'divider' }}>
               <TabList onChange={handleTabChange} centered>
                 <Tab label="My Posts" value="1" />
                 <Tab label="My Likes" value="2" />
@@ -165,11 +157,12 @@ const Profile = () => {
                   <div onClick={() => showPostDetail(post)} key={post.id}>
                     <h1>Title: {post.title}</h1>
                     <p>{post.content}</p>
-                    <img src={post.imgUrl} alt="" width="300" height="300" />
+                    <img src={post.imgUrl} alt="" width="300" height="300"></img>
                     <p>Like: {post.like.length}</p>
-                    {!post.like.includes(currentUser.uid) && (
+                    {
+                      !post.like.includes(currentUser.uid) &&
                       <button onClick={() => addLike(post)}>like</button>
-                    )}
+                    }
                   </div>
                 );
               })}
@@ -180,11 +173,12 @@ const Profile = () => {
                   <div onClick={() => showPostDetail(post)} key={post.id}>
                     <h1>Title: {post.title}</h1>
                     <p>{post.content}</p>
-                    <img src={post.imgUrl} alt="" width="300" height="300" />
+                    <img src={post.imgUrl} alt="" width="300" height="300"></img>
                     <p>Like: {post.like.length}</p>
-                    {!post.like.includes(currentUser.uid) && (
+                    {
+                      !post.like.includes(currentUser.uid) &&
                       <button onClick={() => addLike(post)}>like</button>
-                    )}
+                    }
                   </div>
                 );
               })}
