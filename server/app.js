@@ -5,7 +5,7 @@ const app = express();
 const multer = require("multer");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
-const http = require("http").createServer(app);
+const http = require("http").createServer(express);
 var io = require("socket.io")(http);
 
 const multerMid = multer({
@@ -61,7 +61,14 @@ app.use('*', (req, res) => {
   res.status(404).json({ error: 'Page Not found' });
 });
 
+http.listen(4000, () => {
+  console.log("We've now got a server!");
+  console.log('Your routes will be running on http://localhost:4000');
+});
+
+/*
 app.listen(4000, () => {
   console.log("We've now got a server!");
   console.log('Your routes will be running on http://localhost:4000');
 });
+*/
