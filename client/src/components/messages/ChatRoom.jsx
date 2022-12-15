@@ -1,18 +1,60 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 import "./Messenger.css";
-
+//import Password from "./users/resetPassword";
+// import Add from "../img/addAvatar.png";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth, db, storage } from "../../firebase";
+import {
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  setDoc,
+  orderBy,
+} from "firebase/firestore";
+import { useNavigate, Link } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
+import {
+  Avatar,
+  Box,
+  Button,
+  ButtonGroup,
+  Card,
+  CardContent,
+  CardHeader,
+  Container,
+  IconButton,
+  Stack,
+  Tab,
+  Typography,
+} from "@mui/material";
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
+import { ArrowBack } from "@mui/icons-material";
+import { v4 } from 'uuid';
 
 const Chatroom1 = () => {
-  const [state, setState] = useState({ message: "", name: "", roomNum: ""});
+    const { currentUser } = useContext(AuthContext);
+    const navigate = useNavigate();
+  const [state, setState] = useState({ name: "", roomNum: "", roomPassword: ""});
+  const [stateMessage, setStateMessage] = useState({ message: "", name: "", roomNum: "", roomPassword: ""});
   const [chat, setChat] = useState([]);
+  const [chatRoomList, setChatRoomList] = useState([]);
 
   const socketRef = useRef();
 
   useEffect(() => {
     console.log("useEffect1111");
     socketRef.current = io("ws://localhost:4000");
-    console.log("test"+socketRef.current);
+    //console.log("test"+socketRef.current);
     return () => {
       socketRef.current.disconnect();
     };
@@ -40,29 +82,90 @@ const Chatroom1 = () => {
     };
   }, [chat]);
 
-  const userjoin = (name, roomNum) => {
+  useEffect(() => {
+    console.log("useEffect3333");
+    async function getAllChatRoom() {
+      await getAllCreatedRoom();
+    }
+    getAllChatRoom();
+  }, []);
+
+  const userjoin = (name, roomNum, roomPassword) => {
     console.log("userJoin");
     // socketRef.current.join(roomNum);
-    socketRef.current.emit("user_join", name, roomNum);
+    socketRef.current.emit("user_join", name, roomNum,roomPassword);
     // socketRef.current.emit("test", name, roomNum);
   };
 
   const onMessageSubmit = (e) => {
     let msgEle = document.getElementById("message");
     console.log([msgEle.name], msgEle.value);
-    setState({ ...state, [msgEle.name]: msgEle.value });
-    // console.log("send to : " + state.roomNum);
+    setStateMessage({ ...state, [msgEle.name]: msgEle.value });
 
     socketRef.current.emit("message", {
-      name: state.name,
+      name: stateMessage.name,
       message: msgEle.value,
-      roomNum: state.roomNum
+      roomNum: stateMessage.roomNum
     });
     e.preventDefault();
-    setState({ message: "", name: state.name, roomNum: state.roomNum});
+    setStateMessage({ message: "", name: stateMessage.name, roomNum: stateMessage.roomNum});
     msgEle.value = "";
     msgEle.focus();
   };
+
+  const onCreateRoomSubmit = async (e) => {
+    /*
+    const queryUserData = await getDocs(collection(db, "user"));
+    const userData = await getDocs(queryUserData);
+    userData.forEach((doc) => {
+        const theUser = doc.data()
+        //theUser.id = doc.uid
+        if (theUser.id === currentUser.uid) {
+          setState({
+            name: theUser.displayName,
+            roomNum: document.getElementById("roomNum").value,
+          });
+        }
+      });
+    */
+      e.preventDefault();
+      setState({
+        name: currentUser.displayName,
+        roomNum: document.getElementById("roomNum").value,
+        roomPassword: document.getElementById("room_Password").value,
+      });
+    console.log(document.getElementById("roomNum").value);
+    console.log(document.getElementById("room_Password").value);
+    await setDoc(doc(db, "chatRoom", v4()), {
+        uid: v4(),
+        name: currentUser.displayName,
+        roomNum: document.getElementById("roomNum").value,
+        roomPassword: document.getElementById("room_Password").value,
+        // isAdmin,
+      });
+      await getAllCreatedRoom();
+  };
+
+  const joinTheChatRoom = async (chatRooms) => {
+    userjoin(
+        chatRooms.name,
+        chatRooms.roomNum,
+        chatRooms.roomPassword,
+      );
+  };
+  const getAllCreatedRoom = async (e) => {
+    const chatRoomData = await getDocs(collection(db, "chatRoom"));
+    //const queryChatRoomData = await getDocs(collection(db, "chatRoom"));
+    //const chatRoomData = await getDocs(queryChatRoomData);
+    const roomDataList = []
+    chatRoomData.forEach((doc) => {
+        const roomData = doc.data();
+        roomData.id = doc.id;
+        roomDataList.push(roomData);
+    });
+    setChatRoomList(roomDataList);
+  };
+
 
   const renderChat = () => {
     return chat.map(({ name, message }, index) => (
@@ -76,7 +179,7 @@ const Chatroom1 = () => {
 
   return (
     <div>
-      {state.name && (
+      {stateMessage.name && (
         <div className="card">
           <div className="render-chat">
             <h1>Chat Log</h1>
@@ -97,51 +200,40 @@ const Chatroom1 = () => {
         </div>
       )}
 
-      {!state.name && (
-        <form
-          className="form"
-          onSubmit={(e) => {
-            console.log(document.getElementById("username_input").value);
-            console.log(document.getElementById("roomNum").value);
-            e.preventDefault();
-            setState({
-              name: document.getElementById("username_input").value,
-              roomNum: document.getElementById("roomNum").value,
-            });
-            // setState({ roomNum: document.getElementById("roomNum").value });
-            userjoin(
-              document.getElementById("username_input").value,
-              document.getElementById("roomNum").value,
-            );
-            // userName.value = '';
-          }}
-        >
-          <div className="form-group">
-            <label>
-              User Name:
-              <br />
-              <input id="username_input" />
-            </label>
-            <label>
-              <br />
-              Room Name:
-              <br />
-              <input id="roomNum" />
-            </label>
-            {/*
-            <select id="roomNum">
-              <option value="room1">Room1</option>
-              <option value="room2">Room2</option>
-            </select>
-          */}
-          </div>
-          <br />
-
-          <br />
-          <br />
-          <button type="submit"> Click to join</button>
-        </form>
+        {(
+            <div className="card">
+                <form onSubmit={onCreateRoomSubmit}>
+                <div className="form-group">
+                    <label>
+                        Room Name:
+                        <br />
+                        <input id="roomNum" />
+                    </label>
+                    <label>
+                        <br />
+                        Room Password:
+                        <br />
+                        <input id="room_Password" />
+                    </label>
+                </div>
+                <button type="submit"> Create Room</button>
+            </form>
+        </div>
       )}
+
+    <div>
+        {chatRoomList!==[]?
+        <div>
+            {chatRoomList.map((chatRooms) => {
+                return(
+                    <div>
+                        <h1>Room Name: {chatRooms.roomNum}</h1>
+                        <button onClick={() => joinTheChatRoom(chatRooms)}>Join Room</button>
+                    </div>
+                )
+            })}
+        </div>:<p></p>}
+      </div>
     </div>
   );
 }
