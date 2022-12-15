@@ -228,6 +228,12 @@ const Chatroom1 = () => {
                 return(
                     <div>
                         <h1>Room Name: {chatRooms.roomNum}</h1>
+                        <label>
+                            <br />
+                                Room Password:
+                            <br />
+                            <input id="room_Password_Enter" />
+                        </label>
                         <button onClick={() => joinTheChatRoom(chatRooms)}>Join Room</button>
                     </div>
                 )
