@@ -13,7 +13,7 @@ import {
   DialogContentText,
 } from "@mui/material";
 
-const DisplayName = () => {
+const ResetPhoto = () => {
   const { currentUser } = useContext(AuthContext);
   const [errorDialog, setErrorDialog] = useState(false);
   const [error, setError] = useState();
@@ -101,4 +101,4 @@ const DisplayName = () => {
   );
 };
 
-export default DisplayName;
+export default ResetPhoto;

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { signOut, sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../../firebase";
 
-const Password = () => {
+const ResetPassword = () => {
   const navigate = useNavigate();
 
   const handleSubmit1 = async (e) => {
@@ -37,4 +37,4 @@ const Password = () => {
   );
 };
 
-export default Password;
+export default ResetPassword;

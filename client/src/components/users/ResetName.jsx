@@ -3,7 +3,6 @@ import { AuthContext } from "../../context/AuthContext";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import { updateProfile } from "firebase/auth";
-
 import {
   Box,
   Button,
@@ -13,7 +12,7 @@ import {
   DialogContentText,
 } from "@mui/material";
 
-const DisplayName = () => {
+const ResetName = () => {
   const { currentUser } = useContext(AuthContext);
   const [errorDialog, setErrorDialog] = useState(false);
   const [error, setError] = useState();
@@ -82,17 +81,11 @@ const DisplayName = () => {
       </Dialog>
       <p>change displayName</p>
       <form target="iFrame" onSubmit={handleSubmit}>
-        <input required type="text" placeholder="new Name"></input>
+        <input required type="text" placeholder="new Name"/>
         <button type="submit">Submit</button>
       </form>
-      <iframe
-        id="iFrame"
-        name="iFrame"
-        title="navigation"
-        style={{ display: "none" }}
-      ></iframe>
     </div>
   );
 };
 
-export default DisplayName;
+export default ResetName;
