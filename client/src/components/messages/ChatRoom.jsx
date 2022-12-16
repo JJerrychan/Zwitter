@@ -65,6 +65,9 @@ const Chatroom1 = () => {
 
         socketRef.current.on("message", ({ name, message, roomNum}) => {
             console.log("The server has sent some data to all clients");
+            console.log("name: " + name);
+            console.log("message: " + message);
+            console.log("roomNum: " + roomNum);
             setChat([...chat, { name, message, roomNum}]);
             console.log("test2"+socketRef.current);
         });
@@ -102,7 +105,9 @@ const Chatroom1 = () => {
         let msgEle = document.getElementById("message");
         console.log([msgEle.name], msgEle.value);
         setStateMessage({ ...stateMessage, [msgEle.name]: msgEle.value });
-
+        console.log("name1: " + stateMessage.name);
+        console.log("message1: " + msgEle.value);
+        console.log("roomNum1: " + stateMessage.roomNum);
         socketRef.current.emit("message", {
             name: stateMessage.name,
             message: msgEle.value,
@@ -181,7 +186,7 @@ const Chatroom1 = () => {
             }
             else{
                 setStateMessage({
-                    name: document.getElementById("room_roomNum_Enter").value,
+                    name: document.getElementById("room_UserName_Enter").value,
                     roomNum: document.getElementById("room_Password_Enter").value
                   });
                 userjoin(
@@ -289,9 +294,17 @@ const Chatroom1 = () => {
                                             <br />
                                             Room password: {chatRooms.roomPassword}
                                             <br />
-                                            Room Password:
+                                            User name:
+                                            <br />
+                                            <input id="room_UserName_Enter" />
+                                            <br />
+                                            <br />
+                                            Room name:
                                             <br />
                                             <input id="room_roomNum_Enter" />
+                                            <br />
+                                            Room Password:
+                                            <br />
                                             <input id="room_Password_Enter" />
                                         </label>
                                         <button type="submit">Join Room</button>
