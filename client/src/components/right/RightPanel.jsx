@@ -7,7 +7,7 @@ import UserCard from "./UserCard";
 export default function RightPanel() {
   const { currentUser } = useContext(AuthContext);
   return (
-    <Container maxWidth="xs">
+    <Container>
       {currentUser ? <UserCard /> : <AuthCard />}
       <Typography component="span" fontSize={1}>
         © Zwitter Contributors ·{" "}

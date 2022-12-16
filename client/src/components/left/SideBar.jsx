@@ -1,17 +1,18 @@
 import React, { useContext } from "react";
-import { Container, IconButton, Stack } from "@mui/material";
+import { Box, Container, Stack } from "@mui/material";
 import NavItem from "./NavItem";
 import { Chat, Home, Person } from "@mui/icons-material";
 import { AuthContext } from "../../context/AuthContext";
-import LogoIcon from "../LogoIcon";
+import Logo from "../../public/zwitter-logo/png/logo-color.png";
+import { NavLink } from "react-router-dom";
 
 export default function SideBar() {
   const { currentUser } = useContext(AuthContext);
   return (
-    <Container maxWidth="xs">
-      <IconButton aria-label="logo" color="primary" size="large">
-        <LogoIcon />
-      </IconButton>
+    <Container>
+      <Box display={"block"} marginX={"auto"} component={NavLink} to="/">
+        <img src={Logo} width="100%" alt="zwitter-logo" />
+      </Box>
       <Stack component="nav" spacing={2} alignItems="start">
         <NavItem title="home" to="/" Icon={Home} />
         <NavItem title="messages" to="/messages" Icon={Chat} />
