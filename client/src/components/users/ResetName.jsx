@@ -13,11 +13,10 @@ import {
   TextField,
 } from "@mui/material";
 
-const ResetName = () => {
+const ResetName = ({ closeFunction }) => {
   const { currentUser } = useContext(AuthContext);
   const [errorDialog, setErrorDialog] = useState(false);
   const [error, setError] = useState();
-  const [successDialog, setSuccessDialog] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,11 +33,11 @@ const ResetName = () => {
       });
       await updateDoc(washingtonRef, {
         displayName: displayName,
-      }).then(setSuccessDialog(true));
-    } catch (error) {
-      if (error.code != null) error = error.code;
+      }).then(closeFunction);
+    } catch (e) {
+      if (e.code != null) e = e.code;
 
-      setError(error);
+      setError(e);
       setErrorDialog(true);
     }
   };
@@ -63,6 +62,7 @@ const ResetName = () => {
           Confirm
         </Button>
       </DialogActions>
+
       <Dialog open={errorDialog} onClose={() => setErrorDialog(false)}>
         <Box maxWidth={400}>
           <DialogContent sx={{ display: "flex", justifyContent: "center" }}>
@@ -75,26 +75,8 @@ const ResetName = () => {
             </DialogContentText>
           </DialogContent>
           <DialogActions sx={{ justifyContent: "center" }}>
-            <Button color="warning" onClick={() => setErrorDialog(false)}>
-              Confirm
-            </Button>
-          </DialogActions>
-        </Box>
-      </Dialog>
-      <Dialog open={successDialog} onClose={() => setSuccessDialog(false)}>
-        <Box maxWidth={400}>
-          <DialogContent sx={{ display: "flex", justifyContent: "center" }}>
-            <DialogContentText
-              fontSize="large"
-              letterSpacing=".1rem"
-              fontWeight="bold"
-            >
-              Success!
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions sx={{ justifyContent: "center" }}>
-            <Button color="warning" onClick={() => setSuccessDialog(false)}>
-              Confirm
+            <Button color="error" onClick={() => setErrorDialog(false)}>
+              Try Again
             </Button>
           </DialogActions>
         </Box>

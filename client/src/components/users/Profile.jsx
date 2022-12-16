@@ -127,11 +127,11 @@ const Profile = () => {
   const dialogContent = () => {
     switch (operations) {
       case 0:
-        return <ResetName />;
+        return <ResetName closeFunction={handleDialogClose}/>;
       case 1:
-        return <ResetPhoto />;
+        return <ResetPhoto closeFunction={handleDialogClose}/>;
       case 2:
-        return <ResetPassword />;
+        return <ResetPassword closeFunction={handleDialogClose}/>;
     }
   };
 
