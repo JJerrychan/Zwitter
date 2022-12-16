@@ -92,6 +92,8 @@ const Chatroom1 = () => {
 
     const userjoin = (name, roomNum) => {
         console.log("userJoin");
+        console.log("userJoin"+name);
+        console.log("userJoin"+roomNum);
         // socketRef.current.join(roomNum);
         socketRef.current.emit("user_join", name, roomNum);
     };
@@ -99,7 +101,7 @@ const Chatroom1 = () => {
     const onMessageSubmit = (e) => {
         let msgEle = document.getElementById("message");
         console.log([msgEle.name], msgEle.value);
-        setStateMessage({ ...state, [msgEle.name]: msgEle.value });
+        setStateMessage({ ...stateMessage, [msgEle.name]: msgEle.value });
 
         socketRef.current.emit("message", {
             name: stateMessage.name,
@@ -178,6 +180,10 @@ const Chatroom1 = () => {
                 throw "chat room password is wrong";
             }
             else{
+                setStateMessage({
+                    name: document.getElementById("room_roomNum_Enter").value,
+                    roomNum: document.getElementById("room_Password_Enter").value
+                  });
                 userjoin(
                     document.getElementById("room_roomNum_Enter").value,
                     document.getElementById("room_Password_Enter").value
@@ -245,7 +251,7 @@ const Chatroom1 = () => {
                 </div>
             )}
 
-            {(
+            {!stateMessage.name &&(
                 <div className="card">
                     <form onSubmit={onCreateRoomSubmit}>
                         <div className="form-group">
@@ -268,7 +274,7 @@ const Chatroom1 = () => {
             )}
 
             <div>
-                {chatRoomList!==[]?
+                {!stateMessage.name && (chatRoomList!==[]?
                     <div>
                         {chatRoomList.map((chatRooms) => {
                             return(
@@ -295,7 +301,7 @@ const Chatroom1 = () => {
                                 </div>
                             )
                         })}
-                    </div>:<p></p>}
+                    </div>:<p></p>)}
             </div>
         </div>
     );
