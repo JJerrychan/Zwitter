@@ -124,6 +124,17 @@ const Profile = () => {
     setValue(newValue);
   };
 
+  const dialogContent = () => {
+    switch (operations) {
+      case 0:
+        return <ResetName />;
+      case 1:
+        return <ResetPhoto />;
+      case 2:
+        return <ResetPassword />;
+    }
+  };
+
   return (
     <Container>
       {currentUser ? (
@@ -173,16 +184,7 @@ const Profile = () => {
                 </Button>
               </ButtonGroup>
               <Dialog open={profileDialog} onClose={handleDialogClose}>
-                {() => {
-                  switch (operations) {
-                    case 0:
-                      return <ResetName />;
-                    case 1:
-                      return <ResetPhoto />;
-                    case 2:
-                      return <ResetPassword />;
-                  }
-                }}
+                {dialogContent()}
               </Dialog>
             </Stack>
           </CardContent>
