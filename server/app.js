@@ -44,10 +44,10 @@ app.use(
 io.on("connection", (socket) => {
   console.log("new client connected", socket.id);
 
-  socket.on("user_join", (name, roomNum,roomPassword) => {
-    console.log("RoomNum: " + roomNum + " RoomPassword " + roomPassword);
+  socket.on("user_join", (name, roomNum) => {
+    //console.log("RoomNum: " + roomNum + " RoomPassword " + roomPassword);
     socket.join(roomNum);
-    socket.to(roomNum).emit("user_join", name, roomNum,roomPassword);
+    socket.to(roomNum).emit("user_join", name, roomNum);
   });
 
   socket.on("message", ({ name, message, roomNum }) => {
