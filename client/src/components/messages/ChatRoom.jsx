@@ -15,6 +15,7 @@ import {
   query,
   where,
   getDocs,
+  getDoc,
   doc,
   setDoc,
   orderBy,
@@ -131,9 +132,9 @@ const Chatroom1 = () => {
             const q2 = query(collection(db, "chatRoom"), where("roomNum", "==", document.getElementById("roomNum").value));
             let querySnapshot = await getDocs(q2);
             querySnapshot.forEach((doc) => {
-                console.log("room roomNum: " +doc.data().roomNum);
-                console.log("room roomPassword: " +doc.data().roomPassword);
-                console.log("room detail2: " +doc.data());
+                //console.log("room roomNum: " +doc.data().roomNum);
+                //console.log("room roomPassword: " +doc.data().roomPassword);
+                //console.log("room detail2: " +doc.data());
                 alert("chat room is already exist");
                 throw "chat room is already exist";
             });
@@ -142,8 +143,8 @@ const Chatroom1 = () => {
                 roomNum: document.getElementById("roomNum").value,
                 roomPassword: document.getElementById("room_Password").value,
             });
-            console.log(document.getElementById("roomNum").value);
-            console.log(document.getElementById("room_Password").value);
+            //console.log(document.getElementById("roomNum").value);
+            //console.log(document.getElementById("room_Password").value);
             await setDoc(doc(db, "chatRoom", v4()), {
                 uid: v4(),
                 name: currentUser.displayName,
@@ -157,37 +158,57 @@ const Chatroom1 = () => {
         }
     };
 
-    const joinTheChatRoom = async (chatRooms) => {
-        const q2 = query(collection(db, "chatRoom"), where("roomNum", "==", chatRooms.roomNum));
-        let querySnapshot = await getDocs(q2);
-        let tempCheck = false;
-        querySnapshot.forEach((doc) => {
-            if(chatRooms.roomPassword === doc.data().roomPassword){
-                tempCheck = true;
+    const joinTheChatRoom = async (e) => {
+        try{
+            e.preventDefault();
+            const q2 = query(collection(db, "chatRoom"), where("roomNum", "==", document.getElementById("room_roomNum_Enter").value));
+            let querySnapshot = await getDocs(q2);
+            let tempCheck = false;
+            querySnapshot.forEach((doc) => {
+                console.log("document.room_roomNum_Enter: " +document.getElementById("room_roomNum_Enter").value);
+                console.log("document.room_Password_Enter: " +document.getElementById("room_Password_Enter").value);
+                console.log("doc.data().roomPassword: " +doc.data().roomPassword);
+                //console.log("chatRooms.roomPassword: " +chatRooms.roomPassword);
+                if(document.getElementById("room_Password_Enter").value === doc.data().roomPassword){
+                    tempCheck = true;
+                }
+            });
+            if(tempCheck === false){
+                alert("chat room password is wrong");
+                throw "chat room password is wrong";
             }
-            console.log("room roomPassword for join: " +doc.data().roomPassword);
-        });
-        if(tempCheck === false){
-            alert("chat room password is wrong");
-            throw "chat room password is wrong";
+            else{
+                userjoin(
+                    document.getElementById("room_roomNum_Enter").value,
+                    document.getElementById("room_Password_Enter").value
+                );
+            }
+            //console.log("temp name: " +chatRooms.name);
+            //console.log("temp password: " +chatRooms.roomNum);
+        }catch (error) {
+            console.log(error);
         }
-        console.log("temp name: " +chatRooms.name);
-        console.log("temp password: " +chatRooms.roomNum);
-        userjoin(
-            chatRooms.name,
-            chatRooms.roomNum,
-        );
     };
 
     const getAllCreatedRoom = async (e) => {
         const chatRoomData = await getDocs(collection(db, "chatRoom"));
         const roomDataList = []
         chatRoomData.forEach((doc) => {
+            //console.log("create temp name: " +doc.data().roomNum);
+            //console.log("create temp password: " +doc.data().roomPassword);
             const roomData = doc.data();
             roomData.id = doc.id;
             roomDataList.push(roomData);
+            //console.log("roomData.num: " +roomData.roomNum);
+            //console.log("roomData.password: " +roomData.roomPassword);
         });
         setChatRoomList(roomDataList);
+        /*
+        chatRoomList.forEach(element => {
+            console.log("chatRoomList.roomNum: " +element.roomNum);
+            console.log("chatRoomList.password: " +element.roomPassword);
+        });
+        */
     };
 
 
@@ -252,16 +273,25 @@ const Chatroom1 = () => {
                         {chatRoomList.map((chatRooms) => {
                             return(
                                 <div>
-                                    <h1>Room Name: {chatRooms.roomNum}</h1>
-                                    <h1>Current User Name: {chatRooms.name}</h1>
-                                    <h1>Room password: {chatRooms.roomPassword}</h1>
-                                    <label>
+                                    <form onSubmit={joinTheChatRoom}>
                                         <br />
-                                        Room Password:
                                         <br />
-                                        <input id="room_Password_Enter" />
-                                    </label>
-                                    <button onClick={() => joinTheChatRoom(chatRooms)}>Join Room</button>
+                                        <label>
+                                            Room Name: {chatRooms.roomNum}
+                                            <br />
+                                            Current User Name: {chatRooms.name}
+                                            <br />
+                                            Room password: {chatRooms.roomPassword}
+                                            <br />
+                                            Room Password:
+                                            <br />
+                                            <input id="room_roomNum_Enter" />
+                                            <input id="room_Password_Enter" />
+                                        </label>
+                                        <button type="submit">Join Room</button>
+                                        <br />
+                                        <br />
+                                    </form>
                                 </div>
                             )
                         })}
