@@ -42,22 +42,23 @@ app.use(
 );
 
 io.on("connection", (socket) => {
-  console.log("new client connected", socket.id);
+  // console.log("new client connected", socket.id);
 
   socket.on("user_join", (name, roomNum) => {
-    //console.log("RoomNum: " + roomNum + " RoomPassword " + roomPassword);
+    console.log("RoomNum: " + roomNum );
     socket.join(roomNum);
     socket.to(roomNum).emit("user_join", name, roomNum);
   });
 
   socket.on("message", ({ name, message, roomNum }) => {
-    console.log(name, message, socket.id);
-    console.log("room:  " + roomNum);
+    // console.log(name);
+    // console.log(name, message, socket.id);
+    // console.log("room:  " + roomNum);
     io.to(roomNum).emit("message", { name, message, roomNum });
   });
 
   socket.on("disconnect", () => {
-    console.log("Disconnect Fired");
+    // console.log("Disconnect Fired");
   });
 });
 
