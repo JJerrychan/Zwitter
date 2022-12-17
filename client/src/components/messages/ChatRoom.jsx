@@ -291,7 +291,7 @@ const Chatroom1 = () => {
                     <div>
                         <input
                           id="leave_room_name" hidden
-                          value={stateMessage.roomNum}
+                          defaultValue={stateMessage.roomNum}
                         />
                     </div>
                     <button>Leave Room</button>
@@ -327,7 +327,7 @@ const Chatroom1 = () => {
             <div>
               {chatRoomList.map((chatRooms) => {
                 return (
-                  <div>
+                  <div key={chatRooms.id}>
                     <form onSubmit={joinTheChatRoom}>
                       <br />
                       <br />
@@ -340,7 +340,7 @@ const Chatroom1 = () => {
                         <br />
                         <input
                           id="room_roomNum_Enter" hidden
-                          value={chatRooms.roomNum}
+                          defaultValue={chatRooms.roomNum}
                         />
                         <br />
                         Room Password:
