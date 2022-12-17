@@ -296,16 +296,13 @@ const Chatroom1 = () => {
                       <br />
                       <label>
                         Room Name: {chatRooms.roomNum}
-                        <br />
+                        {/* <br />
                         Current User Name: {chatRooms.name}
                         <br />
-                        Room password: {chatRooms.roomPassword}
-                        <br />
-                        <br />
-                        Room name:
+                        Room password: {chatRooms.roomPassword} */}
                         <br />
                         <input
-                          id="room_roomNum_Enter"
+                          id="room_roomNum_Enter" hidden
                           value={chatRooms.roomNum}
                         />
                         <br />
