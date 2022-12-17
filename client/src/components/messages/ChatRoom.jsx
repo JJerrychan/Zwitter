@@ -72,6 +72,7 @@ const Chatroom1 = () => {
             console.log("test2"+socketRef.current);
         });
         socketRef.current.on("user_join", function (data) {
+            console.log("thename: " + data);
         setChat([
             ...chat,
             { name: "ChatBot", message: `${data} has joined the chat` },
@@ -172,9 +173,9 @@ const Chatroom1 = () => {
             let querySnapshot = await getDocs(q2);
             let tempCheck = false;
             querySnapshot.forEach((doc) => {
-                console.log("document.room_roomNum_Enter: " +document.getElementById("room_roomNum_Enter").value);
-                console.log("document.room_Password_Enter: " +document.getElementById("room_Password_Enter").value);
-                console.log("doc.data().roomPassword: " +doc.data().roomPassword);
+                //console.log("document.room_roomNum_Enter: " +document.getElementById("room_roomNum_Enter").value);
+                //console.log("document.room_Password_Enter: " +document.getElementById("room_Password_Enter").value);
+                //console.log("doc.data().roomPassword: " +doc.data().roomPassword);
                 //console.log("chatRooms.roomPassword: " +chatRooms.roomPassword);
                 if(document.getElementById("room_Password_Enter").value === doc.data().roomPassword){
                     tempCheck = true;
@@ -284,7 +285,7 @@ const Chatroom1 = () => {
                         {chatRoomList.map((chatRooms) => {
                             return(
                                 <div>
-                                    <form onSubmit={joinTheChatRoom}>
+                                    <form onSubmit={joinTheChatRoom(chatRooms)}>
                                         <br />
                                         <br />
                                         <label>
@@ -294,14 +295,10 @@ const Chatroom1 = () => {
                                             <br />
                                             Room password: {chatRooms.roomPassword}
                                             <br />
-                                            User name:
-                                            <br />
-                                            <input id="room_UserName_Enter" />
-                                            <br />
                                             <br />
                                             Room name:
                                             <br />
-                                            <input id="room_roomNum_Enter" />
+                                            <input id="room_roomNum_Enter" value =  {chatRooms.name}/>
                                             <br />
                                             Room Password:
                                             <br />
