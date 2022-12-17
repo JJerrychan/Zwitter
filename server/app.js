@@ -7,7 +7,6 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const http = require("http").createServer(express);
 //var io = require("socket.io")(http);
-
 const multerMid = multer({
   storage: multer.memoryStorage(),
   limits:{
@@ -40,24 +39,44 @@ app.use(
     saveUninitialized: true,
   })
 );
-
+let userIsLogin = false;
 io.on("connection", (socket) => {
   // console.log("new client connected", socket.id);
-
+  userIsLogin = true;
   socket.on("user_join", (name, roomNum) => {
-    console.log("RoomNum: " + roomNum );
-    socket.join(roomNum);
-    socket.to(roomNum).emit("user_join", name, roomNum);
+    if(userIsLogin ===true){
+      console.log("RoomNum: " + roomNum );
+      socket.join(roomNum);
+      socket.to(roomNum).emit("user_join", name, roomNum);      
+    }
+    else{
+      console.log("user did not login");
+    }
   });
 
   socket.on("message", ({ name, message, roomNum }) => {
-    // console.log(name);
-    // console.log(name, message, socket.id);
-    // console.log("room:  " + roomNum);
-    io.to(roomNum).emit("message", { name, message, roomNum });
+    if(userIsLogin ===true){
+      // console.log(name);
+      // console.log(name, message, socket.id);
+      // console.log("room:  " + roomNum);
+      io.to(roomNum).emit("message", { name, message, roomNum });
+    }
+    else{
+      console.log("user did not login");
+    }
+  });
+
+  socket.on("leave_room",function(name, roomNum){
+    if(userIsLogin ===true){
+      socket.leave(roomNum);  
+    }
+    else{
+      console.log("user did not login");
+    }
   });
 
   socket.on("disconnect", () => {
+    userIsLogin=false;
     // console.log("Disconnect Fired");
   });
 });

@@ -41,6 +41,7 @@ import { v4 } from "uuid";
 const Chatroom1 = () => {
   const { currentUser } = useContext(AuthContext);
   const [isJoin, setIsJoin] = useState(false);
+  const [isLeave, setIsLeave] = useState(false);
   const navigate = useNavigate();
   const [state, setState] = useState({
     name: "",
@@ -66,29 +67,39 @@ const Chatroom1 = () => {
 
   useEffect(() => {
     if (isJoin) {
-      socketRef.current.on("message", ({ name, message, roomNum }) => {
-        console.log("The server has sent some data to all clients");
-        console.log("name: " + name);
-        console.log("message: " + message);
-        console.log("roomNum: " + roomNum);
-        setChat([...chat, { name, message, roomNum }]);
-        console.log("test2" + socketRef.current);
-      });
-      socketRef.current.on("user_join", function (data) {
-        console.log("thename: " + data);
-        setChat([
-          ...chat,
-          { name: "ChatBot", message: `${data} has joined the chat` },
-        ]);
-        console.log("test3" + socketRef.current);
-      });
-
-      return () => {
-        socketRef.current.off("message");
-        socketRef.current.off("user-join");
-      };
+        socketRef.current.on("message", ({ name, message, roomNum }) => {
+            console.log("The server has sent some data to all clients");
+            console.log("name: " + name);
+            console.log("message: " + message);
+            console.log("roomNum: " + roomNum);
+            setChat([...chat, { name, message, roomNum }]);
+            console.log("test2" + socketRef.current);
+        });
+        socketRef.current.on("user_join", function (data) {
+            console.log("thename: " + data);
+            setChat([
+                ...chat,
+                { name: "ChatBot", message: `${data} has joined the chat` },
+            ]);
+            console.log("test3" + socketRef.current);
+        });
+        socketRef.current.on("leave_room", ({ username, message, roomNum }) =>{
+            console.log("asdadsdas"+username)
+            setChat([
+                ...chat,
+                { name: "ChatBot", message: `${username} has leave the chat` },
+            ]);
+            //setIsLeave(true);
+            console.log("User leave the room");
+        });
+          
+        return () => {
+            socketRef.current.off("message");
+            socketRef.current.off("user-join");
+            socketRef.current.off("leave_room");
+        };
     }
-  });
+  },[chat,isJoin]);
 
   useEffect(() => {
     async function getAllChatRoom() {
@@ -100,6 +111,11 @@ const Chatroom1 = () => {
   const userjoin = (name, roomNum) => {
     // socketRef.current.join(roomNum);
     socketRef.current.emit("user_join", name, roomNum);
+  };
+
+  const userLeave = (name, roomNum) => {
+    // socketRef.current.leave(roomNum);
+    socketRef.current.emit("leave_room", name, roomNum);
   };
 
   const onMessageSubmit = (e) => {
@@ -195,6 +211,7 @@ const Chatroom1 = () => {
         throw "chat room password is wrong";
       } else {
         setIsJoin(true);
+        //setIsLeave(false);
         setStateMessage({
           name: currentUser.displayName,
           roomNum: roomName,
@@ -208,6 +225,15 @@ const Chatroom1 = () => {
     }
   };
 
+  const leaveTheChatRoom = async(e)=>{
+    try{
+        const roomName = e.target[0].value;
+        //setIsLeave(true);
+        userLeave(currentUser.displayName, roomName);
+    }catch(error){
+        console.log(error);
+    }
+  }
   const getAllCreatedRoom = async (e) => {
     const chatRoomData = await getDocs(collection(db, "chatRoom"));
     const roomDataList = [];
@@ -243,10 +269,10 @@ const Chatroom1 = () => {
     <div>
       {stateMessage.name && (
         <div className="card">
-          <div className="render-chat">
-            <h1>Chat Log</h1>
-            {renderChat()}
-          </div>
+            <div className="render-chat">
+                <h1>Room: {stateMessage.roomNum} Chat Log</h1>
+                {renderChat()}
+            </div>
           <form onSubmit={onMessageSubmit}>
             <h1>Messenger</h1>
             <div>
@@ -259,6 +285,17 @@ const Chatroom1 = () => {
             </div>
             <button>Send Message</button>
           </form>
+          <br />
+          <br />
+          <form onSubmit={leaveTheChatRoom}>
+                    <div>
+                        <input
+                          id="leave_room_name" hidden
+                          value={stateMessage.roomNum}
+                        />
+                    </div>
+                    <button>Leave Room</button>
+                </form>
         </div>
       )}
 
