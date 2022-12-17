@@ -28,6 +28,7 @@ import {
   query,
   setDoc,
 } from "firebase/firestore";
+import PostDetail from "../post/postDetail";
 import ResetName from "./ResetName";
 import ResetPhoto from "./ResetPhoto";
 import ResetPassword from "./ResetPassword";
@@ -103,21 +104,42 @@ const Profile = () => {
     }
   }
 
-  async function addLike(post) {
+  async function addLike(e, post) {
+    e.stopPropagation()
+    //check login
     if (currentUser == null) {
       throw "Please login first";
     }
 
+    //check already like
     if (!post.like.includes(currentUser.uid)) {
-      post.like.push(currentUser.uid);
-      console.log(post);
+      post.like.push(currentUser.uid)
       await setDoc(doc(db, "posts", post.id), post);
-      await getMyPosts();
+      getMyPosts()
+    }
+  }
+
+  async function delLike(e, post) {
+    e.stopPropagation()
+    //check login
+    if (currentUser == null) {
+      throw "Please login first";
+    }
+
+    //check already like
+    if (post.like.includes(currentUser.uid)) {
+      post.like.splice(post.like.indexOf(currentUser.uid))
+      await setDoc(doc(db, "posts", post.id), post);
+      getMyPosts()
     }
   }
 
   function showPostDetail(post) {
     setPost(post);
+  }
+
+  function closeDetail() {
+    setPost(null)
   }
 
   const handleTabChange = (event, newValue) => {
@@ -209,9 +231,11 @@ const Profile = () => {
                     <p>{post.content}</p>
                     <img src={post.imgUrl} alt="" width="300" height="300" />
                     <p>Like: {post.like.length}</p>
-                    {!post.like.includes(currentUser.uid) && (
-                      <button onClick={() => addLike(post)}>like</button>
-                    )}
+                    {currentUser &&
+                      !post.like.includes(currentUser.uid) ?
+                      <button onClick={(e) => addLike(e, post)}>like</button> :
+                      <button onClick={(e) => delLike(e, post)}>cancel</button>
+                    }
                   </div>
                 );
               })}
@@ -224,14 +248,19 @@ const Profile = () => {
                     <p>{post.content}</p>
                     <img src={post.imgUrl} alt="" width="300" height="300" />
                     <p>Like: {post.like.length}</p>
-                    {!post.like.includes(currentUser.uid) && (
-                      <button onClick={() => addLike(post)}>like</button>
-                    )}
+                    {currentUser &&
+                      !post.like.includes(currentUser.uid) ?
+                      <button onClick={(e) => addLike(e, post)}>like</button> :
+                      <button onClick={(e) => delLike(e, post)}>cancel</button>}
                   </div>
                 );
               })}
             </TabPanel>
           </TabContext>
+          {
+            post != null &&
+            <PostDetail closeDetail={closeDetail} post={post}></PostDetail>
+          }
         </Card>
       ) : (
         <>Please login first!</>

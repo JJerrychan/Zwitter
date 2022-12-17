@@ -48,6 +48,21 @@ const Home = () => {
     }
   }
 
+  async function delLike(e, post) {
+    e.stopPropagation()
+    //check login
+    if (currentUser == null) {
+      throw "Please login first";
+    }
+
+    //check already like
+    if (post.like.includes(currentUser.uid)) {
+      post.like.splice(post.like.indexOf(currentUser.uid))
+      await setDoc(doc(db, "posts", post.id), post);
+      getPosts()
+    }
+  }
+
   function closeDetail() {
     setPost(null)
   }
@@ -74,8 +89,9 @@ const Home = () => {
                 <p>Like: {post.like.length}</p>
                 {
                   currentUser &&
-                  !post.like.includes(currentUser.uid) &&
-                  <button onClick={(e) => addLike(e, post)}>like</button>
+                    !post.like.includes(currentUser.uid) ?
+                    <button onClick={(e) => addLike(e, post)}>like</button> :
+                    <button onClick={(e) => delLike(e, post)}>cancel</button>
                 }
               </div>
             );
