@@ -9,6 +9,7 @@ export default function RightPanel() {
   return (
     <Container>
       {currentUser ? <UserCard /> : <AuthCard />}
+      <Typography>Zwitter - A New Wave of Social for Gen Z</Typography>
       <Typography component="span" fontSize={1}>
         © Zwitter Contributors ·{" "}
         <Link

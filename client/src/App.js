@@ -1,4 +1,4 @@
-import "./App.css";
+import "./App.scss";
 import Home from "./components/Home";
 import Profile from "./components/users/Profile";
 import Message from "./components/messages/Messenger";
@@ -17,7 +17,7 @@ function App() {
     <BrowserRouter>
       <Container maxWidth={"xl"}>
         <Grid container direction="row" justifyContent="center">
-          <Grid item component="header" xs={2}>
+          <Grid item component="header" lg={3} md={2} sm={2}>
             <SideBar />
           </Grid>
           <Grid
@@ -27,7 +27,7 @@ function App() {
               borderRight: "1px solid  #eff3f4",
             }}
             component="main"
-            xs={7}
+            lg={6} md={7} sm={10}
           >
             <Routes>
               <Route path="/" element={<Home />} />
@@ -37,7 +37,7 @@ function App() {
               <Route path="/chatRoom" element={<ChatRoom />} />
             </Routes>
           </Grid>
-          <Grid item component="footer" xs={3}>
+          <Grid item component="footer" lg={3} md={3} sm={0}>
             <RightPanel />
           </Grid>
         </Grid>
