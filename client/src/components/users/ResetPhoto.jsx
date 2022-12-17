@@ -23,7 +23,7 @@ const ResetPhoto = ({ closeFunction }) => {
   const [error, setError] = useState();
   const [uploadURL, setUploadURL] = useState(null);
 
-  
+
   //aws s3
   const [progress, setProgress] = useState(0);
   const S3_BUCKET = "zwitter11";

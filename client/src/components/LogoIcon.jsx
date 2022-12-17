@@ -3,5 +3,5 @@ import React from "react";
 import { SvgIcon } from "@mui/material";
 
 export default function LogoIcon(props) {
-  return <SvgIcon {...props} component={Logo}/>;
+  return <SvgIcon {...props} component={Logo} />;
 }

@@ -1,33 +1,30 @@
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { v4 } from 'uuid';
-import { collection,
-  query,
-  where,
-  getDocs,
+import {
   doc,
-  setDoc, 
-  Timestamp 
+  setDoc,
+  Timestamp
 } from "firebase/firestore";
 import {
   ref,
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
-import { auth, db, storage } from "../../firebase";
+import { db, storage } from "../../firebase";
 
-const NewPost = ({refresh}) => {
+const NewPost = ({ refresh }) => {
   const { currentUser } = useContext(AuthContext);
   const [show, setShow] = useState(false);
   const [imgUrl, setImgUrl] = useState("")
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const title = e.target[0].value
     const content = e.target[1].value
     const file = e.target[2].files[0]
-    
+
     try {
       const displayName = e.target[0].value;
       if (currentUser == null) {
@@ -83,31 +80,31 @@ const NewPost = ({refresh}) => {
 
   return (
     <div>
-        {!show && <button onClick={newPostBtn}>New Post</button>}
-        
-        {show && 
+      {!show && <button onClick={newPostBtn}>New Post</button>}
+
+      {show &&
         <div>
-            <h1>New Post</h1>
-            <form target="iFrame" onSubmit={handleSubmit}>
-                <label >Title:</label>
-                <input required type="text" id="title" placeholder="title"></input>
-                < br/>
-                <label >Content:</label>
-                <input required type="text" placeholder="content"></input>
-                < br/>
-                <label >Picture:</label>
-                <input required type="file" id="file" onChange={e => imgChange(e)}/>
-                {imgUrl !== "" && 
-                  <div>
-                      <img src={imgUrl} alt="" width="500" height="500"></img>
-                      <br />
-                      <button onClick={delImg}>Delete</button>
-                  </div>
-                }
-                < br/>
-                <button type="submit">Submit</button>
-                <button onClick={canclePost}>Cancle</button>
-            </form>
+          <h1>New Post</h1>
+          <form target="iFrame" onSubmit={handleSubmit}>
+            <label >Title:</label>
+            <input required type="text" id="title" placeholder="title"></input>
+            < br />
+            <label >Content:</label>
+            <input required type="text" placeholder="content"></input>
+            < br />
+            <label >Picture:</label>
+            <input required type="file" id="file" onChange={e => imgChange(e)} />
+            {imgUrl !== "" &&
+              <div>
+                <img src={imgUrl} alt="" width="500" height="500"></img>
+                <br />
+                <button onClick={delImg}>Delete</button>
+              </div>
+            }
+            < br />
+            <button type="submit">Submit</button>
+            <button onClick={canclePost}>Cancle</button>
+          </form>
         </div>}
     </div>
   );

@@ -1,25 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import { v4 } from 'uuid';
-import { collection,
+import {
+  collection,
   query,
   where,
   getDocs,
-  doc,
-  setDoc, 
-  Timestamp,
   orderBy
 } from "firebase/firestore";
-import {
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-} from "firebase/storage";
-import { auth, db, storage } from "../../firebase";
-import { async } from "@firebase/util";
+import { db } from "../../firebase";
 import AddComment from "./addComment";
 
-const Comment = ({closeDetail, post}) => {
+const Comment = ({ closeDetail, post }) => {
   const { currentUser } = useContext(AuthContext);
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState(null);
@@ -28,7 +19,7 @@ const Comment = ({closeDetail, post}) => {
   useEffect(() => {
     getComments();
   }, []);
-  
+
   async function getComments() {
     let commentList = []
     try {
@@ -43,7 +34,7 @@ const Comment = ({closeDetail, post}) => {
 
       //get all reply
       for (let i = 0; i < commentList.length; i++) {
-        
+
         const q2 = query(collection(db, "comments"), where("parentId", "==", commentList[i].id), orderBy("commentDate", "desc"));
         const querySnapshot2 = await getDocs(q2);
         let subComments = []
@@ -54,7 +45,7 @@ const Comment = ({closeDetail, post}) => {
         })
         commentList[i].reply = subComments
       }
-      
+
       // console.log("comment: ", commentList);
       setComments(commentList)
     } catch (e) {
@@ -77,36 +68,36 @@ const Comment = ({closeDetail, post}) => {
 
   return (
     <div>
-        {
-          !show &&
-          <button onClick={showAddComment}>Add comment</button>
-        }
-        
-        {show &&
-          <AddComment closeAddComment={closeAddComment} post={post} refresh={getComments} parentComment={comment}></AddComment>
-        }
-        
-        {comments.map((comment) => {     
-          return (
-            <div key={comment.id}>
-              <p><b>{comment.postUserName}</b></p>
-              <p>{comment.content}</p>
-              <button onClick={() => replyComment(comment)}>reply</button>
-              {
-                comment.reply.length > 0 &&
-                comment.reply.map((item) => {        
-                  return (
-                    <div key={item.id}>
-                      <p><b>{item.postUserName}</b></p>
-                      <p>{item.content}</p>  
-                    </div>
-                  );
-                })
-              }
-              <hr style={{height: '5px',color:'black'}}></hr>
-            </div>
-          );
-        })}
+      {
+        !show &&
+        <button onClick={showAddComment}>Add comment</button>
+      }
+
+      {show &&
+        <AddComment closeAddComment={closeAddComment} post={post} refresh={getComments} parentComment={comment}></AddComment>
+      }
+
+      {comments.map((comment) => {
+        return (
+          <div key={comment.id}>
+            <p><b>{comment.postUserName}</b></p>
+            <p>{comment.content}</p>
+            <button onClick={() => replyComment(comment)}>reply</button>
+            {
+              comment.reply.length > 0 &&
+              comment.reply.map((item) => {
+                return (
+                  <div key={item.id}>
+                    <p><b>{item.postUserName}</b></p>
+                    <p>{item.content}</p>
+                  </div>
+                );
+              })
+            }
+            <hr style={{ height: '5px', color: 'black' }}></hr>
+          </div>
+        );
+      })}
     </div>
   );
 };

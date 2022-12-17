@@ -5,12 +5,11 @@ import Message from "./components/messages/Messenger";
 import MessageTest from "./components/messages/MessengerTest";
 import ChatRoom from "./components/messages/ChatRoom";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import React, { useContext } from "react";
+import React from "react";
 import SideBar from "./components/left/SideBar";
 import { Container, Grid } from "@mui/material";
 import RightPanel from "./components/right/RightPanel";
 import {
-  DarkModeContext,
   DarkModeContextProvider,
 } from "./context/DarkModeContext";
 import { createTheme, ThemeProvider } from "@mui/material/styles";

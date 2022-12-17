@@ -7,7 +7,7 @@ import { linkWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 const DisplayName = () => {
   const googleProvider = new GoogleAuthProvider();
-//   const navigate = useNavigate();
+  //   const navigate = useNavigate();
 
   const LinkToGoogleAccount = async (e) => {
     try {

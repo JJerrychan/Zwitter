@@ -1,5 +1,4 @@
 import React from "react";
-import ResetPassword from "./users/ResetPassword";
 // import Add from "../img/addAvatar.png";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db, storage } from "../firebase";

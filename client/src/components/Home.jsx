@@ -1,8 +1,8 @@
 import React, { useContext, useState, useEffect } from "react";
 import NewPost from "./post/newPost";
 import PostDetail from "./post/postDetail";
-import { collection, query, where, getDocs, orderBy, doc, setDoc } from "firebase/firestore";
-import { auth, db, storage } from "../firebase";
+import { collection, query, getDocs, orderBy, doc, setDoc } from "firebase/firestore";
+import { db } from "../firebase";
 import { AuthContext } from "../context/AuthContext";
 // import { Link } from "react-router-dom";
 
@@ -51,7 +51,7 @@ const Home = () => {
   function closeDetail() {
     setPost(null)
   }
-  
+
   function showPostDetail(post) {
     setPost(post)
   }
@@ -65,7 +65,7 @@ const Home = () => {
           <button onClick={getPosts}>refresh</button>
           <NewPost refresh={getPosts}></NewPost>
 
-          {posts.map((post) => {        
+          {posts.map((post) => {
             return (
               <div onClick={() => showPostDetail(post)} key={post.id}>
                 <h1>Title: {post.title}</h1>

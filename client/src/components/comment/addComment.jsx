@@ -1,14 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { v4 } from 'uuid';
-import { 
+import {
   doc,
-  setDoc, 
-  Timestamp 
+  setDoc,
+  Timestamp
 } from "firebase/firestore";
 import { db } from "../../firebase";
 
-const AddComment = ({closeAddComment, post, refresh, parentComment}) => {
+const AddComment = ({ closeAddComment, post, refresh, parentComment }) => {
   const { currentUser } = useContext(AuthContext);
   const [content, setContent] = useState("")
 
@@ -48,9 +48,9 @@ const AddComment = ({closeAddComment, post, refresh, parentComment}) => {
 
   return (
     <div>
-        <input id="reply" required type="text" onChange={handleChange} placeholder="comment"></input>
-        <button onClick={addComment}>reply</button>
-        <button onClick={closeAddComment}>cancle</button>
+      <input id="reply" required type="text" onChange={handleChange} placeholder="comment"></input>
+      <button onClick={addComment}>reply</button>
+      <button onClick={closeAddComment}>cancle</button>
     </div>
   );
 };
