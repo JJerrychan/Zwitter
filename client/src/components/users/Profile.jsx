@@ -127,11 +127,11 @@ const Profile = () => {
   const dialogContent = () => {
     switch (operations) {
       case 0:
-        return <ResetName closeFunction={handleDialogClose}/>;
+        return <ResetName closeFunction={handleDialogClose} />;
       case 1:
-        return <ResetPhoto closeFunction={handleDialogClose}/>;
+        return <ResetPhoto closeFunction={handleDialogClose} />;
       case 2:
-        return <ResetPassword closeFunction={handleDialogClose}/>;
+        return <ResetPassword closeFunction={handleDialogClose} />;
     }
   };
 
@@ -157,7 +157,11 @@ const Profile = () => {
                 src={currentUser.photoURL}
               />
               <Typography variant={"h4"}>{currentUser.displayName}</Typography>
-              <ButtonGroup color={"info"} disableElevation variant={"outlined"}>
+              <ButtonGroup
+                color={"secondary"}
+                disableElevation
+                variant={"outlined"}
+              >
                 <Button
                   onClick={() => {
                     setOperations(0);
@@ -230,9 +234,7 @@ const Profile = () => {
           </TabContext>
         </Card>
       ) : (
-        <>Please login first!
-          
-        </>
+        <>Please login first!</>
       )}
     </Container>
   );

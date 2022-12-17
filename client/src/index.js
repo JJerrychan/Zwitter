@@ -4,32 +4,16 @@ import "./index.scss";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { AuthContextProvider } from "./context/AuthContext";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { CssBaseline } from "@mui/material";
 
-const theme = createTheme({
-  palette: {
-    contrastThreshold: 4.5,
-    type: "light",
-    primary: {
-      main: "#6936F5",
-    },
-    secondary: {
-      main: "#cb428f",
-    },
-  },
-  typography: {
-    fontFamily: ["Montserrat","Roboto", "Helvetica", "Arial", "sans-serif"].join(","),
-  },
-});
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <AuthContextProvider>
-    <ThemeProvider theme={theme}>
-      <React.StrictMode>
-        <App />
-      </React.StrictMode>
-    </ThemeProvider>
+    <React.StrictMode>
+      <CssBaseline />
+      <App />
+    </React.StrictMode>
   </AuthContextProvider>
 );
 
