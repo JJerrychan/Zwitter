@@ -1,8 +1,6 @@
 import "./App.scss";
 import Home from "./components/Home";
 import Profile from "./components/users/Profile";
-import Message from "./components/messages/Messenger";
-import MessageTest from "./components/messages/MessengerTest";
 import ChatRoom from "./components/messages/ChatRoom";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import React from "react";
@@ -83,8 +81,6 @@ function App() {
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/user" element={<Profile />} />
-                  <Route path="/messages" element={<Message />} />
-                  <Route path="/messagesTest" element={<MessageTest />} />
                   <Route path="/chatRoom" element={<ChatRoom />} />
                 </Routes>
               </Grid>
