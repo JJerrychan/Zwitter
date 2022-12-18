@@ -5,7 +5,7 @@ import ChatRoom from "./components/messages/ChatRoom";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import React from "react";
 import SideBar from "./components/left/SideBar";
-import { Container, Grid } from "@mui/material";
+import {Container, CssBaseline, Grid} from "@mui/material";
 import RightPanel from "./components/right/RightPanel";
 import {
   DarkModeContextProvider,
@@ -59,8 +59,9 @@ const darkTheme = createTheme({
 function App() {
   // const { darkMode } = useContext(DarkModeContext);
   return (
-    <DarkModeContextProvider c>
+    <DarkModeContextProvider>
       <ThemeProvider theme={lightTheme}>
+        <CssBaseline/>
         <BrowserRouter>
           <Container maxWidth={"xl"}>
             <Grid container direction="row" justifyContent="center">

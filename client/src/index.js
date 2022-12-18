@@ -4,14 +4,11 @@ import "./index.scss";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { AuthContextProvider } from "./context/AuthContext";
-import { CssBaseline } from "@mui/material";
-
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <AuthContextProvider>
     <React.StrictMode>
-      <CssBaseline />
       <App />
     </React.StrictMode>
   </AuthContextProvider>
