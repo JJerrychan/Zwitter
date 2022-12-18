@@ -6,7 +6,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import { updateProfile } from "firebase/auth";
 
 //aws
-import AWS from "aws-sdk";
+// import AWS from "aws-sdk";
 import {
   Box,
   Button,
@@ -25,17 +25,17 @@ const ResetPhoto = ({ closeFunction }) => {
 
 
   //aws s3
-  const [progress, setProgress] = useState(0);
-  const S3_BUCKET = "zwitter11";
-  const REGION = "us-east-1";
-  AWS.config.update({
-    accessKeyId: "AKIAYM2DSDH24MRABJNQ",
-    secretAccessKey: "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",
-  });
-  const myBucket = new AWS.S3({
-    params: { Bucket: S3_BUCKET },
-    region: REGION,
-  });
+  // const [progress, setProgress] = useState(0);
+  // const S3_BUCKET = "zwitter11";
+  // const REGION = "us-east-1";
+  // AWS.config.update({
+  //   accessKeyId: "",
+  //   secretAccessKey: "",
+  // });
+  // const myBucket = new AWS.S3({
+  //   params: { Bucket: S3_BUCKET },
+  //   region: REGION,
+  // });
 
 
 
@@ -55,23 +55,22 @@ const ResetPhoto = ({ closeFunction }) => {
       const storageRef = ref(storage, `${currentUser.displayName + date}`);
 
       //aws
+      // const params = {
+      //   ACL: "public-read",
+      //   Body: file,
+      //   Bucket: S3_BUCKET,
+      //   Key: file.name,
+      // };
 
-      const params = {
-        ACL: "public-read",
-        Body: file,
-        Bucket: S3_BUCKET,
-        Key: file.name,
-      };
-
-      myBucket
-        .putObject(params)
-        .on("httpUploadProgress", (evt) => {
-          setProgress(Math.round((evt.loaded / evt.total) * 100));
-          console.log(progress);
-        })
-        .send((err) => {
-          if (err) console.log(err);
-        });
+      // myBucket
+      //   .putObject(params)
+      //   .on("httpUploadProgress", (evt) => {
+      //     setProgress(Math.round((evt.loaded / evt.total) * 100));
+      //     console.log(progress);
+      //   })
+      //   .send((err) => {
+      //     if (err) console.log(err);
+      //   });
 
       await uploadBytesResumable(storageRef, file).then(() => {
         getDownloadURL(storageRef)
