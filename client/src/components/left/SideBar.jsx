@@ -22,16 +22,19 @@ export default function SideBar() {
   const { darkMode, setDarkMode } = useContext(DarkModeContext);
 
   return (
-    <Container>
-      <Box component={NavLink} to="/">
+    <Container sx={{ display: "flex", flexDirection: "column" }}>
+      <Box padding={2} component={NavLink} to="/">
         <img src={Logo} width="100%" alt="zwitter-logo" />
       </Box>
       {isLarge ? (
-        <Stack component="nav" spacing={2} alignItems="start">
+        <Stack component="nav" spacing={2} alignItems="start" flexGrow={1}>
           <NavItem title="home" to="/" Icon={Home} />
-          {currentUser && <NavItem title="chatRoom" to="/chatRoom" Icon={Chat} />}
+          {currentUser && (
+            <NavItem title="chatRoom" to="/chatRoom" Icon={Chat} />
+          )}
           {currentUser && <NavItem title="profile" to="/user" Icon={Person} />}
           <FormControlLabel
+            style={{ marginTop: "auto", marginBottom: "1rem" }}
             onChange={() => {
               console.log("darkModeOld:", darkMode);
               setDarkMode(!darkMode);
@@ -44,11 +47,13 @@ export default function SideBar() {
           />
         </Stack>
       ) : (
-        <Stack component="nav" spacing={2} alignItems="center">
+        <Stack component="nav" spacing={2} alignItems="center" flexGrow={1}>
           <NavItem to="/" Icon={Home} />
           {currentUser && <NavItem to="/chatRoom" Icon={Chat} />}
           {currentUser && <NavItem to="/user" Icon={Person} />}
-          <DarkModeSwitch />
+          <Box style={{ marginTop: "auto", marginBottom: "1rem" }}>
+            <DarkModeSwitch checked={darkMode} />
+          </Box>
         </Stack>
       )}
     </Container>

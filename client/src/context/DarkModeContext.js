@@ -6,8 +6,9 @@ export const DarkModeContextProvider = ({ children }) => {
   const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
+    console.log("darkMode in context", darkMode);
     setDarkMode(false);
-  }, []);
+  }, [darkMode]);
 
   return (
     <DarkModeContext.Provider value={{ darkMode, setDarkMode }}>

@@ -59,7 +59,7 @@ const darkTheme = createTheme({
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
-  console.log("darkMode IN app",darkMode);
+  console.log("darkMode IN app", darkMode);
 
   return (
     <DarkModeContextProvider>
@@ -76,7 +76,8 @@ function App() {
                 sm={2}
                 position={"sticky"}
                 top={0}
-                height={100}
+                height={"100vh"}
+                display={"flex"}
               >
                 <SideBar />
               </Grid>
@@ -98,6 +99,7 @@ function App() {
                 </Routes>
               </Grid>
               <Grid
+                display={"flex"}
                 item
                 component="footer"
                 lg={3}
@@ -105,7 +107,7 @@ function App() {
                 sm={0}
                 position={"sticky"}
                 top={0}
-                height={100}
+                height={"100vh"}
               >
                 <RightPanel />
               </Grid>

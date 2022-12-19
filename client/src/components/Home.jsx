@@ -4,8 +4,8 @@ import PostDetail from "./post/postDetail";
 import {
   collection,
   doc,
-  getDocs,
   getDoc,
+  getDocs,
   orderBy,
   query,
   setDoc,
