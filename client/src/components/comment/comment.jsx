@@ -9,6 +9,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import AddComment from "./addComment";
+import { Button, CardMedia, Card, Input, CardContent } from "@mui/material";
 
 const Comment = ({ closeDetail, post }) => {
   const { currentUser } = useContext(AuthContext);
@@ -70,7 +71,7 @@ const Comment = ({ closeDetail, post }) => {
     <div>
       {
         !show &&
-        <button onClick={showAddComment}>Add comment</button>
+        <Button variant="contained" color="success" onClick={showAddComment}>Add a comment</Button>
       }
 
       {show &&
@@ -80,21 +81,24 @@ const Comment = ({ closeDetail, post }) => {
       {comments.map((comment) => {
         return (
           <div key={comment.id}>
-            <p><b>{comment.postUserName}</b></p>
-            <p>{comment.content}</p>
-            <button onClick={() => replyComment(comment)}>reply</button>
-            {
-              comment.reply.length > 0 &&
-              comment.reply.map((item) => {
-                return (
-                  <div key={item.id}>
-                    <p><b>{item.postUserName}</b></p>
-                    <p>{item.content}</p>
-                  </div>
-                );
-              })
-            }
-            <hr style={{ height: '5px', color: 'black' }}></hr>
+            <Card sx={{ minWidth: 275 }}>
+              <CardContent>
+                <p><b>{comment.postUserName}</b></p>
+                <p>{comment.content}</p>
+                <Button variant="contained" color="success" onClick={() => replyComment(comment)}>reply</Button>
+                {
+                  comment.reply.length > 0 &&
+                  comment.reply.map((item) => {
+                    return (
+                      <div key={item.id}>
+                        <p><b>{item.postUserName}</b></p>
+                        <p>{item.content}</p>
+                      </div>
+                    );
+                  })
+                }
+              </CardContent>
+            </Card>
           </div>
         );
       })}

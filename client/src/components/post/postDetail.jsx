@@ -11,6 +11,7 @@ import {
   setDoc,
   deleteDoc
 } from "firebase/firestore";
+import { Typography , CardMedia, Button, Box, CardContent } from "@mui/material";
 
 const PostDetail = ({ closeDetail, post }) => {
   const { currentUser } = useContext(AuthContext);
@@ -38,17 +39,30 @@ const PostDetail = ({ closeDetail, post }) => {
 
   return (
     <div>
-      <div>
-        <button onClick={closeDetail}>Back</button>
-        <h1>Title: {post.title}</h1>
-        <p>{post.content}</p>
-        <img src={post.imgUrl} alt="" width="500" height="500"></img>
-        <p>Like: {post.like.length}</p>
-      </div>
+      <Button variant="text" onClick={closeDetail}>Go Back</Button>
+      <Box sx={{ width: '100%', maxWidth: 500 }}>
+        <Typography variant="h1" gutterBottom>
+          {post.title}
+        </Typography>
+        <Typography variant="body1" gutterBottom>
+          {post.content}
+        </Typography>
+        <CardMedia
+          sx={{
+            border: 0.1,
+            borderColor: "#cfd9de",
+            borderRadius: 3,
+            borderStyle: "solid",
+          }}
+          component={"img"}
+          src={post.imgUrl}
+          alt={""}
+        />
+      </Box>
       <div>
         {currentUser &&
           post.userId.includes(currentUser.uid) &&
-          <button onClick={(e) => deletePost(e, post)}>Delete</button>
+          <Button variant="contained" color="error" onClick={(e) => deletePost(e, post)}>Delete post</Button>
         }
       </div>
       <Comment post={post}></Comment>

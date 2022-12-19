@@ -4,7 +4,7 @@ import { v4 } from "uuid";
 import { doc, setDoc, Timestamp } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { db, storage } from "../../firebase";
-import { Button } from "@mui/material";
+import { Button, CardMedia, Card, Input, CardContent } from "@mui/material";
 
 const NewPost = ({ refresh }) => {
   const { currentUser } = useContext(AuthContext);
@@ -61,14 +61,16 @@ const NewPost = ({ refresh }) => {
   }
 
   function imgChange(e) {
-    console.log(e.target.files[0]);
-    setImgUrl(URL.createObjectURL(e.target.files[0]));
+    if (e.target.files[0]) {
+      setImgUrl(URL.createObjectURL(e.target.files[0]));
+    } else setImgUrl("")
+    
   }
 
   function delImg(e) {
     e.preventDefault();
     setImgUrl("");
-    e.target.reset();
+    // e.target.reset();
   }
 
   return (
@@ -86,32 +88,48 @@ const NewPost = ({ refresh }) => {
 
       {show && (
         <div>
-          <h1>New Post</h1>
-          <form target="iFrame" onSubmit={handleSubmit}>
-            <label>Title:</label>
-            <input required type="text" id="title" placeholder="title"></input>
-            <br />
-            <label>Content:</label>
-            <input required type="text" placeholder="content"></input>
-            <br />
-            <label>Picture:</label>
-            <input
-              required
-              type="file"
-              id="file"
-              onChange={(e) => imgChange(e)}
-            />
-            {imgUrl !== "" && (
-              <div>
-                <img src={imgUrl} alt="" width="500" height="500"></img>
-                <br />
-                <button onClick={delImg}>Delete</button>
-              </div>
-            )}
-            <br />
-            <button type="submit">Submit</button>
-            <button onClick={canclePost}>Cancle</button>
-          </form>
+          <Card sx={{ minWidth: 300 }}>
+          <CardContent>
+            <h1>New Post</h1>
+            <form target="iFrame" onSubmit={handleSubmit}>
+              <label>Title:</label>
+              <Input required type="text" id="title" placeholder="title"></Input>
+              <br />
+              <label>Content:</label>
+              <Input required type="text" placeholder="content" rows="3"></Input>
+              <br />
+              <label>Picture:</label>
+              <input
+                required
+                type="file"
+                id="file"
+                onChange={(e) => imgChange(e)}
+              />
+
+              {imgUrl !== "" && (
+                <div>
+                  <CardMedia
+                    sx={{
+                      border: 0.1,
+                      borderColor: "#cfd9de",
+                      borderRadius: 3,
+                      borderStyle: "solid",
+                    }}
+                    component={"img"}
+                    src={imgUrl}
+                    alt={""}
+                  />
+                  <Button color="error" onClick={delImg}>Delete</Button>
+                </div>
+                
+              )}
+
+              <br />
+              <Button variant="contained" color="success" type="submit">Submit</Button>
+              <Button variant="outlined" color="error" onClick={canclePost}>Cancle</Button>
+            </form>
+          </CardContent>
+        </Card>
         </div>
       )}
     </div>
