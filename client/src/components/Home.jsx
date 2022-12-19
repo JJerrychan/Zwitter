@@ -118,6 +118,7 @@ const Home = () => {
           <Typography component={"h1"} variant={"h5"} fontWeight={"bold"}>
             Home
           </Typography>
+          <br />
           <LoadingButton
             color={"secondary"}
             size={"large"}
@@ -133,6 +134,7 @@ const Home = () => {
             refresh
           </LoadingButton>
           <NewPost refresh={getPosts} />
+          <br />
 
           <Stack spacing={2} divider={<Divider variant={"middle"} />}>
             {posts.map((post) => {
@@ -175,7 +177,7 @@ const Home = () => {
                       <Button
                         onClick={(e) => addLike(e, post)}
                         color={"secondary"}
-                        startIcon={<ThumbUpAlt />}
+                        startIcon={<ThumbUpOffAlt />}
                       >
                         {post.like.length}
                       </Button>
@@ -183,7 +185,7 @@ const Home = () => {
                       <Button
                         onClick={(e) => delLike(e, post)}
                         color={"secondary"}
-                        startIcon={<ThumbUpOffAlt />}
+                        startIcon={<ThumbUpAlt />}
                       >
                         {post.like.length}
                       </Button>
