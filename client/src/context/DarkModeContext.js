@@ -7,7 +7,6 @@ export const DarkModeContextProvider = ({ children }) => {
 
   useEffect(() => {
     console.log("darkMode in context", darkMode);
-    setDarkMode(false);
   }, [darkMode]);
 
   return (

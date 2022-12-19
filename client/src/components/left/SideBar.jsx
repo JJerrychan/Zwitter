@@ -36,9 +36,7 @@ export default function SideBar() {
           <FormControlLabel
             style={{ marginTop: "auto", marginBottom: "1rem" }}
             onChange={() => {
-              console.log("darkModeOld:", darkMode);
               setDarkMode(!darkMode);
-              console.log("darkModeNew:", darkMode);
             }}
             checked={darkMode}
             sx={{ color: "primary.main" }}
