@@ -3,7 +3,15 @@ import { AuthContext } from "../../context/AuthContext";
 import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { db } from "../../firebase";
 import AddComment from "./AddComment";
-import { Box, Button, Card, CardContent } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  CardHeader,
+  Divider,
+  Stack,
+  Typography,
+} from "@mui/material";
 
 const Comment = ({ closeDetail, post }) => {
   const { currentUser } = useContext(AuthContext);
@@ -83,39 +91,50 @@ const Comment = ({ closeDetail, post }) => {
           Add Comment
         </Button>
       )}
-
-      {comments.map((comment) => {
-        return (
-          <div key={comment.id}>
-            <Card sx={{ minWidth: 275 }}>
-              <CardContent>
-                <p>
-                  <b>{comment.postUserName}</b>
-                </p>
-                <p>{comment.content}</p>
+      <Stack spacing={1} divider={<Divider variant={"middle"} />}>
+        {comments.map((comment) => {
+          return (
+            <Box key={comment.id}>
+              <CardHeader
+                avatar={
+                  <Avatar
+                    sx={{ width: 42, height: 42 }}
+                    alt={comment.postUserName}
+                    src={comment.postUserName}
+                  />
+                }
+                subheader={comment.commentDate.toDate().toLocaleString()}
+                title={comment.postUserName}
+              />
+              <Box paddingX={2}>
+                <Typography variant={"body1"} gutterBottom>
+                  {comment.content}
+                </Typography>
                 <Button
-                  variant="contained"
-                  color="success"
+                  szie={"small"}
+                  variant="text"
+                  color="secondary"
                   onClick={() => replyComment(comment)}
                 >
                   reply
                 </Button>
-                {comment.reply.length > 0 &&
-                  comment.reply.map((item) => {
-                    return (
-                      <div key={item.id}>
-                        <p>
-                          <b>{item.postUserName}</b>
-                        </p>
-                        <p>{item.content}</p>
-                      </div>
-                    );
-                  })}
-              </CardContent>
-            </Card>
-          </div>
-        );
-      })}
+              </Box>
+
+              {comment.reply.length > 0 &&
+                comment.reply.map((item) => {
+                  return (
+                    <div key={item.id}>
+                      <p>
+                        <b>{item.postUserName}</b>
+                      </p>
+                      <p>{item.content}</p>
+                    </div>
+                  );
+                })}
+            </Box>
+          );
+        })}
+      </Stack>
     </Box>
   );
 };
