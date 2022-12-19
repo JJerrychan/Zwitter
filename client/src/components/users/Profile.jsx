@@ -74,7 +74,7 @@ const Profile = () => {
       querySnapshot.forEach((doc) => {
         const post = doc.data();
         post.id = doc.id;
-        if (post.useId === currentUser.uid) {
+        if (post.userId === currentUser.uid) {
           setPosts(postList.push(post));
         }
       });
