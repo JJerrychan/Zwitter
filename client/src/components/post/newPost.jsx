@@ -31,7 +31,7 @@ const NewPost = ({ refresh }) => {
         getDownloadURL(storageRef).then(async (downloadURL) => {
           try {
             const post = {
-              useId: currentUser.uid,
+              userId: currentUser.uid,
               title: title,
               content: content,
               imgUrl: downloadURL,
