@@ -58,11 +58,8 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      await getMyPosts();
-    };
-    fetchData();
-  }, []);
+    getMyPosts();
+  }, [currentUser]);
 
   async function getMyPosts() {
     let postList = [];
@@ -92,7 +89,7 @@ const Profile = () => {
       await getMyLikes();
     };
     fetchData();
-  }, []);
+  }, [currentUser]);
 
   async function getMyLikes() {
     let postList = [];
