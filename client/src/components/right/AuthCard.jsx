@@ -84,16 +84,15 @@ export default function AuthCard() {
       if (email == null) throw "Please input an email";
 
       //send password reset email
-      sendPasswordResetEmail(auth, email)
+      await sendPasswordResetEmail(auth, email)
         .then(() => {
           setPasswordDialog(false);
         })
         .catch((error) => {
-          console.log(error);
-          // throw error.code
+          throw error.code
         });
     } catch (error) {
-      if (error === "");
+      if (error === "auth/user-not-found")  setAuthError("email not exist");
       else setAuthError(error.toString().substring(error.indexOf("/") + 1));
       setErrorDialog(true);
     }
