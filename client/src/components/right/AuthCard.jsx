@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { sendPasswordResetEmail } from "firebase/auth";
 import {
   Box,
   Button,
@@ -34,6 +35,7 @@ import { useNavigate } from "react-router-dom";
 export default function AuthCard() {
   const navigate = useNavigate();
   const [emailDialog, setEmailDialog] = useState(false);
+  const [passwordDialog, setPasswordDialog] = useState(false);
   const [isReg, setIsReg] = useState(true);
   const [errorDialog, setErrorDialog] = useState(false);
   const [authError, setAuthError] = useState("");
@@ -45,6 +47,15 @@ export default function AuthCard() {
   const handleDialogClose = () => {
     setEmailDialog(false);
   };
+  
+  const passwordDialogOpen = () => {
+    setPasswordDialog(true);
+    setEmailDialog(false);
+  }
+
+  const passwordDialogClose = () => {
+    setPasswordDialog(false);
+  }
 
   const handleLogin = async (e) => {
     try {
@@ -63,6 +74,25 @@ export default function AuthCard() {
         setAuthError("Incorrect email address or password, please try again!");
       else setAuthError(error.substring(error.toString().indexOf("/") + 1));
       setErrorDialog(true);
+    }
+  };
+
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    try {
+      const email = e.target[0].value;
+      if (email == null) throw "Please input an email";
+
+      //send password reset email
+      sendPasswordResetEmail(auth, email)
+        .then(() => {
+          setPasswordDialog(false);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -297,10 +327,40 @@ export default function AuthCard() {
             </DialogContent>
             <DialogActions sx={{ justifyContent: "center" }}>
               <Button type="submit">Next</Button>
-              <Button onClick={handleDialogClose}>Forget Password?</Button>
+              <Button onClick={passwordDialogOpen}>Forget Password?</Button>
             </DialogActions>
           </Box>
         )}
+      </Dialog>
+
+      <Dialog open={passwordDialog} onClose={passwordDialogClose}>
+        <Box onSubmit={handleResetPassword} component="form" minWidth={400}>
+          <DialogContent>
+            <DialogContentText>
+              Please input your email address and a password reset email will be sent to your email address.
+            </DialogContentText>
+            <TextField
+                variant="standard"
+                margin="normal"
+                required
+                fullWidth
+                type="email"
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+              />
+          </DialogContent>
+          <DialogActions sx={{ justifyContent: "center" }}>
+            <Button size="large"  color="success" onClick={passwordDialogClose}>
+              Cancel
+            </Button>
+            <Button size="large" type="submit" color="error">
+              Confirm
+            </Button>
+          </DialogActions>
+        </Box>
       </Dialog>
 
       <Dialog open={errorDialog} onClose={() => setErrorDialog(false)}>
