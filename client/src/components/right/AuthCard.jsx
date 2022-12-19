@@ -190,9 +190,8 @@ export default function AuthCard() {
     <Box
       component="section"
       sx={{
-        marginY: "10px",
-        padding: "15px",
-        borderRadius: "16px",
+        padding: "1rem",
+        borderRadius: "1rem",
         border: "1px solid #eff3f4",
       }}
     >
@@ -328,8 +327,8 @@ export default function AuthCard() {
         <Typography fontWeight="bold" variant="h5" component="h1">
           New to Zwitter?
         </Typography>
-        <Typography color="#536471" variant="body2" component="p">
-          Sign up now to get your own personalized timeline!
+        <Typography color="text.secondary" variant="body2" component="p">
+          {"Sign up now to get your own personalized timeline!"}
         </Typography>
         <Button
           sx={{ fontWeight: "bold" }}
@@ -350,13 +349,14 @@ export default function AuthCard() {
           Sign up with Email
         </Button>
         <Typography
-          color="#536471"
+          color="text.secondary"
           fontSize="small"
           variant="body2"
           component="p"
         >
-          By signing up, you agree to the Terms of Service and Privacy Policy,
-          which includes the terms of use of cookies.
+          {
+            "By signing up, you agree to the Terms of Service and Privacy Policy, which includes the terms of use of cookies."
+          }
         </Typography>
       </Stack>
     </Box>

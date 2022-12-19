@@ -6,11 +6,11 @@ import {
   doc,
   getDoc,
   getDocs,
+  limit,
   orderBy,
   query,
   setDoc,
   startAfter,
-  limit
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { AuthContext } from "../context/AuthContext";
@@ -38,7 +38,7 @@ const Home = () => {
   // const [showDetail, setShowDetail] = useState(false)
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [last , setLast ] = useState();
+  const [last, setLast] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,9 +50,13 @@ const Home = () => {
   async function getPosts() {
     let postList = [];
     try {
-      const q = query(collection(db, "posts"), orderBy("postDate", "desc"), limit(10));
+      const q = query(
+        collection(db, "posts"),
+        orderBy("postDate", "desc"),
+        limit(10)
+      );
       const querySnapshot = await getDocs(q);
-      setLast(querySnapshot.docs[querySnapshot.docs.length-1])
+      setLast(querySnapshot.docs[querySnapshot.docs.length - 1]);
 
       const docs = querySnapshot.docs;
       for (let i = 0; i < docs.length; i++) {
@@ -118,31 +122,32 @@ const Home = () => {
     let postList = [];
     try {
       // Get the last visible document
-      const next = query(collection(db, "posts"),
-      orderBy("postDate", "desc"),
-      startAfter(last),
-      limit(10));
+      const next = query(
+        collection(db, "posts"),
+        orderBy("postDate", "desc"),
+        startAfter(last),
+        limit(10)
+      );
 
       const querySnapshot = await getDocs(next);
-      const docs = querySnapshot.docs
+      const docs = querySnapshot.docs;
       for (let i = 0; i < docs.length; i++) {
         const post = docs[i].data();
         post.id = docs[i].id;
 
-        post.user = await getPostUser(post.userId)
+        post.user = await getPostUser(post.userId);
 
         postList.push(post);
       }
       if (postList.length == 0) {
-        alert("No more posts")
+        alert("No more posts");
       } else {
-        setLast(querySnapshot.docs[querySnapshot.docs.length-1])
-        setPosts(posts.concat(postList))
-      }      
+        setLast(querySnapshot.docs[querySnapshot.docs.length - 1]);
+        setPosts(posts.concat(postList));
+      }
     } catch (e) {
       console.log(e);
     }
-    
   }
 
   return (
@@ -241,19 +246,19 @@ const Home = () => {
               );
             })}
             <LoadingButton
-            color={"secondary"}
-            size={"large"}
-            sx={{ float: "right" }}
-            loading={loading}
-            loadingPosition="start"
-            startIcon={<Refresh />}
-            onClick={() => {
-              setLoading(true);
-              loadMore().then(() => setLoading(false));
-            }}
-          >
-            LOAD MORE
-          </LoadingButton>
+              color={"secondary"}
+              size={"large"}
+              sx={{ float: "right" }}
+              loading={loading}
+              loadingPosition="start"
+              startIcon={<Refresh />}
+              onClick={() => {
+                setLoading(true);
+                loadMore().then(() => setLoading(false));
+              }}
+            >
+              LOAD MORE
+            </LoadingButton>
           </Stack>
         </Box>
       )}

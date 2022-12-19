@@ -34,7 +34,7 @@ export default function SideBar() {
           )}
           {currentUser && <NavItem title="profile" to="/user" Icon={Person} />}
           <FormControlLabel
-            style={{ marginTop: "auto", marginBottom: "1rem" }}
+            style={{ marginTop: "auto" }}
             onChange={() => {
               setDarkMode(!darkMode);
             }}
@@ -49,8 +49,13 @@ export default function SideBar() {
           <NavItem to="/" Icon={Home} />
           {currentUser && <NavItem to="/chatRoom" Icon={Chat} />}
           {currentUser && <NavItem to="/user" Icon={Person} />}
-          <Box style={{ marginTop: "auto", marginBottom: "1rem" }}>
-            <DarkModeSwitch checked={darkMode} />
+          <Box style={{ marginTop: "auto" }}>
+            <DarkModeSwitch
+              checked={darkMode}
+              onChange={() => {
+                setDarkMode(!darkMode);
+              }}
+            />
           </Box>
         </Stack>
       )}

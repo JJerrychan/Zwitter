@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import {Box, Container, Link, Typography} from "@mui/material";
+import { Box, Container, Link, Typography } from "@mui/material";
 import { AuthContext } from "../../context/AuthContext";
 import AuthCard from "./AuthCard";
 import UserCard from "./UserCard";
@@ -9,7 +9,7 @@ export default function RightPanel() {
   return (
     <Container sx={{ display: "flex", flexDirection: "column" }}>
       {currentUser ? <UserCard /> : <AuthCard />}
-      <Box marginTop={"auto"} marginBottom={"1rem"}>
+      <Box marginTop={"auto"}>
         <Typography fontSize={"0.9rem"} fontStyle={"italic"}>
           Zwitter - A New Wave of Social for Gen Z
         </Typography>

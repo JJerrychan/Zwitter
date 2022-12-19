@@ -3,7 +3,7 @@ import Home from "./components/Home";
 import Profile from "./components/users/Profile";
 import ChatRoom from "./components/messages/ChatRoom";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import SideBar from "./components/left/SideBar";
 import { Container, CssBaseline, Grid } from "@mui/material";
 import RightPanel from "./components/right/RightPanel";
@@ -56,9 +56,6 @@ const darkTheme = createTheme({
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
-  useEffect(() => {
-    console.log("darkMode in App", darkMode);
-  }, []);
 
   return (
     <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
@@ -67,11 +64,13 @@ function App() {
         <Container maxWidth={"xl"}>
           <Grid container direction="row" justifyContent="center">
             <Grid
+              paddingY={2}
               item
               component="header"
               lg={3}
               md={2}
               sm={2}
+              xs={2}
               position={"sticky"}
               top={0}
               height={"100vh"}
@@ -80,6 +79,7 @@ function App() {
               <SideBar />
             </Grid>
             <Grid
+              paddingY={2}
               item
               sx={{
                 borderLeft: "1px solid #eff3f4",
@@ -97,12 +97,14 @@ function App() {
               </Routes>
             </Grid>
             <Grid
+              paddingY={2}
               display={"flex"}
               item
               component="footer"
               lg={3}
               md={3}
               sm={0}
+              xs={0}
               position={"sticky"}
               top={0}
               height={"100vh"}
