@@ -207,19 +207,19 @@ const Home = () => {
                     </Box>
                   </CardActionArea>
                   <CardActions>
-                    {currentUser && !post.like.includes(currentUser.uid) ? (
+                    {currentUser && post.like.includes(currentUser.uid) ? (
                       <Button
-                        onClick={(e) => addLike(e, post)}
+                        onClick={(e) => delLike(e, post)}
                         color={"secondary"}
-                        startIcon={<ThumbUpOffAlt />}
+                        startIcon={<ThumbUpAlt />}
                       >
                         {post.like.length}
                       </Button>
                     ) : (
                       <Button
-                        onClick={(e) => delLike(e, post)}
+                        onClick={(e) => addLike(e, post)}
                         color={"secondary"}
-                        startIcon={<ThumbUpAlt />}
+                        startIcon={<ThumbUpOffAlt />}
                       >
                         {post.like.length}
                       </Button>
