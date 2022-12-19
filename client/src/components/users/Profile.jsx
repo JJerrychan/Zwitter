@@ -59,7 +59,7 @@ const Profile = () => {
 
   useEffect(() => {
     getMyPosts();
-  }, [currentUser]);
+  }, [currentUser.uid, posts.length]);
 
   async function getMyPosts() {
     let postList = [];
@@ -89,7 +89,7 @@ const Profile = () => {
       await getMyLikes();
     };
     fetchData();
-  }, [currentUser]);
+  }, [currentUser.uid, likes.length]);
 
   async function getMyLikes() {
     let postList = [];
@@ -125,7 +125,7 @@ const Profile = () => {
     if (!post.like.includes(currentUser.uid)) {
       post.like.push(currentUser.uid);
       await setDoc(doc(db, "posts", post.id), post);
-      getMyPosts();
+      getMyLikes();
     }
   }
 
@@ -147,7 +147,7 @@ const Profile = () => {
     if (post.like.includes(currentUser.uid)) {
       post.like.splice(post.like.indexOf(currentUser.uid));
       await setDoc(doc(db, "posts", post.id), post);
-      getMyPosts();
+      getMyLikes();
     }
   }
 
