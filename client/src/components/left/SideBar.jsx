@@ -27,7 +27,7 @@ export default function SideBar() {
       {isLarge ? (
         <Stack component="nav" spacing={2} alignItems="start">
           <NavItem title="home" to="/" Icon={Home} />
-          <NavItem title="chatRoom" to="/chatRoom" Icon={Chat} />
+          {currentUser && <NavItem title="chatRoom" to="/chatRoom" Icon={Chat} />}
           {currentUser && <NavItem title="profile" to="/user" Icon={Person} />}
           <FormControlLabel
             sx={{ color: "primary.main" }}
@@ -38,7 +38,7 @@ export default function SideBar() {
       ) : (
         <Stack component="nav" spacing={2} alignItems="center">
           <NavItem to="/" Icon={Home} />
-          <NavItem to="/chatRoom" Icon={Chat} />
+          {currentUser && <NavItem to="/chatRoom" Icon={Chat} />}
           {currentUser && <NavItem to="/user" Icon={Person} />}
           <DarkModeSwitch />
         </Stack>

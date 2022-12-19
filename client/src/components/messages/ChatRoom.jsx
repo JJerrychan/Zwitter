@@ -227,92 +227,98 @@ const Chatroom1 = () => {
 
     return (
         <div>
-            {stateMessage.name && (
-                <div className="card">
-                    <div className="render-chat">
-                        <h1>Room: {stateMessage.roomNum} Chat Log</h1>
-                        {renderChat()}
+            {currentUser ? (
+                <div>
+                    {stateMessage.name && (
+                        <div className="card">
+                            <div className="render-chat">
+                                <h1>Room: {stateMessage.roomNum} Chat Log</h1>
+                                {renderChat()}
+                            </div>
+                            <form onSubmit={onMessageSubmit}>
+                                <h1>Messenger</h1>
+                                <div>
+                                    <input
+                                        name="message"
+                                        id="message"
+                                        variant="outlined"
+                                        label="Message"
+                                    />
+                                </div>
+                                <button>Send Message</button>
+                            </form>
+                            <br />
+                            <br />
+                            <form onSubmit={leaveTheChatRoom}>
+                                <div>
+                                    <input
+                                        id="leave_room_name" hidden
+                                        defaultValue={stateMessage.roomNum}
+                                    />
+                                </div>
+                                <button>Leave Room</button>
+                            </form>
+                        </div>
+                    )}
+
+                    {!stateMessage.name && (
+                        <div className="card">
+                            <form onSubmit={onCreateRoomSubmit}>
+                                <div className="form-group">
+                                    <label>
+                                        <br />
+                                        Room Name:
+                                        <br />
+                                        <input id="roomNum" />
+                                    </label>
+                                    <label>
+                                        <br />
+                                        Room Password:
+                                        <br />
+                                        <input id="room_Password" />
+                                    </label>
+                                </div>
+                                <button type="submit"> Create Room</button>
+                            </form>
+                        </div>
+                    )}
+
+                    <div>
+                        {!stateMessage.name &&
+                            (chatRoomList !== [] ? (
+                                <div>
+                                    {chatRoomList.map((chatRooms) => {
+                                        return (
+                                            <div key={chatRooms.id}>
+                                                <form onSubmit={joinTheChatRoom}>
+                                                    <br />
+                                                    <br />
+                                                    <label>
+                                                        Room Name: {chatRooms.roomNum}
+                                                        <input
+                                                            id="room_roomNum_Enter" hidden
+                                                            defaultValue={chatRooms.roomNum}
+                                                        />
+                                                        <br />
+                                                        Room Password:
+                                                        <br />
+                                                        <input id="room_Password_Enter" />
+                                                    </label>
+                                                    <button type="submit">Join Room</button>
+                                                    <br />
+                                                    <br />
+                                                </form>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            ) : (<p></p>)
+                        )}
                     </div>
-                    <form onSubmit={onMessageSubmit}>
-                        <h1>Messenger</h1>
-                        <div>
-                            <input
-                                name="message"
-                                id="message"
-                                variant="outlined"
-                                label="Message"
-                            />
-                        </div>
-                        <button>Send Message</button>
-                    </form>
-                    <br />
-                    <br />
-                    <form onSubmit={leaveTheChatRoom}>
-                        <div>
-                            <input
-                                id="leave_room_name" hidden
-                                defaultValue={stateMessage.roomNum}
-                            />
-                        </div>
-                        <button>Leave Room</button>
-                    </form>
                 </div>
+            ): (
+                <>Please login first!</>
             )}
-
-            {!stateMessage.name && (
-                <div className="card">
-                    <form onSubmit={onCreateRoomSubmit}>
-                        <div className="form-group">
-                            <label>
-                                <br />
-                                Room Name:
-                                <br />
-                                <input id="roomNum" />
-                            </label>
-                            <label>
-                                <br />
-                                Room Password:
-                                <br />
-                                <input id="room_Password" />
-                            </label>
-                        </div>
-                        <button type="submit"> Create Room</button>
-                    </form>
-                </div>
-            )}
-
-            <div>
-                {!stateMessage.name &&
-                    (chatRoomList !== [] ? (
-                        <div>
-                            {chatRoomList.map((chatRooms) => {
-                                return (
-                                    <div key={chatRooms.id}>
-                                        <form onSubmit={joinTheChatRoom}>
-                                            <br />
-                                            <br />
-                                            <label>
-                                                Room Name: {chatRooms.roomNum}
-                                                <input
-                                                    id="room_roomNum_Enter" hidden
-                                                    defaultValue={chatRooms.roomNum}
-                                                />
-                                                <br />
-                                                Room Password:
-                                                <br />
-                                                <input id="room_Password_Enter" />
-                                            </label>
-                                            <button type="submit">Join Room</button>
-                                            <br />
-                                            <br />
-                                        </form>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    ) : (<p></p>)
-                )}
-            </div>
         </div>
     );
 };
