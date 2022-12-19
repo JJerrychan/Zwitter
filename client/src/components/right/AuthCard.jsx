@@ -81,7 +81,7 @@ export default function AuthCard() {
     e.preventDefault();
     try {
       const email = e.target[0].value;
-      if (email == null) throw "Please input an email";
+      if (email == null) throw new Error("Please input an email");
 
       //send password reset email
       await sendPasswordResetEmail(auth, email)

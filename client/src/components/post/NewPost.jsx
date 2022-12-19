@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { v4 } from "uuid";
-import { doc, setDoc, Timestamp } from "firebase/firestore";
+import { doc, setDoc, Timestamp, getDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { db, storage } from "../../firebase";
 import {
@@ -60,6 +60,7 @@ const NewPost = ({ refresh }) => {
             };
             cancelPost();
             await setDoc(doc(db, "posts", v4()), post);
+            await addNumZwitter(currentUser.uid)
             alert("Post created!");
             refresh();
           } catch (error) {
@@ -71,6 +72,14 @@ const NewPost = ({ refresh }) => {
       console.error(error);
     }
   };
+
+  async function addNumZwitter(userId) {
+    const docRef = doc(db, "users", userId);
+    const docSnap = await getDoc(docRef);
+    const data = docSnap.data()
+    const num = data.numZwitter + 1
+    setDoc(docRef, { numZwitter: num }, { merge: true });
+  }
 
   function newPostBtn() {
     setShow(true);

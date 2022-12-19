@@ -16,9 +16,17 @@ import { useNavigate } from "react-router-dom";
 
 export default function UserCard() {
   const navigate = useNavigate();
-  const { currentUser } = useContext(AuthContext);
+  // const [a, setA] = useState(true);
+  let { currentUser } = useContext(AuthContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  
+  // useEffect(() => {
+  //   // setA(!a);
+  //   // currentUser = auth.currentUser
+  //   console.log(2);
+  // },[a]);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };

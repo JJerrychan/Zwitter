@@ -19,17 +19,17 @@ const ResetPassword = ({ closeFunction }) => {
     e.preventDefault();
     try {
       const email = e.target[0].value;
-      if (email == null) throw "Please input an email";
+      if (email == null) throw new Error("Please input an email");
 
       //send password reset email
-      sendPasswordResetEmail(auth, email)
+      await sendPasswordResetEmail(auth, email)
         .then(() => {
           closeFunction();
           signOut(auth);
           navigate("/");
         })
         .catch((error) => {
-          console.error(error);
+          throw error;
         });
     } catch (error) {
       console.error(error);
