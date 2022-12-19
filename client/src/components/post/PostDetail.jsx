@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate, useParams, Navigate } from 'react-router-dom';
+import { useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import Comment from "../comment/Comment";
 import { db } from "../../firebase";
@@ -25,7 +25,6 @@ const PostDetail = () => {
   const { currentUser } = useContext(AuthContext);
   const { postId } = useParams();
   const [post, setPost] = useState();
-  const [back, setBack] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,8 +39,8 @@ const PostDetail = () => {
     const docSnap = await getDoc(docRef);
     const postData = docSnap.data();
     postData.user = await getPostUser(postData.userId);
-    postData.id = postId
-    setPost(postData)
+    postData.id = postId;
+    setPost(postData);
   }
 
   async function getPostUser(userId) {
@@ -64,28 +63,28 @@ const PostDetail = () => {
       await minusNumZwitter(currentUser.uid)
       // console.log(post);
       alert("Post deleted!");
-      window.location.reload();
+      navigate("/");
     }
   }
 
   async function minusNumZwitter(userId) {
     const docRef = doc(db, "users", userId);
     const docSnap = await getDoc(docRef);
-    const data = docSnap.data()
-    const num = data.numZwitter - 1
+    const data = docSnap.data();
+    const num = data.numZwitter - 1;
     setDoc(docRef, { numZwitter: num }, { merge: true });
   }
 
   return (
     <Card elevation={0}>
-      {back && <Navigate replace to="/" />}
+      {/*{back && window.history.back(-1)}*/}
       <Stack direction={"row"} alignItems={"center"}>
         <Tooltip title={"back"}>
           <IconButton
             sx={{ marginRight: "2rem" }}
             size={"small"}
-            onClick={() => setBack(true)}
-          // onClick={(closeDetail)}
+            onClick={() => navigate(-1)}
+            // onClick={(closeDetail)}
           >
             <ArrowBack fontSize="large" />
           </IconButton>
@@ -99,8 +98,7 @@ const PostDetail = () => {
           Post
         </Typography>
       </Stack>
-      {
-        post &&
+      {post && (
         <div>
           <CardHeader
             avatar={
@@ -146,7 +144,7 @@ const PostDetail = () => {
             <Comment post={post} />
           </CardActions>
         </div>
-      }
+      )}
     </Card>
   );
 };

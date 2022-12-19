@@ -123,12 +123,24 @@ const Comment = ({ closeDetail, post }) => {
               {comment.reply.length > 0 &&
                 comment.reply.map((item) => {
                   return (
-                    <div key={item.id}>
-                      <p>
-                        <b>{item.postUserName}</b>
-                      </p>
-                      <p>{item.content}</p>
-                    </div>
+                    <Box pl={5} key={item.id}>
+                      <CardHeader
+                        avatar={
+                          <Avatar
+                            sx={{ width: 42, height: 42 }}
+                            alt={item.postUserName}
+                            src={item.postUserName}
+                          />
+                        }
+                        subheader={item.commentDate.toDate().toLocaleString()}
+                        title={item.postUserName}
+                      />
+                      <Box paddingX={2}>
+                        <Typography variant={"body1"} gutterBottom>
+                          {item.content}
+                        </Typography>
+                      </Box>
+                    </Box>
                   );
                 })}
             </Box>
