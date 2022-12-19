@@ -20,7 +20,7 @@ import { v4 } from "uuid";
 const Chatroom1 = () => {
   const { currentUser } = useContext(AuthContext);
   const [isJoin, setIsJoin] = useState(false);
-  const [isLeave, setIsLeave] = useState(false);
+  //const [isLeave, setIsLeave] = useState(false);
   const navigate = useNavigate();
   const [state, setState] = useState({
     name: "",
@@ -71,14 +71,16 @@ const Chatroom1 = () => {
           ]);
         });
         /*
-              socketRef.current.on("leave_room", ({ username, message, roomNum }) =>{
-                  setChat([
-                      ...chat,
-                      { name: "ChatBot", message: `${username} has leave the chat` },
-                  ]);
-                  //setIsLeave(true);
-              });
-              */
+        if(isLeave===false){
+          socketRef.current.on("leave_room", function (data){
+            setChat([
+              ...chat,
+              { name: "ChatBot", message: `${data} has leave the chat` },
+            ]);
+            setIsLeave(true);
+          });
+        }
+        */
         return () => {
           socketRef.current.off("message");
           socketRef.current.off("user-join");
@@ -175,10 +177,10 @@ const Chatroom1 = () => {
   const joinTheChatRoom = async (e) => {
     try {
       e.preventDefault();
-      console.log('check 1', socketRef.current.connected);
-      if(socketRef.current.connected===false){
-        alert("something wrong with the server")
-        throw 'something wrong with the server';
+      //console.log("check 1", socketRef.current.connected);
+      if (socketRef.current.connected === false) {
+        alert("something wrong with the server");
+        throw "something wrong with the server";
       }
       const roomName = e.target[0].value;
       const password = e.target[1].value;
@@ -241,12 +243,18 @@ const Chatroom1 = () => {
     }
   };
 
-  const renderChat = () => {
-    return chat.map(({ name, message }, index) => (
+  const renderChat = (currentRoom) => {
+    return chat.map(({ name, message, roomNum }, index) => (
       <div key={index}>
-        <h3>
-          {name}: <span>{message}</span>
-        </h3>
+        {currentRoom === roomNum ? (
+          <div>
+            <h3>
+              {name}: <span>{message}</span>
+            </h3>
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
     ));
   };
@@ -259,7 +267,7 @@ const Chatroom1 = () => {
             <div className="card">
               <div className="render-chat">
                 <h1>Room: {stateMessage.roomNum} Chat Log</h1>
-                {renderChat()}
+                {renderChat(stateMessage.roomNum)}
               </div>
               <form onSubmit={onMessageSubmit}>
                 <h1>Messenger</h1>

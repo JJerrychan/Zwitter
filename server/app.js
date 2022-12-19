@@ -5,6 +5,8 @@ const app = express();
 const multer = require("multer");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
+const { log } = require("console");
+const { LOADIPHLPAPI } = require("dns");
 const http = require("http").createServer(express);
 //var io = require("socket.io")(http);
 const multerMid = multer({
@@ -44,7 +46,7 @@ io.on("connection", (socket) => {
   userIsLogin = true;
   socket.on("user_join", (name, roomNum) => {
     if(userIsLogin ===true){
-      console.log("RoomNum: " + roomNum );
+      console.log("RoomNum: " + roomNum + " user join");
       socket.join(roomNum);
       socket.to(roomNum).emit("user_join", name, roomNum);      
     }
@@ -58,22 +60,25 @@ io.on("connection", (socket) => {
       // console.log(name);
       // console.log(name, message, socket.id);
       // console.log("room:  " + roomNum);
+      console.log("user sent message in" + roomNum);
       io.to(roomNum).emit("message", { name, message, roomNum });
     }
     else{
       console.log("user did not login");
     }
   });
-
+  /*
   socket.on("leave_room",function(name, roomNum){
     if(userIsLogin ===true){
+      console.log("user leave");
+      socket.to(roomNum).emit("leave_room", name, roomNum);     
       socket.leave(roomNum);  
     }
     else{
       console.log("user did not login");
     }
   });
-
+  */
   socket.on("disconnect", () => {
     userIsLogin=false;
     // console.log("Disconnect Fired");
