@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { Navigate } from 'react-router-dom';
 import NewPost from "./post/NewPost";
 import PostDetail from "./post/PostDetail";
 import {
@@ -117,6 +118,7 @@ const Home = () => {
 
   function showPostDetail(post) {
     setPost(post);
+
   }
 
   async function loadMore() {
@@ -260,7 +262,8 @@ const Home = () => {
           </Stack>
         </Box>
       )}
-      {post != null && <PostDetail closeDetail={closeDetail} post={post} />}
+      {/* {post != null && <PostDetail closeDetail={closeDetail} post={post} />} */}
+      {post != null && <Navigate replace to={"/post/"+ post.id} />}
     </Container>
   );
 };
