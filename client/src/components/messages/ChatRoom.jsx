@@ -172,6 +172,7 @@ const Chatroom1 = () => {
   };
 
   const leaveTheChatRoom = async (e) => {
+    e.preventDefault()
     try {
       const roomName = e.target[0].value;
       //setIsLeave(true);
