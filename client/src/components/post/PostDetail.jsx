@@ -4,17 +4,18 @@ import Comment from "../comment/Comment";
 import { db } from "../../firebase";
 import { deleteDoc, doc } from "firebase/firestore";
 import {
-    Avatar,
-    Box,
-    Button,
-    Card,
-    CardActions,
-    CardContent,
-    CardHeader,
-    CardMedia,
-    IconButton,
-    Stack, Tooltip,
-    Typography,
+  Avatar,
+  Box,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
+  CardMedia,
+  IconButton,
+  Stack,
+  Tooltip,
+  Typography,
 } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 
@@ -113,6 +114,7 @@ const PostDetail = ({ closeDetail, post }) => {
       {/*  />*/}
       {/*</Box>*/}
       <CardActions>
+        <Comment post={post} />
         {currentUser && post.userId.includes(currentUser.uid) && (
           <Button
             sx={{ marginX: 2 }}
@@ -123,7 +125,6 @@ const PostDetail = ({ closeDetail, post }) => {
             Delete post
           </Button>
         )}
-        <Comment post={post} />
       </CardActions>
     </Card>
   );

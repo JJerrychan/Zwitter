@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { db } from "../../firebase";
-import AddComment from "./addComment";
+import AddComment from "./AddComment";
 import { Button, Card, CardContent } from "@mui/material";
 
 const Comment = ({ closeDetail, post }) => {
@@ -12,9 +12,6 @@ const Comment = ({ closeDetail, post }) => {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    const getComments = async () => {
-      await getComments();
-    };
     getComments();
   }, []);
 

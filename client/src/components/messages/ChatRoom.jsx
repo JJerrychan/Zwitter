@@ -37,18 +37,18 @@ const Chatroom1 = () => {
   const socketRef = useRef();
 
   useEffect(() => {
-    try{
+    try {
       socketRef.current = io("ws://localhost:4000");
       return () => {
         socketRef.current.disconnect();
       };
-    }catch(error){
+    } catch (error) {
       console.log(error);
     }
   }, []);
 
   useEffect(() => {
-    try{
+    try {
       if (isJoin) {
         socketRef.current.on("message", ({ name, message, roomNum }) => {
           console.log("The server has sent some data to all clients");
@@ -75,43 +75,43 @@ const Chatroom1 = () => {
           //socketRef.current.off("leave_room");
         };
       }
-    }catch(error){
+    } catch (error) {
       console.log(error);
     }
   }, [chat, isJoin]);
 
   useEffect(() => {
-    try{
+    try {
       async function getAllChatRoom() {
         await getAllCreatedRoom();
       }
-  
+
       getAllChatRoom();
-    }catch(error){
+    } catch (error) {
       console.log(error);
     }
   }, []);
 
   const userjoin = (name, roomNum) => {
-    try{
+    try {
       // socketRef.current.join(roomNum);
       socketRef.current.emit("user_join", name, roomNum);
-    }catch(error){
+    } catch (error) {
       console.log(error);
     }
   };
 
   const userLeave = (name, roomNum) => {
-    try{
+    try {
       // socketRef.current.leave(roomNum);
       socketRef.current.emit("leave_room", name, roomNum);
-    }catch(error){
+    } catch (error) {
       console.log(error);
     }
   };
 
   const onMessageSubmit = (e) => {
-    try{
+    try {
       let msgEle = document.getElementById("message");
       setStateMessage({ ...stateMessage, message: msgEle.value });
       socketRef.current.emit("message", {
@@ -127,7 +127,7 @@ const Chatroom1 = () => {
       });
       msgEle.value = "";
       msgEle.focus();
-    }catch(error){
+    } catch (error) {
       console.log(error);
     }
   };
@@ -197,7 +197,7 @@ const Chatroom1 = () => {
 
   const leaveTheChatRoom = async (e) => {
     try {
-      e.preventDefault()
+      e.preventDefault();
       const roomName = e.target[0].value;
       //setIsLeave(true);
       userLeave(currentUser.displayName, roomName);
@@ -212,7 +212,7 @@ const Chatroom1 = () => {
   };
 
   const getAllCreatedRoom = async (e) => {
-    try{
+    try {
       const chatRoomData = await getDocs(collection(db, "chatRoom"));
       const roomDataList = [];
       chatRoomData.forEach((doc) => {
@@ -221,7 +221,7 @@ const Chatroom1 = () => {
         roomDataList.push(roomData);
       });
       setChatRoomList(roomDataList);
-    }catch(error){
+    } catch (error) {
       console.log(error);
     }
   };
