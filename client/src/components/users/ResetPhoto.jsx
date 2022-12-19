@@ -23,7 +23,6 @@ const ResetPhoto = ({ closeFunction }) => {
   const [error, setError] = useState();
   const [uploadURL, setUploadURL] = useState(null);
 
-
   //aws s3
   // const [progress, setProgress] = useState(0);
   // const S3_BUCKET = "zwitter11";
@@ -37,8 +36,6 @@ const ResetPhoto = ({ closeFunction }) => {
   //   region: REGION,
   // });
 
-
-
   const handlePreview = (e) => {
     e.preventDefault();
     const file = e.target.files[0];
@@ -46,10 +43,10 @@ const ResetPhoto = ({ closeFunction }) => {
     setUploadURL(imageURL);
   };
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const file = e.target[0].files[0];
-
     try {
+      e.preventDefault();
+      if (e.target[0].value[0] == null) throw "no image upload";
+      const file = e.target[0].files[0];
       const date = new Date().getTime();
 
       const storageRef = ref(storage, `${currentUser.displayName + date}`);
@@ -111,7 +108,6 @@ const ResetPhoto = ({ closeFunction }) => {
             hidden
             accept="image/*"
             type="file"
-            required
             name="file"
             id="file"
           />
