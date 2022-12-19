@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
+import socket from "socket.io-client";
 import "./Messenger.css";
 //import Password from "./users/resetPassword";
 // import Add from "../img/addAvatar.png";
@@ -38,7 +39,16 @@ const Chatroom1 = () => {
 
   useEffect(() => {
     try {
+      //const URL = "http://localhost:4000";
+      //socketRef.current = io(URL, { autoConnect: false });
+      //socketRef.current.connect();
+      //console.log(socketRef.current);
       socketRef.current = io("ws://localhost:4000");
+      socketRef.current.on("connect_error", (err) => {
+        alert("something wrong with the server");
+        console.log(`connect_error due to ${err.message}`);
+        socketRef.current.disconnect();
+      });
       return () => {
         socketRef.current.disconnect();
       };
@@ -165,6 +175,11 @@ const Chatroom1 = () => {
   const joinTheChatRoom = async (e) => {
     try {
       e.preventDefault();
+      console.log('check 1', socketRef.current.connected);
+      if(socketRef.current.connected===false){
+        alert("something wrong with the server")
+        throw 'something wrong with the server';
+      }
       const roomName = e.target[0].value;
       const password = e.target[1].value;
       const q2 = query(
