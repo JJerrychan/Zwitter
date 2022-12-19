@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { AuthContext } from "../../context/AuthContext";
 import Comment from "../comment/Comment";
 import { db } from "../../firebase";
@@ -63,7 +63,7 @@ const PostDetail = () => {
       await minusNumZwitter(currentUser.uid)
       // console.log(post);
       alert("Post deleted!");
-      navigate("/");
+      // window.location.reload();
     }
   }
 
@@ -132,14 +132,16 @@ const PostDetail = () => {
           </Box>
           <CardActions sx={{ flexDirection: "column", display: "contents" }}>
             {currentUser && post.userId.includes(currentUser.uid) && (
-              <Button
-                sx={{ marginX: 2 }}
-                variant="contained"
-                color="error"
-                onClick={(e) => deletePost(e, post)}
-              >
-                Delete post
-              </Button>
+              <Link to='/'>
+                <Button
+                  sx={{ marginX: 2 }}
+                  variant="contained"
+                  color="error"
+                  onClick={(e) => deletePost(e, post)}
+                >
+                  Delete post
+                </Button>
+              </Link>
             )}
             <Comment post={post} />
           </CardActions>
