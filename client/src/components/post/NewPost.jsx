@@ -20,15 +20,13 @@ const NewPost = ({ refresh }) => {
   const { currentUser } = useContext(AuthContext);
   const [show, setShow] = useState(false);
   const [imgUrl, setImgUrl] = useState("");
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [file, setFile] = useState();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const title = e.target[0].value;
-      const content = e.target[1].value;
-      const file = e.target[2].files[0];
-
-      const displayName = e.target[0].value;
       if (currentUser == null) {
         throw "Please login first";
       }
@@ -73,12 +71,29 @@ const NewPost = ({ refresh }) => {
   function imgChange(e) {
     if (e.target.files[0]) {
       setImgUrl(URL.createObjectURL(e.target.files[0]));
-    } else setImgUrl("");
+      setFile(e.target.files[0])
+    } else {
+      setImgUrl("");
+      setFile()
+    }
+  }
+
+  function titleChange(e) {
+    if (e.target.value) {
+      setTitle(e.target.value);
+    } else setTitle("");
+  }
+
+  function contentChange(e) {
+    if (e.target.value) {
+      setContent(e.target.value);
+    } else setContent("");
   }
 
   function delImg(e) {
     e.preventDefault();
     setImgUrl("");
+    setFile()
     // e.target.reset();
   }
 
@@ -98,6 +113,7 @@ const NewPost = ({ refresh }) => {
         <Card component={"form"} onSubmit={handleSubmit} sx={{ marginY: 2 }}>
           <CardContent>
             <TextField
+              onChange={titleChange}
               size={"small"}
               label={"Title"}
               required
@@ -107,6 +123,7 @@ const NewPost = ({ refresh }) => {
               placeholder={"What's Happening?"}
             />
             <TextField
+              onChange={contentChange}
               label={"Content"}
               required
               margin={"dense"}
@@ -135,6 +152,7 @@ const NewPost = ({ refresh }) => {
                 id="file"
               />
             </Button>
+            
           </CardContent>
           {/*<label>Title:</label>*/}
           {/*<Input required type="text" id="title" placeholder="title" />*/}

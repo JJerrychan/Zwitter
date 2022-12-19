@@ -37,75 +37,99 @@ const Chatroom1 = () => {
   const socketRef = useRef();
 
   useEffect(() => {
-    socketRef.current = io("ws://localhost:4000");
-    return () => {
-      socketRef.current.disconnect();
-    };
+    try {
+      socketRef.current = io("ws://localhost:4000");
+      return () => {
+        socketRef.current.disconnect();
+      };
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   useEffect(() => {
-    if (isJoin) {
-      socketRef.current.on("message", ({ name, message, roomNum }) => {
-        console.log("The server has sent some data to all clients");
-        setChat([...chat, { name, message, roomNum }]);
-      });
-      socketRef.current.on("user_join", function (data) {
-        setChat([
-          ...chat,
-          { name: "ChatBot", message: `${data} has joined the chat` },
-        ]);
-      });
-      /*
-            socketRef.current.on("leave_room", ({ username, message, roomNum }) =>{
-                setChat([
-                    ...chat,
-                    { name: "ChatBot", message: `${username} has leave the chat` },
-                ]);
-                //setIsLeave(true);
-            });
-            */
-      return () => {
-        socketRef.current.off("message");
-        socketRef.current.off("user-join");
-        //socketRef.current.off("leave_room");
-      };
+    try {
+      if (isJoin) {
+        socketRef.current.on("message", ({ name, message, roomNum }) => {
+          console.log("The server has sent some data to all clients");
+          setChat([...chat, { name, message, roomNum }]);
+        });
+        socketRef.current.on("user_join", function (data) {
+          setChat([
+            ...chat,
+            { name: "ChatBot", message: `${data} has joined the chat` },
+          ]);
+        });
+        /*
+              socketRef.current.on("leave_room", ({ username, message, roomNum }) =>{
+                  setChat([
+                      ...chat,
+                      { name: "ChatBot", message: `${username} has leave the chat` },
+                  ]);
+                  //setIsLeave(true);
+              });
+              */
+        return () => {
+          socketRef.current.off("message");
+          socketRef.current.off("user-join");
+          //socketRef.current.off("leave_room");
+        };
+      }
+    } catch (error) {
+      console.log(error);
     }
   }, [chat, isJoin]);
 
   useEffect(() => {
-    async function getAllChatRoom() {
-      await getAllCreatedRoom();
-    }
+    try {
+      async function getAllChatRoom() {
+        await getAllCreatedRoom();
+      }
 
-    getAllChatRoom();
+      getAllChatRoom();
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   const userjoin = (name, roomNum) => {
-    // socketRef.current.join(roomNum);
-    socketRef.current.emit("user_join", name, roomNum);
+    try {
+      // socketRef.current.join(roomNum);
+      socketRef.current.emit("user_join", name, roomNum);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const userLeave = (name, roomNum) => {
-    // socketRef.current.leave(roomNum);
-    socketRef.current.emit("leave_room", name, roomNum);
+    try {
+      // socketRef.current.leave(roomNum);
+      socketRef.current.emit("leave_room", name, roomNum);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const onMessageSubmit = (e) => {
-    let msgEle = document.getElementById("message");
-    setStateMessage({ ...stateMessage, message: msgEle.value });
-    socketRef.current.emit("message", {
-      name: stateMessage.name,
-      message: msgEle.value,
-      roomNum: stateMessage.roomNum,
-    });
-    e.preventDefault();
-    setStateMessage({
-      message: "",
-      name: stateMessage.name,
-      roomNum: stateMessage.roomNum,
-    });
-    msgEle.value = "";
-    msgEle.focus();
+    try {
+      let msgEle = document.getElementById("message");
+      setStateMessage({ ...stateMessage, message: msgEle.value });
+      socketRef.current.emit("message", {
+        name: stateMessage.name,
+        message: msgEle.value,
+        roomNum: stateMessage.roomNum,
+      });
+      e.preventDefault();
+      setStateMessage({
+        message: "",
+        name: stateMessage.name,
+        roomNum: stateMessage.roomNum,
+      });
+      msgEle.value = "";
+      msgEle.focus();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const onCreateRoomSubmit = async (e) => {
@@ -172,8 +196,8 @@ const Chatroom1 = () => {
   };
 
   const leaveTheChatRoom = async (e) => {
-    e.preventDefault()
     try {
+      e.preventDefault();
       const roomName = e.target[0].value;
       //setIsLeave(true);
       userLeave(currentUser.displayName, roomName);
@@ -188,14 +212,18 @@ const Chatroom1 = () => {
   };
 
   const getAllCreatedRoom = async (e) => {
-    const chatRoomData = await getDocs(collection(db, "chatRoom"));
-    const roomDataList = [];
-    chatRoomData.forEach((doc) => {
-      const roomData = doc.data();
-      roomData.id = doc.id;
-      roomDataList.push(roomData);
-    });
-    setChatRoomList(roomDataList);
+    try {
+      const chatRoomData = await getDocs(collection(db, "chatRoom"));
+      const roomDataList = [];
+      chatRoomData.forEach((doc) => {
+        const roomData = doc.data();
+        roomData.id = doc.id;
+        roomDataList.push(roomData);
+      });
+      setChatRoomList(roomDataList);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const renderChat = () => {

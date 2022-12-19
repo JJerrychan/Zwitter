@@ -17,6 +17,7 @@ import {
   Stack,
   Tab,
   Typography,
+  Tooltip,
 } from "@mui/material";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
@@ -183,13 +184,15 @@ const Profile = () => {
         <Card elevation={0}>
           <CardHeader
             avatar={
-              <IconButton
-                onClick={() => navigate(-1)}
-                size={"small"}
-                sx={{ marginRight: "2rem" }}
-              >
-                <ArrowBack fontSize="large" />
-              </IconButton>
+              <Tooltip title={"back"}>
+                <IconButton
+                  onClick={() => navigate(-1)}
+                  size={"small"}
+                  sx={{ marginRight: "2rem" }}
+                >
+                  <ArrowBack fontSize="large" />
+                </IconButton>
+              </Tooltip>
             }
             title={currentUser.displayName}
             titleTypographyProps={{ fontSize: "1.2rem", fontWeight: "bold" }}
