@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContext } from "../../context/AuthContext";
 import Comment from "../comment/Comment";
 import { db } from "../../firebase";
-import { deleteDoc, doc, getDoc } from "firebase/firestore";
+import { deleteDoc, doc, getDoc, setDoc } from "firebase/firestore";
 import {
   Avatar,
   Box,
@@ -60,11 +60,19 @@ const PostDetail = () => {
     //check already like
     if (post.userId === currentUser.uid) {
       await deleteDoc(doc(db, "posts", post.id));
+      await minusNumZwitter(currentUser.uid)
       console.log(post);
       alert("Post deleted!");
-      window.location.reload();
-      // await getPosts();
+      window.history.back(-1);
     }
+  }
+
+  async function minusNumZwitter(userId) {
+    const docRef = doc(db, "users", userId);
+    const docSnap = await getDoc(docRef);
+    const data = docSnap.data()
+    const num = data.numZwitter - 1
+    setDoc(docRef, { numZwitter: num }, { merge: true });
   }
 
   return (
