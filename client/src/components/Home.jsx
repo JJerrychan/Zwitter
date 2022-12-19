@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import NewPost from "./post/newPost";
+import NewPost from "./post/NewPost";
 import PostDetail from "./post/postDetail";
 import {
   collection,
@@ -26,6 +26,7 @@ import {
   CardMedia,
   Container,
   Divider,
+  Grid,
   Stack,
   Typography,
 } from "@mui/material";
@@ -154,28 +155,32 @@ const Home = () => {
     <Container>
       {!post && (
         <Box>
-          <Typography component={"h1"} variant={"h5"} fontWeight={"bold"}>
-            Home
-          </Typography>
-          <br />
-          <LoadingButton
-            color={"secondary"}
-            size={"large"}
-            sx={{ float: "right" }}
-            loading={loading}
-            loadingPosition="start"
-            startIcon={<Refresh />}
-            onClick={() => {
-              setLoading(true);
-              getPosts().then(() => setLoading(false));
-            }}
-          >
-            refresh
-          </LoadingButton>
-          <NewPost refresh={getPosts} />
-          <br />
+          <Grid container>
+            <Grid item xs={11}>
+              <Typography component={"h1"} variant={"h5"} fontWeight={"bold"}>
+                Home
+              </Typography>
+              <NewPost refresh={getPosts} />
+            </Grid>
+            <Grid item xs={1}>
+              <LoadingButton
+                color={"secondary"}
+                size={"large"}
+                sx={{ float: "right" }}
+                loading={loading}
+                loadingPosition="start"
+                startIcon={<Refresh />}
+                onClick={() => {
+                  setLoading(true);
+                  getPosts().then(() => setLoading(false));
+                }}
+              >
+                refresh
+              </LoadingButton>
+            </Grid>
+          </Grid>
 
-          <Stack spacing={2} divider={<Divider variant={"middle"} />}>
+          <Stack my={2} spacing={2} divider={<Divider variant={"middle"} />}>
             {posts.map((post) => {
               return (
                 <Card key={post.id} elevation={0} square>
@@ -191,13 +196,15 @@ const Home = () => {
                       subheader={post.postDate.toDate().toLocaleString()}
                       title={post.user.displayName}
                     />
-                    <CardContent>
-                      <Typography variant={"h5"} component={"h2"}>
-                        title: {post.title}
-                      </Typography>
-                      {post.content}
-                    </CardContent>
-                    <Box marginX={6}>
+                    <Box px={6} pb={2}>
+                      <CardContent sx={{ paddingTop: 0 }} component={"article"}>
+                        <Typography variant={"h4"} component={"h2"}>
+                          {post.title}
+                        </Typography>
+                        <Typography variant={"body1"}>
+                          {post.content}
+                        </Typography>
+                      </CardContent>
                       <CardMedia
                         sx={{
                           border: 0.1,
@@ -211,7 +218,7 @@ const Home = () => {
                       />
                     </Box>
                   </CardActionArea>
-                  <CardActions>
+                  <CardActions sx={{ justifyContent: "end" }}>
                     {currentUser && post.like.includes(currentUser.uid) ? (
                       <Button
                         onClick={(e) => delLike(e, post)}
@@ -230,25 +237,12 @@ const Home = () => {
                       </Button>
                     )}
                   </CardActions>
-
-                  {/*<div onClick={() => showPostDetail(post)} key={post.id}>*/}
-                  {/*  <h1>Title: {post.title}</h1>*/}
-                  {/*  <p>{post.content}</p>*/}
-                  {/*  <img src={post.imgUrl} alt="" width="300" height="300" />*/}
-                  {/*  <p>Like: {post.like.length}</p>*/}
-                  {/*{currentUser && !post.like.includes(currentUser.uid) ? (*/}
-                  {/*  <button onClick={(e) => addLike(e, post)}>like</button>*/}
-                  {/*) : (*/}
-                  {/*  <button onClick={(e) => delLike(e, post)}>cancel</button>*/}
-                  {/*)}*/}
-                  {/*</div>*/}
                 </Card>
               );
             })}
             <LoadingButton
               color={"secondary"}
               size={"large"}
-              sx={{ float: "right" }}
               loading={loading}
               loadingPosition="start"
               startIcon={<Refresh />}

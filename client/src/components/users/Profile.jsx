@@ -30,13 +30,14 @@ import {
   orderBy,
   query,
   setDoc,
-  getDoc
+  getDoc,
 } from "firebase/firestore";
 import PostDetail from "../post/postDetail";
 import ResetName from "./ResetName";
 import ResetPhoto from "./ResetPhoto";
 import ResetPassword from "./ResetPassword";
 import { ThumbUpAlt, ThumbUpOffAlt } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const { currentUser } = useContext(AuthContext);
@@ -83,7 +84,7 @@ const Profile = () => {
     } catch (e) {
       console.log(e);
     }
-  };
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -116,7 +117,7 @@ const Profile = () => {
   }
 
   async function addLike(e, post) {
-    e.stopPropagation()
+    e.stopPropagation();
     //check login
     if (currentUser == null) {
       throw "Please login first";
@@ -124,21 +125,21 @@ const Profile = () => {
 
     //check already like
     if (!post.like.includes(currentUser.uid)) {
-      post.like.push(currentUser.uid)
+      post.like.push(currentUser.uid);
       await setDoc(doc(db, "posts", post.id), post);
-      getMyPosts()
-    };
+      getMyPosts();
+    }
   }
 
   async function getPostUser(userId) {
     // const data = await db.collection('users').doc(userId)
     const docRef = doc(db, "users", userId);
     const docSnap = await getDoc(docRef);
-    return docSnap.data()
+    return docSnap.data();
   }
 
   async function delLike(e, post) {
-    e.stopPropagation()
+    e.stopPropagation();
     //check login
     if (currentUser == null) {
       throw "Please login first";
@@ -146,10 +147,10 @@ const Profile = () => {
 
     //check already like
     if (post.like.includes(currentUser.uid)) {
-      post.like.splice(post.like.indexOf(currentUser.uid))
+      post.like.splice(post.like.indexOf(currentUser.uid));
       await setDoc(doc(db, "posts", post.id), post);
-      getMyPosts()
-    };
+      getMyPosts();
+    }
   }
 
   function showPostDetail(post) {
@@ -158,7 +159,7 @@ const Profile = () => {
   }
 
   function closeDetail() {
-    setPost(null)
+    setPost(null);
   }
 
   const handleTabChange = (event, newValue) => {
@@ -175,14 +176,18 @@ const Profile = () => {
         return <ResetPassword closeFunction={handleDialogClose} />;
     }
   };
-
+  const navigate = useNavigate();
   return (
     <Container>
       {currentUser ? (
         <Card elevation={0}>
           <CardHeader
             avatar={
-              <IconButton size={"small"} sx={{ marginRight: "2rem" }}>
+              <IconButton
+                onClick={() => navigate(-1)}
+                size={"small"}
+                sx={{ marginRight: "2rem" }}
+              >
                 <ArrowBack fontSize="large" />
               </IconButton>
             }
@@ -260,7 +265,7 @@ const Profile = () => {
                       />
                       <CardContent>
                         <Typography variant={"h5"} component={"h2"}>
-                          title: {post.title}
+                          {post.title}
                         </Typography>
                         {post.content}
                       </CardContent>
@@ -319,7 +324,7 @@ const Profile = () => {
                       />
                       <CardContent>
                         <Typography variant={"h5"} component={"h2"}>
-                          title: {post.title}
+                          {post.title}
                         </Typography>
                         {post.content}
                       </CardContent>
