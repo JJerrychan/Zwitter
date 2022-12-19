@@ -3,7 +3,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { v4 } from "uuid";
 import { doc, setDoc, Timestamp } from "firebase/firestore";
 import { db } from "../../firebase";
-import { Button, Input } from "@mui/material";
+import { Box, Button, Grid, Stack, TextField } from "@mui/material";
 
 const AddComment = ({ closeAddComment, post, refresh, parentComment }) => {
   const { currentUser } = useContext(AuthContext);
@@ -16,7 +16,6 @@ const AddComment = ({ closeAddComment, post, refresh, parentComment }) => {
 
     try {
       const parentId = parentComment ? parentComment.id : "";
-
       const comment = {
         useId: currentUser.uid,
         postUserName: currentUser.displayName,
@@ -25,9 +24,6 @@ const AddComment = ({ closeAddComment, post, refresh, parentComment }) => {
         parentId: parentId,
         commentDate: Timestamp.fromDate(new Date()),
       };
-
-      console.log("comment: ", comment);
-
       await setDoc(doc(db, "comments", v4()), comment);
       alert("Comment published!");
       closeAddComment();
@@ -42,21 +38,36 @@ const AddComment = ({ closeAddComment, post, refresh, parentComment }) => {
   }
 
   return (
-    <div>
-      <Input
+    <Stack spacing={1}>
+      <TextField
+        fullWidth
+        multiline
+        label="Comment"
+        variant={"standard"}
+        autoFocus
         id="reply"
-        required
-        type="text"
         onChange={handleChange}
-        placeholder="comment"
+        placeholder="leave your friendly reply here..."
       />
-      <Button variant="outlined" color="success" onClick={addComment}>
-        reply
-      </Button>
-      <Button variant="outlined" color="secondary" onClick={closeAddComment}>
-        cancle
-      </Button>
-    </div>
+      <Stack spacing={2} direction={"row"} justifyContent={"end"}>
+        <Button
+          size={"small"}
+          variant="outlined"
+          color="secondary"
+          onClick={closeAddComment}
+        >
+          cancel
+        </Button>
+        <Button
+          size={"small"}
+          variant="outlined"
+          color="success"
+          onClick={addComment}
+        >
+          reply
+        </Button>
+      </Stack>
+    </Stack>
   );
 };
 

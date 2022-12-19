@@ -113,8 +113,7 @@ const PostDetail = ({ closeDetail, post }) => {
       {/*    alt={post.title}*/}
       {/*  />*/}
       {/*</Box>*/}
-      <CardActions>
-        <Comment post={post} />
+      <CardActions sx={{ flexDirection: "column", display: "contents" }}>
         {currentUser && post.userId.includes(currentUser.uid) && (
           <Button
             sx={{ float: "right" }}
@@ -125,6 +124,7 @@ const PostDetail = ({ closeDetail, post }) => {
             Delete post
           </Button>
         )}
+        <Comment post={post} />
       </CardActions>
     </Card>
   );

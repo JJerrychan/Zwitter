@@ -3,7 +3,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { db } from "../../firebase";
 import AddComment from "./AddComment";
-import {Box, Button, Card, CardContent} from "@mui/material";
+import { Box, Button, Card, CardContent } from "@mui/material";
 
 const Comment = ({ closeDetail, post }) => {
   const { currentUser } = useContext(AuthContext);
@@ -70,20 +70,18 @@ const Comment = ({ closeDetail, post }) => {
   }
 
   return (
-    <Box>
-      {!show && (
-        <Button variant="contained" color="success" onClick={showAddComment}>
-          Add a comment
-        </Button>
-      )}
-
-      {show && (
+    <Box paddingX={4}>
+      {show ? (
         <AddComment
           closeAddComment={closeAddComment}
           post={post}
           refresh={getComments}
           parentComment={comment}
         />
+      ) : (
+        <Button variant="contained" color="success" onClick={showAddComment}>
+          Add Comment
+        </Button>
       )}
 
       {comments.map((comment) => {

@@ -11,6 +11,7 @@ import {
   CardActions,
   CardContent,
   CardMedia,
+  Grow,
   IconButton,
   TextField,
 } from "@mui/material";
@@ -71,10 +72,10 @@ const NewPost = ({ refresh }) => {
   function imgChange(e) {
     if (e.target.files[0]) {
       setImgUrl(URL.createObjectURL(e.target.files[0]));
-      setFile(e.target.files[0])
+      setFile(e.target.files[0]);
     } else {
       setImgUrl("");
-      setFile()
+      setFile();
     }
   }
 
@@ -93,7 +94,7 @@ const NewPost = ({ refresh }) => {
   function delImg(e) {
     e.preventDefault();
     setImgUrl("");
-    setFile()
+    setFile();
     // e.target.reset();
   }
 
@@ -110,92 +111,89 @@ const NewPost = ({ refresh }) => {
           Share Your Story
         </Button>
       ) : (
-        <Card component={"form"} onSubmit={handleSubmit} sx={{ marginY: 2 }}>
-          <CardContent>
-            <TextField
-              onChange={titleChange}
-              size={"small"}
-              label={"Title"}
-              required
-              margin={"dense"}
-              color={"primary"}
-              fullWidth
-              placeholder={"What's Happening?"}
-            />
-            <TextField
-              onChange={contentChange}
-              label={"Content"}
-              required
-              margin={"dense"}
-              color={"primary"}
-              rows={4}
-              fullWidth
-              multiline
-              autoFocus
-              placeholder={"What's Happening?"}
-            />
-            <Button
-              fullWidth
-              sx={{ marginTop: 2 }}
-              variant="contained"
-              component="label"
-              startIcon={<PhotoCamera />}
-            >
-              Share Photo
-              <input
-                onChange={imgChange}
-                hidden
-                accept="image/*"
-                type="file"
-                required
-                name="file"
-                id="file"
-              />
-            </Button>
-            
-          </CardContent>
-          {/*<label>Title:</label>*/}
-          {/*<Input required type="text" id="title" placeholder="title" />*/}
-
-          {/*<label>Content:</label>*/}
-          {/*<Input required type="text" placeholder="content" rows="3" />*/}
-
-          {/*<label>Picture:</label>*/}
-          {/*<input*/}
-          {/*  required*/}
-          {/*  type="file"*/}
-          {/*  id="file"*/}
-          {/*  onChange={(e) => imgChange(e)}*/}
-          {/*/>*/}
-
-          {imgUrl && (
-            <Box paddingX={3}>
-              <CardMedia
-                sx={{
-                  borderRadius: "1.5rem",
-                }}
-                component={"img"}
-                src={imgUrl}
-                alt={"preview"}
-              />
-              <IconButton
-                color={"error"}
+        <Grow in={true}>
+          <Card component={"form"} onSubmit={handleSubmit} sx={{ marginY: 2 }}>
+            <CardContent>
+              <TextField
+                onChange={titleChange}
                 size={"small"}
-                onClick={delImg}
+                label={"Title"}
+                required
+                margin={"dense"}
+                color={"primary"}
+                fullWidth
+                placeholder={"What's Happening?"}
+              />
+              <TextField
+                onChange={contentChange}
+                label={"Content"}
+                required
+                margin={"dense"}
+                color={"primary"}
+                rows={4}
+                fullWidth
+                multiline
+                autoFocus
+                placeholder={"What's Happening?"}
+              />
+              <Button
+                fullWidth
+                sx={{ marginTop: 2 }}
+                variant="contained"
+                component="label"
+                startIcon={<PhotoCamera />}
               >
-                <DeleteForever fontSize={"small"} />
-              </IconButton>
-            </Box>
-          )}
-          <CardActions sx={{ justifyContent: "end" }}>
-            <Button variant="contained" color="success" type="submit">
-              Submit
-            </Button>
-            <Button variant="outlined" color="error" onClick={cancelPost}>
-              Cancel
-            </Button>
-          </CardActions>
-        </Card>
+                Share Photo
+                <input
+                  onChange={imgChange}
+                  hidden
+                  accept="image/*"
+                  type="file"
+                  required
+                  name="file"
+                  id="file"
+                />
+              </Button>
+            </CardContent>
+            {/*<label>Title:</label>*/}
+            {/*<Input required type="text" id="title" placeholder="title" />*/}
+
+            {/*<label>Content:</label>*/}
+            {/*<Input required type="text" placeholder="content" rows="3" />*/}
+
+            {/*<label>Picture:</label>*/}
+            {/*<input*/}
+            {/*  required*/}
+            {/*  type="file"*/}
+            {/*  id="file"*/}
+            {/*  onChange={(e) => imgChange(e)}*/}
+            {/*/>*/}
+
+            {imgUrl && (
+              <Box paddingX={3}>
+                <CardMedia
+                  sx={{
+                    borderRadius: "1.5rem",
+                  }}
+                  component={"img"}
+                  src={imgUrl}
+                  alt={"preview"}
+                />
+                <IconButton color={"error"} size={"small"} onClick={delImg}>
+                  <DeleteForever fontSize={"small"} />
+                </IconButton>
+              </Box>
+            )}
+            <CardActions sx={{ justifyContent: "end" }}>
+              <Button variant="contained" color="success" type="submit">
+                Submit
+              </Button>
+              <Button variant="outlined" color="error" onClick={cancelPost}>
+                Cancel
+              </Button>
+            </CardActions>
+          </Card>
+        </Grow>
       )}
     </>
   );
