@@ -49,13 +49,13 @@ const Home = () => {
     try {
       const q = query(collection(db, "posts"), orderBy("postDate", "desc"));
       const querySnapshot = await getDocs(q);
- 
-      const docs = querySnapshot.docs
+
+      const docs = querySnapshot.docs;
       for (let i = 0; i < docs.length; i++) {
         const post = docs[i].data();
         post.id = docs[i].id;
 
-        post.user = await getPostUser(post.userId)
+        post.user = await getPostUser(post.userId);
 
         postList.push(post);
       }
@@ -95,12 +95,12 @@ const Home = () => {
       await getPosts();
     }
   }
-  
+
   async function getPostUser(userId) {
     // const data = await db.collection('users').doc(userId)
     const docRef = doc(db, "users", userId);
     const docSnap = await getDoc(docRef);
-    return docSnap.data()
+    return docSnap.data();
   }
 
   function closeDetail() {
@@ -148,7 +148,7 @@ const Home = () => {
                         />
                       }
                       subheader={post.postDate.toDate().toLocaleString()}
-                      title={`post by ${post.user.displayName}`}
+                      title={post.user.displayName}
                     />
                     <CardContent>
                       <Typography variant={"h5"} component={"h2"}>

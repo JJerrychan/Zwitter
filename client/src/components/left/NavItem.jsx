@@ -7,7 +7,7 @@ export default function NavItem({ Icon, to, title }) {
     <>
       {title ? (
         <Button component={NavLink} to={to} startIcon={<Icon />} size={"large"}>
-          {title.toUpperCase()}
+          {title}
         </Button>
       ) : (
         <IconButton color="primary" size={"large"} component={NavLink} to={to}>

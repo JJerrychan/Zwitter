@@ -13,11 +13,13 @@ import { AuthContext } from "../../context/AuthContext";
 import Logo from "../../public/zwitter-logo/png/logo-color.png";
 import { NavLink } from "react-router-dom";
 import DarkModeSwitch from "./DarkModeSwitch";
+import { DarkModeContext } from "../../context/DarkModeContext";
 
 export default function SideBar() {
   const { currentUser } = useContext(AuthContext);
   const theme = useTheme();
   const isLarge = useMediaQuery(theme.breakpoints.up("lg"));
+  const { darkMode, setDarkMode } = useContext(DarkModeContext);
 
   return (
     <Container>
@@ -30,6 +32,12 @@ export default function SideBar() {
           {currentUser && <NavItem title="chatRoom" to="/chatRoom" Icon={Chat} />}
           {currentUser && <NavItem title="profile" to="/user" Icon={Person} />}
           <FormControlLabel
+            onChange={() => {
+              console.log("darkModeOld:", darkMode);
+              setDarkMode(!darkMode);
+              console.log("darkModeNew:", darkMode);
+            }}
+            checked={darkMode}
             sx={{ color: "primary.main" }}
             control={<DarkModeSwitch />}
             label="Dark Mode"

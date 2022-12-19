@@ -3,11 +3,12 @@ import Home from "./components/Home";
 import Profile from "./components/users/Profile";
 import ChatRoom from "./components/messages/ChatRoom";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import React from "react";
+import React, { useContext } from "react";
 import SideBar from "./components/left/SideBar";
-import {Container, CssBaseline, Grid} from "@mui/material";
+import { Container, CssBaseline, Grid } from "@mui/material";
 import RightPanel from "./components/right/RightPanel";
 import {
+  DarkModeContext,
   DarkModeContextProvider,
 } from "./context/DarkModeContext";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -57,15 +58,26 @@ const darkTheme = createTheme({
 });
 
 function App() {
-  // const { darkMode } = useContext(DarkModeContext);
+  const { darkMode } = useContext(DarkModeContext);
+  console.log("darkMode IN app",darkMode);
+
   return (
     <DarkModeContextProvider>
-      <ThemeProvider theme={lightTheme}>
-        <CssBaseline/>
+      <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
+        <CssBaseline />
         <BrowserRouter>
           <Container maxWidth={"xl"}>
             <Grid container direction="row" justifyContent="center">
-              <Grid item component="header" lg={3} md={2} sm={2}>
+              <Grid
+                item
+                component="header"
+                lg={3}
+                md={2}
+                sm={2}
+                position={"sticky"}
+                top={0}
+                height={100}
+              >
                 <SideBar />
               </Grid>
               <Grid
@@ -85,7 +97,16 @@ function App() {
                   <Route path="/chatRoom" element={<ChatRoom />} />
                 </Routes>
               </Grid>
-              <Grid item component="footer" lg={3} md={3} sm={0}>
+              <Grid
+                item
+                component="footer"
+                lg={3}
+                md={3}
+                sm={0}
+                position={"sticky"}
+                top={0}
+                height={100}
+              >
                 <RightPanel />
               </Grid>
             </Grid>
