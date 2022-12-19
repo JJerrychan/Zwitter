@@ -32,7 +32,7 @@ import {
   setDoc,
   getDoc,
 } from "firebase/firestore";
-import PostDetail from "../post/postDetail";
+import PostDetail from "../post/PostDetail";
 import ResetName from "./ResetName";
 import ResetPhoto from "./ResetPhoto";
 import ResetPassword from "./ResetPassword";

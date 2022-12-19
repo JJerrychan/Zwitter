@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import NewPost from "./post/NewPost";
-import PostDetail from "./post/postDetail";
+import PostDetail from "./post/PostDetail";
 import {
   collection,
   doc,
@@ -140,7 +140,7 @@ const Home = () => {
 
         postList.push(post);
       }
-      if (postList.length == 0) {
+      if (postList.length === 0) {
         alert("No more posts");
       } else {
         setLast(querySnapshot.docs[querySnapshot.docs.length - 1]);
@@ -198,7 +198,11 @@ const Home = () => {
                     />
                     <Box px={6} pb={2}>
                       <CardContent sx={{ paddingTop: 0 }} component={"article"}>
-                        <Typography variant={"h4"} component={"h2"}>
+                        <Typography
+                          variant={"h4"}
+                          component={"h2"}
+                          gutterBottom
+                        >
                           {post.title}
                         </Typography>
                         <Typography variant={"body1"}>
