@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Navigate } from 'react-router-dom';
 import { AuthContext } from "../../context/AuthContext";
 import Comment from "../comment/Comment";
 import { db } from "../../firebase";
@@ -23,9 +23,10 @@ import { ArrowBack } from "@mui/icons-material";
 // const PostDetail = async ({ closeDetail, post }) => {
 const PostDetail = () => {
   const { currentUser } = useContext(AuthContext);
-  const {postId} = useParams();
-  const [post, setPost] = useState()
-  const [back, setBack] = useState(false)
+  const { postId } = useParams();
+  const [post, setPost] = useState();
+  const [back, setBack] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -61,9 +62,9 @@ const PostDetail = () => {
     if (post.userId === currentUser.uid) {
       await deleteDoc(doc(db, "posts", post.id));
       await minusNumZwitter(currentUser.uid)
-      console.log(post);
+      // console.log(post);
       alert("Post deleted!");
-      window.history.back(-1);
+      window.location.reload();
     }
   }
 
@@ -77,14 +78,14 @@ const PostDetail = () => {
 
   return (
     <Card elevation={0}>
-      {back && window.history.back(-1)}
+      {back && <Navigate replace to="/" />}
       <Stack direction={"row"} alignItems={"center"}>
         <Tooltip title={"back"}>
           <IconButton
             sx={{ marginRight: "2rem" }}
             size={"small"}
             onClick={() => setBack(true)}
-            // onClick={(closeDetail)}
+          // onClick={(closeDetail)}
           >
             <ArrowBack fontSize="large" />
           </IconButton>

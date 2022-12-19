@@ -15,11 +15,12 @@ const multerMid = multer({
     fileSize: 5* 1024 * 1024
   }
 });
+const PORT = process.env.PORT || 5000;
 
 app.disable('x-powered-by');
 app.use(multerMid.array('file'));
 
-const io = require("socket.io")(4000, {
+const io = require("socket.io")(PORT, {
   cors: {
     origin: "http://zwitter.herokuapp.com",
   },
