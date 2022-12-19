@@ -32,12 +32,12 @@ export const AuthContextProvider = ({ children }) => {
           console.log(error);
         }
       }
-    });
+    }, []);
 
     return () => {
       unsub();
     };
-  }, []);
+  });
 
   return (
     <AuthContext.Provider value={{ currentUser }}>

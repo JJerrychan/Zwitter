@@ -118,7 +118,7 @@ const Profile = () => {
     e.stopPropagation();
     //check login
     if (currentUser == null) {
-      throw "Please login first";
+      new Error("Please login first")
     }
 
     //check already like
@@ -140,7 +140,7 @@ const Profile = () => {
     e.stopPropagation();
     //check login
     if (currentUser == null) {
-      throw "Please login first";
+      new Error("Please login first")
     }
 
     //check already like
