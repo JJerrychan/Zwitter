@@ -177,6 +177,11 @@ const Chatroom1 = () => {
       const roomName = e.target[0].value;
       //setIsLeave(true);
       userLeave(currentUser.displayName, roomName);
+      setStateMessage({
+        message: "",
+        name: "",
+        roomNum: "",
+      });
     } catch (error) {
       console.log(error);
     }
