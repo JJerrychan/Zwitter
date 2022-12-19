@@ -62,7 +62,7 @@ const PostDetail = () => {
       await deleteDoc(doc(db, "posts", post.id));
       console.log(post);
       alert("Post deleted!");
-      window.location.reload();
+      window.history.back(-1);
       // await getPosts();
     }
   }
