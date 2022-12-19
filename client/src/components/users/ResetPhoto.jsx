@@ -27,8 +27,8 @@ const ResetPhoto = ({ closeFunction }) => {
   // aws s3
   const S3_BUCKET = "zwitter11";
   AWS.config.update({
-    accessKeyId: "AKIAYM2DSDH24MRABJNQ",
-    secretAccessKey: "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",
+    accessKeyId: "",
+    secretAccessKey: "",
   });
 
   const handlePreview = (e) => {

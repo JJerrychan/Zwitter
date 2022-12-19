@@ -80,7 +80,7 @@ const Profile = () => {
         }
       }
       setPosts(postList);
-      console.log(postList);
+      // console.log(postList);
     } catch (e) {
       console.log(e);
     }
