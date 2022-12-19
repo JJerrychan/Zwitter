@@ -43,7 +43,7 @@ const ResetPassword = ({ closeFunction }) => {
           A password reset email will be sent to your email address. Then you
           will be logged out.
         </DialogContentText>
-        <input hidden value={currentUser.email} />
+        <input hidden defaultValue={currentUser.email}/>
       </DialogContent>
       <DialogActions sx={{ justifyContent: "center" }}>
         <Button size="large" onClick={closeFunction} color="success">
