@@ -40,6 +40,7 @@ const PostDetail = () => {
     const docSnap = await getDoc(docRef);
     const postData = docSnap.data()
     postData.user = await getPostUser(postData.userId);
+    postData.id = postId
     setPost(postData)
   }
 
@@ -138,25 +139,6 @@ const PostDetail = () => {
           </CardActions>
         </div>
       }
-      {/*<Box>*/}
-      {/*  <Typography variant="h1" gutterBottom>*/}
-      {/*    {post.title}*/}
-      {/*  </Typography>*/}
-      {/*  <Typography variant="body1" gutterBottom>*/}
-      {/*    {post.content}*/}
-      {/*  </Typography>*/}
-      {/*  <CardMedia*/}
-      {/*    sx={{*/}
-      {/*      border: 0.1,*/}
-      {/*      borderColor: "#cfd9de",*/}
-      {/*      borderRadius: 3,*/}
-      {/*      borderStyle: "solid",*/}
-      {/*    }}*/}
-      {/*    component={"img"}*/}
-      {/*    src={post.imgUrl}*/}
-      {/*    alt={post.title}*/}
-      {/*  />*/}
-      {/*</Box>*/}
     </Card>
   );
 };
