@@ -15,7 +15,7 @@ export const AuthContextProvider = ({ children }) => {
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (user) => {
-      if(user === undefined){
+      if(user === null){
         setCurrentUser(user);
       }else{
         try {

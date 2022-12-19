@@ -89,10 +89,13 @@ export default function AuthCard() {
           setPasswordDialog(false);
         })
         .catch((error) => {
-          console.error(error);
+          console.log(error);
+          // throw error.code
         });
     } catch (error) {
-      console.error(error);
+      if (error === "");
+      else setAuthError(error.toString().substring(error.indexOf("/") + 1));
+      setErrorDialog(true);
     }
   };
 
