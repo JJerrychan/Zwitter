@@ -1,20 +1,20 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import Comment from "../comment/comment";
+import Comment from "../comment/Comment";
 import { db } from "../../firebase";
 import { deleteDoc, doc } from "firebase/firestore";
 import {
-  Avatar,
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  CardMedia,
-  IconButton,
-  Stack,
-  Typography,
+    Avatar,
+    Box,
+    Button,
+    Card,
+    CardActions,
+    CardContent,
+    CardHeader,
+    CardMedia,
+    IconButton,
+    Stack, Tooltip,
+    Typography,
 } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 
@@ -45,13 +45,15 @@ const PostDetail = ({ closeDetail, post }) => {
   return (
     <Card elevation={0}>
       <Stack direction={"row"} alignItems={"center"}>
-        <IconButton
-          sx={{ marginRight: "2rem" }}
-          size={"small"}
-          onClick={closeDetail}
-        >
-          <ArrowBack fontSize="large" />
-        </IconButton>
+        <Tooltip title={"back"}>
+          <IconButton
+            sx={{ marginRight: "2rem" }}
+            size={"small"}
+            onClick={closeDetail}
+          >
+            <ArrowBack fontSize="large" />
+          </IconButton>
+        </Tooltip>
         <Typography
           display={"inline"}
           component={"h1"}
