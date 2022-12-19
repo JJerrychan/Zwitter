@@ -6,7 +6,10 @@ import {
   Button,
   ButtonGroup,
   Card,
+  CardActionArea,
+  CardActions,
   CardContent,
+  CardMedia,
   CardHeader,
   Container,
   Dialog,
@@ -27,11 +30,13 @@ import {
   orderBy,
   query,
   setDoc,
+  getDoc
 } from "firebase/firestore";
 import PostDetail from "../post/postDetail";
 import ResetName from "./ResetName";
 import ResetPhoto from "./ResetPhoto";
 import ResetPassword from "./ResetPassword";
+import { ThumbUpAlt, ThumbUpOffAlt } from "@mui/icons-material";
 
 const Profile = () => {
   const { currentUser } = useContext(AuthContext);
@@ -51,19 +56,10 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    async function getPosts() {
+    const fetchData = async () => {
       await getMyPosts();
-    }
-
-    getPosts();
-  }, []);
-
-  useEffect(() => {
-    async function getLikes() {
-      await getMyLikes();
-    }
-
-    getLikes();
+    };
+    fetchData();
   }, []);
 
   async function getMyPosts() {
@@ -71,33 +67,48 @@ const Profile = () => {
     try {
       const q = query(collection(db, "posts"), orderBy("postDate", "desc"));
       const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        const post = doc.data();
-        post.id = doc.id;
-        if (post.userId === currentUser.uid) {
-          setPosts(postList.push(post));
+
+      const docs = querySnapshot.docs;
+      for (let i = 0; i < docs.length; i++) {
+        const post = docs[i].data();
+
+        post.id = docs[i].id;
+
+        post.user = await getPostUser(post.userId);
+        if (post.user.uid === currentUser.uid) {
+          postList.push(post);
         }
-      });
-      console.log(postList);
+      }
       setPosts(postList);
     } catch (e) {
       console.log(e);
     }
-  }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await getMyLikes();
+    };
+    fetchData();
+  }, []);
 
   async function getMyLikes() {
     let postList = [];
     try {
       const q = query(collection(db, "posts"), orderBy("postDate", "desc"));
       const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        const post = doc.data();
-        post.id = doc.id;
+
+      const docs = querySnapshot.docs;
+      for (let i = 0; i < docs.length; i++) {
+        const post = docs[i].data();
+
+        post.id = docs[i].id;
+
+        post.user = await getPostUser(post.userId);
         if (post.like.includes(currentUser.uid)) {
-          setLikes(postList.push(post));
+          postList.push(post);
         }
-      });
-      console.log(postList);
+      }
       setLikes(postList);
     } catch (e) {
       console.log(e);
@@ -116,7 +127,14 @@ const Profile = () => {
       post.like.push(currentUser.uid)
       await setDoc(doc(db, "posts", post.id), post);
       getMyPosts()
-    }
+    };
+  }
+
+  async function getPostUser(userId) {
+    // const data = await db.collection('users').doc(userId)
+    const docRef = doc(db, "users", userId);
+    const docSnap = await getDoc(docRef);
+    return docSnap.data()
   }
 
   async function delLike(e, post) {
@@ -131,11 +149,12 @@ const Profile = () => {
       post.like.splice(post.like.indexOf(currentUser.uid))
       await setDoc(doc(db, "posts", post.id), post);
       getMyPosts()
-    }
+    };
   }
 
   function showPostDetail(post) {
     setPost(post);
+    window.scrollBy(0, document.body.scrollHeight);
   }
 
   function closeDetail() {
@@ -226,45 +245,127 @@ const Profile = () => {
             <TabPanel value="1">
               {posts.map((post) => {
                 return (
-                  <div onClick={() => showPostDetail(post)} key={post.id}>
-                    <h1>Title: {post.title}</h1>
-                    <p>{post.content}</p>
-                    <img src={post.imgUrl} alt="" width="300" height="300" />
-                    <p>Like: {post.like.length}</p>
-                    {currentUser &&
-                      !post.like.includes(currentUser.uid) ?
-                      <button onClick={(e) => addLike(e, post)}>like</button> :
-                      <button onClick={(e) => delLike(e, post)}>cancel</button>
-                    }
-                  </div>
+                  <Card key={post.id} elevation={0} square>
+                    <CardActionArea onClick={() => showPostDetail(post)}>
+                      <CardHeader
+                        avatar={
+                          <Avatar
+                            sx={{ width: 56, height: 56 }}
+                            alt={post.user.displayName}
+                            src={post.user.photoURL}
+                          />
+                        }
+                        subheader={post.postDate.toDate().toLocaleString()}
+                        title={post.user.displayName}
+                      />
+                      <CardContent>
+                        <Typography variant={"h5"} component={"h2"}>
+                          title: {post.title}
+                        </Typography>
+                        {post.content}
+                      </CardContent>
+                      <Box marginX={6}>
+                        <CardMedia
+                          sx={{
+                            border: 0.1,
+                            borderColor: "#cfd9de",
+                            borderRadius: 3,
+                            borderStyle: "solid",
+                          }}
+                          component={"img"}
+                          src={post.imgUrl}
+                          alt={post.title}
+                        />
+                      </Box>
+                    </CardActionArea>
+                    <CardActions>
+                      {currentUser && !post.like.includes(currentUser.uid) ? (
+                        <Button
+                          onClick={(e) => addLike(e, post)}
+                          color={"secondary"}
+                          startIcon={<ThumbUpOffAlt />}
+                        >
+                          {post.like.length}
+                        </Button>
+                      ) : (
+                        <Button
+                          onClick={(e) => delLike(e, post)}
+                          color={"secondary"}
+                          startIcon={<ThumbUpAlt />}
+                        >
+                          {post.like.length}
+                        </Button>
+                      )}
+                    </CardActions>
+                  </Card>
                 );
               })}
             </TabPanel>
             <TabPanel value="2">
               {likes.map((post) => {
                 return (
-                  <div onClick={() => showPostDetail(post)} key={post.id}>
-                    <h1>Title: {post.title}</h1>
-                    <p>{post.content}</p>
-                    <img src={post.imgUrl} alt="" width="300" height="300" />
-                    <p>Like: {post.like.length}</p>
-                    {currentUser &&
-                      !post.like.includes(currentUser.uid) ?
-                      <button onClick={(e) => addLike(e, post)}>like</button> :
-                      <button onClick={(e) => delLike(e, post)}>cancel</button>}
-                  </div>
+                  <Card key={post.id} elevation={0} square>
+                    <CardActionArea onClick={() => showPostDetail(post)}>
+                      <CardHeader
+                        avatar={
+                          <Avatar
+                            sx={{ width: 56, height: 56 }}
+                            alt={post.user.displayName}
+                            src={post.user.photoURL}
+                          />
+                        }
+                        subheader={post.postDate.toDate().toLocaleString()}
+                        title={post.user.displayName}
+                      />
+                      <CardContent>
+                        <Typography variant={"h5"} component={"h2"}>
+                          title: {post.title}
+                        </Typography>
+                        {post.content}
+                      </CardContent>
+                      <Box marginX={6}>
+                        <CardMedia
+                          sx={{
+                            border: 0.1,
+                            borderColor: "#cfd9de",
+                            borderRadius: 3,
+                            borderStyle: "solid",
+                          }}
+                          component={"img"}
+                          src={post.imgUrl}
+                          alt={post.title}
+                        />
+                      </Box>
+                    </CardActionArea>
+                    <CardActions>
+                      {currentUser && !post.like.includes(currentUser.uid) ? (
+                        <Button
+                          onClick={(e) => addLike(e, post)}
+                          color={"secondary"}
+                          startIcon={<ThumbUpOffAlt />}
+                        >
+                          {post.like.length}
+                        </Button>
+                      ) : (
+                        <Button
+                          onClick={(e) => delLike(e, post)}
+                          color={"secondary"}
+                          startIcon={<ThumbUpAlt />}
+                        >
+                          {post.like.length}
+                        </Button>
+                      )}
+                    </CardActions>
+                  </Card>
                 );
               })}
             </TabPanel>
           </TabContext>
-          {
-            post != null &&
-            <PostDetail closeDetail={closeDetail} post={post}></PostDetail>
-          }
         </Card>
       ) : (
         <>Please login first!</>
       )}
+      {post != null && <PostDetail closeDetail={closeDetail} post={post} />}
     </Container>
   );
 };
