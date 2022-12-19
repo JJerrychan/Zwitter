@@ -2,6 +2,7 @@ import "./App.scss";
 import Home from "./components/Home";
 import Profile from "./components/users/Profile";
 import ChatRoom from "./components/messages/ChatRoom";
+import PostDetail from "./components/post/PostDetail";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import React, { useContext } from "react";
 import SideBar from "./components/left/SideBar";
@@ -94,6 +95,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/user" element={<Profile />} />
                 <Route path="/chatRoom" element={<ChatRoom />} />
+                <Route path="/post/:postId" element={<PostDetail />} />
               </Routes>
             </Grid>
             <Grid

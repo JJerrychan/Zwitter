@@ -14,13 +14,19 @@ const AddComment = ({ closeAddComment, post, refresh, parentComment }) => {
       throw "Please login first";
     }
 
+    //null validation
+    if (!content.trim()) {
+      alert("Content cannot be empty!")
+      return false
+    }
+
     try {
       const parentId = parentComment ? parentComment.id : "";
       const comment = {
         useId: currentUser.uid,
         postUserName: currentUser.displayName,
         postId: post.id,
-        content: content,
+        content: content.trim(),
         parentId: parentId,
         commentDate: Timestamp.fromDate(new Date()),
       };

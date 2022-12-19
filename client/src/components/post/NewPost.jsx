@@ -27,10 +27,22 @@ const NewPost = ({ refresh }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       if (currentUser == null) {
         throw "Please login first";
       }
+
+      //null validation
+      if (!title.trim()) {
+        alert("Titile cannot be empty!")
+        return false
+      }
+      if (!content.trim()) {
+        alert("Content cannot be empty!")
+        return false
+      }
+   
 
       //upload img
       const storageRef = ref(storage, file.name + new Date());

@@ -64,18 +64,19 @@ const Chatroom1 = () => {
           console.log("The server has sent some data to all clients");
           setChat([...chat, { name, message, roomNum }]);
         });
-        socketRef.current.on("user_join", function (data) {
+        socketRef.current.on("user_join", function (dataName,dataRoom) {
+          console.log(dataRoom);
           setChat([
             ...chat,
-            { name: "ChatBot", message: `${data} has joined the chat` },
+            { name: "ChatBot", message: `${dataName} has joined the chat`, roomNum:dataRoom },
           ]);
         });
         /*
         if(isLeave===false){
-          socketRef.current.on("leave_room", function (data){
+          socketRef.current.on("leave_room", function (dataName, dataRoom){
             setChat([
               ...chat,
-              { name: "ChatBot", message: `${data} has leave the chat` },
+              { name: "ChatBot", message: `${dataName} has leave the chat`, roomNum: dataRoom },
             ]);
             setIsLeave(true);
           });
