@@ -7,6 +7,7 @@ import {
   Timestamp
 } from "firebase/firestore";
 import { db } from "../../firebase";
+import { Button, CardMedia, Card, Input, CardContent } from "@mui/material";
 
 const AddComment = ({ closeAddComment, post, refresh, parentComment }) => {
   const { currentUser } = useContext(AuthContext);
@@ -48,9 +49,9 @@ const AddComment = ({ closeAddComment, post, refresh, parentComment }) => {
 
   return (
     <div>
-      <input id="reply" required type="text" onChange={handleChange} placeholder="comment"></input>
-      <button onClick={addComment}>reply</button>
-      <button onClick={closeAddComment}>cancle</button>
+      <Input id="reply" required type="text" onChange={handleChange} placeholder="comment"></Input>
+      <Button variant="outlined" color="success" onClick={addComment}>reply</Button>
+      <Button variant="outlined" color="secondary" onClick={closeAddComment}>cancle</Button>
     </div>
   );
 };
