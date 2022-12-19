@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { Navigate } from 'react-router-dom';
 import { AuthContext } from "../../context/AuthContext";
 import {
   Avatar,
@@ -74,11 +75,12 @@ const Profile = () => {
         post.id = docs[i].id;
 
         post.user = await getPostUser(post.userId);
-        if (post.user.uid === currentUser.uid) {
+        if (post.userId === currentUser.uid) {
           postList.push(post);
         }
       }
       setPosts(postList);
+      console.log(postList);
     } catch (e) {
       console.log(e);
     }
@@ -153,7 +155,6 @@ const Profile = () => {
 
   function showPostDetail(post) {
     setPost(post);
-    window.scrollBy(0, document.body.scrollHeight);
   }
 
   function closeDetail() {
@@ -370,7 +371,7 @@ const Profile = () => {
       ) : (
         <>Please login first!</>
       )}
-      {post != null && <PostDetail closeDetail={closeDetail} post={post} />}
+      {post != null && <Navigate replace to={"/post/"+ post.id} />}
     </Container>
   );
 };

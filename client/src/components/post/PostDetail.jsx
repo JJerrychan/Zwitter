@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Routes, useNavigate, useParams, redirect, Navigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContext } from "../../context/AuthContext";
 import Comment from "../comment/Comment";
 import { db } from "../../firebase";
@@ -26,7 +26,6 @@ const PostDetail = () => {
   const {postId} = useParams();
   const [post, setPost] = useState()
   const [back, setBack] = useState(false)
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,7 +37,7 @@ const PostDetail = () => {
   async function getPost(postId) {
     const docRef = doc(db, "posts", postId);
     const docSnap = await getDoc(docRef);
-    const postData = docSnap.data()
+    const postData = docSnap.data();
     postData.user = await getPostUser(postData.userId);
     postData.id = postId
     setPost(postData)
@@ -70,7 +69,7 @@ const PostDetail = () => {
 
   return (
     <Card elevation={0}>
-      {back && <Navigate replace to="/" />}
+      {back && window.history.back(-1)}
       <Stack direction={"row"} alignItems={"center"}>
         <Tooltip title={"back"}>
           <IconButton
