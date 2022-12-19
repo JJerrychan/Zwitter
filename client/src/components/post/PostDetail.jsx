@@ -117,7 +117,7 @@ const PostDetail = ({ closeDetail, post }) => {
         <Comment post={post} />
         {currentUser && post.userId.includes(currentUser.uid) && (
           <Button
-            sx={{ marginX: 2 }}
+            sx={{ float: "right" }}
             variant="contained"
             color="error"
             onClick={(e) => deletePost(e, post)}
