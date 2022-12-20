@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
-import "./Messenger.css";
+import "./Messenger.scss";
 //import Password from "./users/resetPassword";
 // import Add from "../img/addAvatar.png";
 import { db } from "../../firebase";
@@ -15,6 +15,14 @@ import {
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { v4 } from "uuid";
+import {
+  Box,
+  Button,
+  Container,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 
 const Chatroom1 = () => {
   const { currentUser } = useContext(AuthContext);
@@ -266,7 +274,10 @@ const Chatroom1 = () => {
   };
 
   return (
-    <div>
+    <Container>
+      <Typography component={"h1"} variant={"h5"} fontWeight={"bold"}>
+        Chat Room
+      </Typography>
       {currentUser ? (
         <div>
           {stateMessage.name && (
@@ -285,10 +296,9 @@ const Chatroom1 = () => {
                     label="Message"
                   />
                 </div>
-                <button>Send Message</button>
+                <Button>Send Message</Button>
               </form>
-              <br />
-              <br />
+
               <form onSubmit={leaveTheChatRoom}>
                 <div>
                   <input
@@ -297,31 +307,41 @@ const Chatroom1 = () => {
                     defaultValue={stateMessage.roomNum}
                   />
                 </div>
-                <button>Leave Room</button>
+                <Button>Leave Room</Button>
               </form>
             </div>
           )}
 
           {!stateMessage.name && (
-            <div className="card">
-              <form onSubmit={onCreateRoomSubmit}>
-                <div className="form-group">
-                  <label>
-                    <br />
-                    Room Name:
-                    <br />
-                    <input id="roomNum" />
-                  </label>
-                  <label>
-                    <br />
-                    Room Password:
-                    <br />
-                    <input id="room_Password" />
-                  </label>
-                </div>
-                <button type="submit"> Create Room</button>
-              </form>
-            </div>
+            <Box p={2} component={"form"} onSubmit={onCreateRoomSubmit}>
+              <Typography variant={"h6"}>Create a new room?</Typography>
+              <Stack my={2} spacing={2} direction={"row"}>
+                <TextField
+                  // margin={"dense"}
+                  fullWidth
+                  id="roomNum"
+                  label="Room Name"
+                  variant="outlined"
+                  placeholder={"Room Name"}
+                />
+                <TextField
+                  // margin={"dense"}
+                  fullWidth
+                  id="room_Password"
+                  label="Room Password"
+                  variant="outlined"
+                  placeholder={"Room Password"}
+                />
+              </Stack>
+              <Button
+                sx={{}}
+                color={"secondary"}
+                variant={"outlined"}
+                type="submit"
+              >
+                Create Room
+              </Button>
+            </Box>
           )}
 
           <div>
@@ -332,8 +352,6 @@ const Chatroom1 = () => {
                     return (
                       <div key={chatRooms.id}>
                         <form onSubmit={joinTheChatRoom}>
-                          <br />
-                          <br />
                           <label>
                             Room Name: {chatRooms.roomNum}
                             <input
@@ -341,14 +359,10 @@ const Chatroom1 = () => {
                               hidden
                               defaultValue={chatRooms.roomNum}
                             />
-                            <br />
                             Room Password:
-                            <br />
                             <input id="room_Password_Enter" />
                           </label>
-                          <button type="submit">Join Room</button>
-                          <br />
-                          <br />
+                          <Button type="submit">Join Room</Button>
                         </form>
                       </div>
                     );
@@ -362,7 +376,7 @@ const Chatroom1 = () => {
       ) : (
         <>Please login first!</>
       )}
-    </div>
+    </Container>
   );
 };
 
