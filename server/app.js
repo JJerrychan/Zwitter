@@ -46,13 +46,22 @@ io.on("connection", (socket) => {
   // console.log("new client connected", socket.id);
   userIsLogin = true;
   socket.on("user_join", (name, roomNum) => {
-    if(userIsLogin ===true){
-      console.log("RoomNum: " + roomNum + " user join");
-      socket.join(roomNum);
-      socket.to(roomNum).emit("user_join", name, roomNum);      
-    }
-    else{
-      console.log("user did not login");
+    try{
+      if(roomNum.trim() !== ""){
+        if(userIsLogin ===true){
+          console.log("RoomNum: " + roomNum + " user join");
+          socket.join(roomNum);
+          socket.to(roomNum).emit("user_join", name, roomNum);      
+        }
+        else{
+          console.log("user did not login");
+        }
+      }
+      else{
+        throw 'chat room name can not be just space'
+      }
+    }catch(error){
+      console.log(error)
     }
   });
 

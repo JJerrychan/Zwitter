@@ -186,7 +186,7 @@ const Chatroom1 = () => {
       e.preventDefault();
       const roomNum = document.getElementById("roomNum");
       const roomPassword = document.getElementById("room_Password");
-      if (roomNum.value !== "") {
+      if (roomNum.value.trim() !== "") {
         const q2 = query(
           collection(db, "chatRoom"),
           where("roomNum", "==", roomNum.value)
@@ -213,8 +213,8 @@ const Chatroom1 = () => {
         handleAlertOpen("chat room is created success");
         await getAllCreatedRoom();
       } else {
-        handleAlertOpen("chat room name should not be empty");
-        throw "chat room name should not be empty";
+        handleAlertOpen("chat room name can not be empty");
+        throw "chat room name can not be just space";
       }
     } catch (error) {
       console.log(error);
