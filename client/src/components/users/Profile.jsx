@@ -34,7 +34,6 @@ import {
   setDoc,
   getDoc,
 } from "firebase/firestore";
-import PostDetail from "../post/PostDetail";
 import ResetName from "./ResetName";
 import ResetPhoto from "./ResetPhoto";
 import ResetPassword from "./ResetPassword";
@@ -157,9 +156,9 @@ const Profile = () => {
     setPost(post);
   }
 
-  function closeDetail() {
-    setPost(null);
-  }
+  // function closeDetail() {
+  //   setPost(null);
+  // }
 
   const handleTabChange = (event, newValue) => {
     setValue(newValue);

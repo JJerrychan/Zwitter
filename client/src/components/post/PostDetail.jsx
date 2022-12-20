@@ -3,7 +3,6 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import { AuthContext } from "../../context/AuthContext";
 import Comment from "../comment/Comment";
 import { db } from "../../firebase";
-import { deleteDoc, doc, getDoc, setDoc } from "firebase/firestore";
 import {
   Avatar,
   Box,
@@ -18,11 +17,24 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import {
+  collection,
+  doc,
+  getDocs,
+  orderBy,
+  query,
+  setDoc,
+  getDoc,
+  deleteDoc
+} from "firebase/firestore";
 import { ArrowBack } from "@mui/icons-material";
+import { ThumbUpAlt, ThumbUpOffAlt } from "@mui/icons-material";
 
 // const PostDetail = async ({ closeDetail, post }) => {
 const PostDetail = () => {
   const { currentUser } = useContext(AuthContext);
+  const [posts, setPosts] = useState([]);
+  const [likes, setLikes] = useState([]);
   const { postId } = useParams();
   const [post, setPost] = useState();
   const navigate = useNavigate();
@@ -48,6 +60,93 @@ const PostDetail = () => {
     const docRef = doc(db, "users", userId);
     const docSnap = await getDoc(docRef);
     return docSnap.data();
+  }
+
+  useEffect(() => {
+    getMyPosts();
+  }, []);
+
+  async function getMyPosts() {
+    let postList = [];
+    try {
+      const q = query(collection(db, "posts"), orderBy("postDate", "desc"));
+      const querySnapshot = await getDocs(q);
+
+      const docs = querySnapshot.docs;
+      for (let i = 0; i < docs.length; i++) {
+        const post = docs[i].data();
+
+        post.id = docs[i].id;
+
+        post.user = await getPostUser(post.userId);
+        if (post.userId === currentUser.uid) {
+          postList.push(post);
+        }
+      }
+      setPosts(postList);
+      // console.log(postList);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await getMyLikes();
+    };
+    fetchData();
+  }, []);
+
+  async function getMyLikes() {
+    let postList = [];
+    try {
+      const q = query(collection(db, "posts"), orderBy("postDate", "desc"));
+      const querySnapshot = await getDocs(q);
+
+      const docs = querySnapshot.docs;
+      for (let i = 0; i < docs.length; i++) {
+        const post = docs[i].data();
+
+        post.id = docs[i].id;
+
+        post.user = await getPostUser(post.userId);
+        if (post.like.includes(currentUser.uid)) {
+          postList.push(post);
+        }
+      }
+      setLikes(postList);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  async function addLike(e, post) {
+    e.stopPropagation();
+    //check login
+    if (currentUser == null) {
+      throw new Error("Please login first").message
+    }
+
+    //check already like
+    if (!post.like.includes(currentUser.uid)) {
+      post.like.push(currentUser.uid);
+      await setDoc(doc(db, "posts", post.id), post);
+      getMyLikes();
+    }
+  }
+
+  async function delLike(e, post) {
+    e.stopPropagation();
+    //check login
+    if (currentUser == null) {
+      throw new Error("Please login first")
+    }
+
+    //check already like
+    if (post.like.includes(currentUser.uid)) {
+      post.like.splice(post.like.indexOf(currentUser.uid));
+      await setDoc(doc(db, "posts", post.id), post);
+      getMyLikes();
+    }
   }
 
   async function deletePost(e, post) {
@@ -84,7 +183,7 @@ const PostDetail = () => {
             sx={{ marginRight: "2rem" }}
             size={"small"}
             onClick={() => navigate(-1)}
-            // onClick={(closeDetail)}
+          // onClick={(closeDetail)}
           >
             <ArrowBack fontSize="large" />
           </IconButton>
@@ -130,6 +229,25 @@ const PostDetail = () => {
               alt={post.title}
             />
           </Box>
+          <CardActions>
+            {currentUser && !post.like.includes(currentUser.uid) ? (
+              <Button
+                onClick={(e) => addLike(e, post)}
+                color={"secondary"}
+                startIcon={<ThumbUpOffAlt />}
+              >
+                {post.like.length}
+              </Button>
+            ) : (
+              <Button
+                onClick={(e) => delLike(e, post)}
+                color={"secondary"}
+                startIcon={<ThumbUpAlt />}
+              >
+                {post.like.length}
+              </Button>
+            )}
+          </CardActions>
           <CardActions sx={{ flexDirection: "column", display: "contents" }}>
             {currentUser && post.userId.includes(currentUser.uid) && (
               <Link to='/'>
@@ -145,6 +263,7 @@ const PostDetail = () => {
             )}
             <Comment post={post} />
           </CardActions>
+
         </div>
       )}
     </Card>
