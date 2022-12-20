@@ -19,10 +19,18 @@ import {
   Box,
   Button,
   Container,
+  IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  ListSubheader,
   Stack,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
+import { Login, People } from "@mui/icons-material";
 
 const Chatroom1 = () => {
   const { currentUser } = useContext(AuthContext);
@@ -161,32 +169,31 @@ const Chatroom1 = () => {
   const onCreateRoomSubmit = async (e) => {
     try {
       e.preventDefault();
-      if(document.getElementById("roomNum").value !== ""){
+      if (document.getElementById("roomNum").value !== "") {
         const q2 = query(
-            collection(db, "chatRoom"),
-            where("roomNum", "==", document.getElementById("roomNum").value)
-          );
-          let querySnapshot = await getDocs(q2);
-          querySnapshot.forEach((doc) => {
-            alert("chat room is already exist");
-            throw "chat room is already exist";
-          });
-          setState({
-            name: currentUser.displayName,
-            roomNum: document.getElementById("roomNum").value,
-            roomPassword: document.getElementById("room_Password").value,
-          });
-          await setDoc(doc(db, "chatRoom", v4()), {
-            uid: v4(),
-            name: currentUser.displayName,
-            roomNum: document.getElementById("roomNum").value,
-            roomPassword: document.getElementById("room_Password").value,
-            //isAdmin,
-          });
-          alert("chat room is created success");
-          await getAllCreatedRoom();
-      }
-      else{
+          collection(db, "chatRoom"),
+          where("roomNum", "==", document.getElementById("roomNum").value)
+        );
+        let querySnapshot = await getDocs(q2);
+        querySnapshot.forEach((doc) => {
+          alert("chat room is already exist");
+          throw "chat room is already exist";
+        });
+        setState({
+          name: currentUser.displayName,
+          roomNum: document.getElementById("roomNum").value,
+          roomPassword: document.getElementById("room_Password").value,
+        });
+        await setDoc(doc(db, "chatRoom", v4()), {
+          uid: v4(),
+          name: currentUser.displayName,
+          roomNum: document.getElementById("roomNum").value,
+          roomPassword: document.getElementById("room_Password").value,
+          //isAdmin,
+        });
+        alert("chat room is created success");
+        await getAllCreatedRoom();
+      } else {
         alert("chat room name should not be empty");
         throw "chat room name should not be empty";
       }
@@ -286,7 +293,7 @@ const Chatroom1 = () => {
         Chat Room
       </Typography>
       {currentUser ? (
-        <div>
+        <>
           {stateMessage.name && (
             <div className="card">
               <div className="render-chat">
@@ -320,7 +327,7 @@ const Chatroom1 = () => {
           )}
 
           {!stateMessage.name && (
-            <Box p={2} component={"form"} onSubmit={onCreateRoomSubmit}>
+            <Box my={2} p={2} component={"form"} onSubmit={onCreateRoomSubmit}>
               <Typography variant={"h6"}>Create a new room?</Typography>
               <Stack my={2} spacing={2} direction={"row"}>
                 <TextField
@@ -351,35 +358,57 @@ const Chatroom1 = () => {
             </Box>
           )}
 
-          <div>
-            {!stateMessage.name &&
-              (chatRoomList !== [] ? (
-                <div>
-                  {chatRoomList.map((chatRooms) => {
-                    return (
-                      <div key={chatRooms.id}>
-                        <form onSubmit={joinTheChatRoom}>
-                          <label>
-                            Room Name: {chatRooms.roomNum}
-                            <input
-                              id="room_roomNum_Enter"
-                              hidden
-                              defaultValue={chatRooms.roomNum}
-                            />
-                            Room Password:
-                            <input id="room_Password_Enter" />
-                          </label>
-                          <Button type="submit">Join Room</Button>
-                        </form>
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <p></p>
-              ))}
-          </div>
-        </div>
+          {!stateMessage.name && chatRoomList !== [] && (
+            <List
+              sx={{ width: "100%" }}
+              subheader={<ListSubheader>online room list</ListSubheader>}
+            >
+              {chatRoomList.map((chatRooms) => {
+                return (
+                  <ListItem sx={{justifyContent:"center"}} key={chatRooms.id}>
+                    <Stack
+                      direction={"row"}
+                      spacing={2}
+                      component={"form"}
+                      onSubmit={joinTheChatRoom}
+                    >
+                      <ListItemIcon>
+                        <People fontSize={"large"} color={"success"} />
+                      </ListItemIcon>
+                      <ListItemText>
+                        <TextField
+                          disabled
+                          variant={"standard"}
+                          label={"Room Name:"}
+                          id="room_roomNum_Enter"
+                          defaultValue={chatRooms.roomNum}
+                        />
+                      </ListItemText>
+                      <TextField
+                        variant={"standard"}
+                        label={"Room Password:"}
+                        id="room_Password_Enter"
+                      />
+
+                      {/*<Button*/}
+                      {/*  color={"secondary"}*/}
+                      {/*  variant={"contained"}*/}
+                      {/*  type="submit"*/}
+                      {/*>*/}
+                      {/*  Join Room*/}
+                      {/*</Button>*/}
+                      <Tooltip title={`Join ${chatRooms.roomNum}`}>
+                        <IconButton type={"submit"}>
+                          <Login />
+                        </IconButton>
+                      </Tooltip>
+                    </Stack>
+                  </ListItem>
+                );
+              })}
+            </List>
+          )}
+        </>
       ) : (
         <>Please login first!</>
       )}
