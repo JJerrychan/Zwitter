@@ -14,6 +14,7 @@ import Logo from "../../public/zwitter-logo/png/logo-color.png";
 import { NavLink } from "react-router-dom";
 import DarkModeSwitch from "./DarkModeSwitch";
 import { DarkModeContext } from "../../context/DarkModeContext";
+import NewPost from "../post/NewPost";
 
 export default function SideBar() {
   const { currentUser } = useContext(AuthContext);
@@ -33,6 +34,7 @@ export default function SideBar() {
             <NavItem title="chatRoom" to="/chatRoom" Icon={Chat} />
           )}
           {currentUser && <NavItem title="profile" to="/user" Icon={Person} />}
+          <NewPost />
           <FormControlLabel
             style={{ marginTop: "auto" }}
             onChange={() => {

@@ -202,20 +202,6 @@ const NewPost = ({ refresh, onChange }) => {
                 />
               </Button>
             </CardContent>
-            {/*<label>Title:</label>*/}
-            {/*<Input required type="text" id="title" placeholder="title" />*/}
-
-            {/*<label>Content:</label>*/}
-            {/*<Input required type="text" placeholder="content" rows="3" />*/}
-
-            {/*<label>Picture:</label>*/}
-            {/*<input*/}
-            {/*  required*/}
-            {/*  type="file"*/}
-            {/*  id="file"*/}
-            {/*  onChange={(e) => imgChange(e)}*/}
-            {/*/>*/}
-
             {imgUrl && (
               <Box paddingX={3}>
                 <CardMedia
