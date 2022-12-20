@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "zwitter-e1db4"
-  }
+    "default": "zwitter-e1db4",
+    "beta": "zwitterbeta"
+  },
+  "targets": {},
+  "etags": {}
 }
