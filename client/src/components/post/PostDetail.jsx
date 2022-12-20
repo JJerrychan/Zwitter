@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import Comment from "../comment/Comment";
 import { db } from "../../firebase";
@@ -12,11 +12,13 @@ import {
   CardContent,
   CardHeader,
   CardMedia,
+  Container,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   IconButton,
+  Popover,
   Stack,
   Tooltip,
   Typography,
@@ -31,7 +33,12 @@ import {
   query,
   setDoc,
 } from "firebase/firestore";
-import { ArrowBack, ThumbUpAlt, ThumbUpOffAlt } from "@mui/icons-material";
+import {
+  ArrowBack,
+  DeleteForever,
+  ThumbUpAlt,
+  ThumbUpOffAlt,
+} from "@mui/icons-material";
 
 // const PostDetail = async ({ closeDetail, post }) => {
 const PostDetail = () => {
@@ -43,6 +50,17 @@ const PostDetail = () => {
   // const [back, setBack] = useState(false);
   const [errorDialog, setErrorDialog] = useState(false);
   const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -186,7 +204,7 @@ const PostDetail = () => {
   }
 
   return (
-    <Card elevation={0}>
+    <Container>
       <Dialog open={errorDialog} onClose={() => setErrorDialog(false)}>
         <Box maxWidth={400}>
           <DialogContent sx={{ display: "flex", justifyContent: "center" }}>
@@ -205,30 +223,30 @@ const PostDetail = () => {
           </DialogActions>
         </Box>
       </Dialog>
+      {post ? (
+        <Card elevation={0}>
+          {/*{back && <Navigate replace to="/" />}*/}
+          <Stack direction={"row"} alignItems={"center"}>
+            <Tooltip title={"back"}>
+              <IconButton
+                sx={{ marginRight: "2rem" }}
+                size={"small"}
+                onClick={() => navigate(-1)}
+                // onClick={(closeDetail)}
+              >
+                <ArrowBack fontSize="large" />
+              </IconButton>
+            </Tooltip>
+            <Typography
+              display={"inline"}
+              component={"h1"}
+              variant={"h5"}
+              fontWeight={"bold"}
+            >
+              Post
+            </Typography>
+          </Stack>
 
-      {/*{back && <Navigate replace to="/" />}*/}
-      <Stack direction={"row"} alignItems={"center"}>
-        <Tooltip title={"back"}>
-          <IconButton
-            sx={{ marginRight: "2rem" }}
-            size={"small"}
-            onClick={() => navigate(-1)}
-            // onClick={(closeDetail)}
-          >
-            <ArrowBack fontSize="large" />
-          </IconButton>
-        </Tooltip>
-        <Typography
-          display={"inline"}
-          component={"h1"}
-          variant={"h5"}
-          fontWeight={"bold"}
-        >
-          Post
-        </Typography>
-      </Stack>
-      {post && (
-        <div>
           <CardHeader
             avatar={
               <Avatar
@@ -259,43 +277,59 @@ const PostDetail = () => {
               alt={post.title}
             />
           </Box>
-          <CardActions>
-            {currentUser && !post.like.includes(currentUser.uid) ? (
-              <Button
-                onClick={(e) => addLike(e, post)}
-                color={"secondary"}
-                startIcon={<ThumbUpOffAlt />}
-              >
-                {post.like.length}
-              </Button>
-            ) : (
-              <Button
-                onClick={(e) => delLike(e, post)}
-                color={"secondary"}
-                startIcon={<ThumbUpAlt />}
-              >
-                {post.like.length}
-              </Button>
-            )}
-          </CardActions>
-          <CardActions sx={{ flexDirection: "column", display: "contents" }}>
-            {currentUser && post.userId.includes(currentUser.uid) && (
-              <Link to="/">
-                <Button
-                  sx={{ marginX: 2 }}
-                  variant="contained"
-                  color="error"
-                  onClick={(e) => deletePost(e, post)}
-                >
-                  Delete post
+          <CardActions sx={{ justifyContent: "end" }}>
+            <Popover
+              sx={{ mt: 1 }}
+              open={open}
+              anchorEl={anchorEl}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "left",
+              }}
+            >
+              <Stack p={2}>
+                <Typography fontWeight={"bold"} gutterBottom>
+                  Confirm Delete?
+                </Typography>
+                <Button onClick={(e) => deletePost(e, post)} color={"error"}>
+                  Confirm
                 </Button>
-              </Link>
+              </Stack>
+            </Popover>
+            {currentUser && post.userId.includes(currentUser.uid) && (
+              <IconButton color="error" onClick={(e) => handleClick(e)}>
+                <DeleteForever/>
+              </IconButton>
             )}
-            <Comment post={post} onChange={() => setErrorDialog(true)} />
+            {currentUser && post.like.includes(currentUser.uid) ? (
+              <Tooltip title={"Unlike"}>
+                <Button
+                  onClick={(e) => delLike(e, post)}
+                  color={"secondary"}
+                  startIcon={<ThumbUpAlt />}
+                >
+                  {post.like.length}
+                </Button>
+              </Tooltip>
+            ) : (
+              <Tooltip title={"Like"}>
+                <Button
+                  onClick={(e) => addLike(e, post)}
+                  color={"secondary"}
+                  startIcon={<ThumbUpOffAlt />}
+                >
+                  {post.like.length}
+                </Button>
+              </Tooltip>
+            )}
           </CardActions>
-        </div>
+          <Comment post={post} onChange={() => setErrorDialog(true)} />
+        </Card>
+      ) : (
+        <p>Invalid post!</p>
       )}
-    </Card>
+    </Container>
   );
 };
 

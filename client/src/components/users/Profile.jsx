@@ -253,11 +253,9 @@ const Profile = () => {
               </TabList>
             </Box>
             <TabPanel value="1">
-              <Stack
-                spacing={2}
-                divider={<Divider variant={"middle"} />}
-              >
+              <Stack spacing={2} divider={<Divider variant={"middle"} />}>
                 {posts.map((post) => {
+                  const user = getPostUser(post.userId);
                   return (
                     <Card key={post.id} elevation={0} square>
                       <CardActionArea
@@ -304,22 +302,26 @@ const Profile = () => {
                         </Box>
                       </CardActionArea>
                       <CardActions>
-                        {currentUser && !post.like.includes(currentUser.uid) ? (
-                          <Button
-                            onClick={(e) => addLike(e, post)}
-                            color={"secondary"}
-                            startIcon={<ThumbUpOffAlt />}
-                          >
-                            {post.like.length}
-                          </Button>
+                        {currentUser && post.like.includes(currentUser.uid) ? (
+                          <Tooltip title={"Unlike"}>
+                            <Button
+                              onClick={(e) => delLike(e, post)}
+                              color={"secondary"}
+                              startIcon={<ThumbUpAlt />}
+                            >
+                              {post.like.length}
+                            </Button>
+                          </Tooltip>
                         ) : (
-                          <Button
-                            onClick={(e) => delLike(e, post)}
-                            color={"secondary"}
-                            startIcon={<ThumbUpAlt />}
-                          >
-                            {post.like.length}
-                          </Button>
+                          <Tooltip title={"Like"}>
+                            <Button
+                              onClick={(e) => addLike(e, post)}
+                              color={"secondary"}
+                              startIcon={<ThumbUpOffAlt />}
+                            >
+                              {post.like.length}
+                            </Button>
+                          </Tooltip>
                         )}
                       </CardActions>
                     </Card>
@@ -328,10 +330,7 @@ const Profile = () => {
               </Stack>
             </TabPanel>
             <TabPanel value="2">
-              <Stack
-                spacing={2}
-                divider={<Divider variant={"middle"} />}
-              >
+              <Stack spacing={2} divider={<Divider variant={"middle"} />}>
                 {likes.map((post) => {
                   return (
                     <Card key={post.id} elevation={0} square>
@@ -379,22 +378,26 @@ const Profile = () => {
                         </Box>
                       </CardActionArea>
                       <CardActions>
-                        {currentUser && !post.like.includes(currentUser.uid) ? (
-                          <Button
-                            onClick={(e) => addLike(e, post)}
-                            color={"secondary"}
-                            startIcon={<ThumbUpOffAlt />}
-                          >
-                            {post.like.length}
-                          </Button>
+                        {currentUser && post.like.includes(currentUser.uid) ? (
+                          <Tooltip title={"Unlike"}>
+                            <Button
+                              onClick={(e) => delLike(e, post)}
+                              color={"secondary"}
+                              startIcon={<ThumbUpAlt />}
+                            >
+                              {post.like.length}
+                            </Button>
+                          </Tooltip>
                         ) : (
-                          <Button
-                            onClick={(e) => delLike(e, post)}
-                            color={"secondary"}
-                            startIcon={<ThumbUpAlt />}
-                          >
-                            {post.like.length}
-                          </Button>
+                          <Tooltip title={"Like"}>
+                            <Button
+                              onClick={(e) => addLike(e, post)}
+                              color={"secondary"}
+                              startIcon={<ThumbUpOffAlt />}
+                            >
+                              {post.like.length}
+                            </Button>
+                          </Tooltip>
                         )}
                       </CardActions>
                     </Card>

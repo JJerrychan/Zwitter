@@ -32,6 +32,7 @@ import {
   Divider,
   Grid,
   Stack,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { Refresh, ThumbUpAlt, ThumbUpOffAlt } from "@mui/icons-material";
@@ -79,7 +80,6 @@ const Home = () => {
         postList.push(post);
       }
       setPosts(postList);
-      console.log(userMap);
     } catch (e) {
       console.log(e);
     }
@@ -260,21 +260,25 @@ const Home = () => {
                   </CardActionArea>
                   <CardActions sx={{ justifyContent: "end" }}>
                     {currentUser && post.like.includes(currentUser.uid) ? (
-                      <Button
-                        onClick={(e) => delLike(e, post)}
-                        color={"secondary"}
-                        startIcon={<ThumbUpAlt />}
-                      >
-                        {post.like.length}
-                      </Button>
+                      <Tooltip title={"Unlike"}>
+                        <Button
+                          onClick={(e) => delLike(e, post)}
+                          color={"secondary"}
+                          startIcon={<ThumbUpAlt />}
+                        >
+                          {post.like.length}
+                        </Button>
+                      </Tooltip>
                     ) : (
-                      <Button
-                        onClick={(e) => addLike(e, post)}
-                        color={"secondary"}
-                        startIcon={<ThumbUpOffAlt />}
-                      >
-                        {post.like.length}
-                      </Button>
+                      <Tooltip title={"Like"}>
+                        <Button
+                          onClick={(e) => addLike(e, post)}
+                          color={"secondary"}
+                          startIcon={<ThumbUpOffAlt />}
+                        >
+                          {post.like.length}
+                        </Button>
+                      </Tooltip>
                     )}
                   </CardActions>
                 </Card>

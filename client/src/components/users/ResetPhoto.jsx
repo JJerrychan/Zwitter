@@ -40,7 +40,8 @@ const ResetPhoto = ({ closeFunction }) => {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      if (e.target[0].value[0] == null) throw new Error("Please select a image").message;
+      if (e.target[0].value[0] == null)
+        throw new Error("Please select a image").message;
       const file = e.target[0].files[0];
       const date = new Date().getTime();
 
@@ -55,8 +56,8 @@ const ResetPhoto = ({ closeFunction }) => {
         Key: fileName,
       };
 
-      var upload = new AWS.S3.ManagedUpload({params});
-      upload.promise().then(async data => {
+      const upload = new AWS.S3.ManagedUpload({ params });
+      upload.promise().then(async (data) => {
         const displayName = currentUser.displayName;
         await updateProfile(currentUser, {
           displayName,
@@ -68,7 +69,6 @@ const ResetPhoto = ({ closeFunction }) => {
         }).then(closeFunction);
         navigate("/user");
       });
-
     } catch (error) {
       // if (error.code !== undefined) error = error.code;
       // if(error.message !== undefined) error = error.message;
@@ -124,8 +124,6 @@ const ResetPhoto = ({ closeFunction }) => {
         </Box>
       </Dialog>
     </Box>
-
-   
   );
 };
 

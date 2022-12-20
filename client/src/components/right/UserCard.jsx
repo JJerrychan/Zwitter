@@ -20,7 +20,7 @@ export default function UserCard() {
   let { currentUser } = useContext(AuthContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  
+
   // useEffect(() => {
   //   // setA(!a);
   //   // currentUser = auth.currentUser
