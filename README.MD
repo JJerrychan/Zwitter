@@ -16,10 +16,6 @@ HTML, CSS, React, Firebase, AWS s3, Socket, Node.js.
 
 ## Code resource
 
-- AWS S3: Bucket ARN:           arn:aws:s3:::zwitter11
-- Images Fold URL:      https://zwitter11.s3.amazonaws.com/image/
-- Images Fold S3 URL:   s3://zwitter11/image/
-
 Clone the repo 'git clone https://github.com/JJerrychan/Zwitter'
 
 Run 'npm install' to install the required dependencies for our project.
