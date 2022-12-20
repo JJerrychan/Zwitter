@@ -87,7 +87,11 @@ const PostDetail = () => {
     const docRef = doc(db, "posts", postId);
     const docSnap = await getDoc(docRef);
     const postData = docSnap.data();
-    postData.user = await getPostUser(postData.userId);
+    // postData.user = await getPostUser(postData.userId);
+    // console.log(postData);
+    const user = await getPostUser(postData.userId);
+    postData.displayName = user.displayName;
+    postData.photoURL = user.photoURL;
     postData.id = postId;
     setPost(postData);
   }
