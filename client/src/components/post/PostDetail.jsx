@@ -16,6 +16,10 @@ import {
   Stack,
   Tooltip,
   Typography,
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogActions
 } from "@mui/material";
 import {
   collection,
@@ -38,6 +42,7 @@ const PostDetail = () => {
   const { postId } = useParams();
   const [post, setPost] = useState();
   const [back, setBack] = useState(false);
+  const [errorDialog, setErrorDialog] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -124,6 +129,7 @@ const PostDetail = () => {
     e.stopPropagation();
     //check login
     if (currentUser == null) {
+      setErrorDialog(true)
       throw new Error("Please login first").message
     }
 
@@ -139,7 +145,8 @@ const PostDetail = () => {
     e.stopPropagation();
     //check login
     if (currentUser == null) {
-      throw new Error("Please login first")
+      setErrorDialog(true)
+      throw new Error("Please login first").message
     }
 
     //check already like
@@ -154,7 +161,8 @@ const PostDetail = () => {
     e.stopPropagation();
     //check login
     if (currentUser == null) {
-      throw "Please login first";
+      setErrorDialog(true)
+      throw new Error("Please login first").message
     }
 
     //check already like
@@ -177,6 +185,26 @@ const PostDetail = () => {
 
   return (
     <Card elevation={0}>
+
+      <Dialog open={errorDialog} onClose={() => setErrorDialog(false)}>
+        <Box maxWidth={400}>
+          <DialogContent sx={{ display: "flex", justifyContent: "center" }}>
+            <DialogContentText
+              fontSize="large"
+              letterSpacing=".1rem"
+              fontWeight="bold"
+            >
+              Please Login first.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions sx={{ justifyContent: "center" }}>
+            <Button color="warning" onClick={() => setErrorDialog(false)}>
+              Confirm
+            </Button>
+          </DialogActions>
+        </Box>
+      </Dialog>
+
       {back && <Navigate replace to="/" />}
       <Stack direction={"row"} alignItems={"center"}>
         <Tooltip title={"back"}>
@@ -262,7 +290,7 @@ const PostDetail = () => {
                 </Button>
               </Link>
             )}
-            <Comment post={post} />
+            <Comment post={post} onChange={() => setErrorDialog(true)} />
           </CardActions>
 
         </div>

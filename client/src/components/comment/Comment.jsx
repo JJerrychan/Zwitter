@@ -13,7 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 
-const Comment = ({ closeDetail, post }) => {
+const Comment = ({ closeDetail, post, onChange }) => {
   const { currentUser } = useContext(AuthContext);
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState(null);
@@ -77,6 +77,10 @@ const Comment = ({ closeDetail, post }) => {
   }
 
   function showAddComment() {
+    if (currentUser == null) {
+      onChange()
+      throw new Error("Please login first").message;
+    }
     setShow(true);
   }
 

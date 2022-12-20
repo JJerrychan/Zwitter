@@ -11,7 +11,7 @@ const AddComment = ({ closeAddComment, post, refresh, parentComment }) => {
 
   async function addComment() {
     if (currentUser == null) {
-      throw "Please login first";
+      throw new Error("Please login first").message
     }
 
     //null validation
