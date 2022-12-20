@@ -213,6 +213,7 @@ const PostDetail = () => {
       await minusNumZwitter(currentUser.uid);
       // console.log(post);
       handleAlertClick();
+      navigate(-1);
       // window.location.reload();
     }
   }
