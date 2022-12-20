@@ -87,10 +87,14 @@ const Home = () => {
         const post = docs[i].data();
         post.id = docs[i].id;
 
-        if (!userMap.has(post.userId)) {
-          const user = await getPostUser(post.userId);
-          userMap.set(post.userId, user);
-        }
+        const user = await getPostUser(post.userId);
+        post.displayName = user.displayName;
+        post.photoURL = user.photoURL;
+
+        // if (!userMap.has(post.userId)) {
+        //   const user = await getPostUser(post.userId);
+        //   userMap.set(post.userId, user);
+        // }
         postList.push(post);
       }
       setPosts(postList);
