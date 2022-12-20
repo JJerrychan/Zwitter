@@ -87,14 +87,14 @@ const Home = () => {
         const post = docs[i].data();
         post.id = docs[i].id;
 
-        const user = await getPostUser(post.userId);
-        post.displayName = user.displayName;
-        post.photoURL = user.photoURL;
+        // const user = await getPostUser(post.userId);
+        // post.displayName = user.displayName;
+        // post.photoURL = user.photoURL;
 
-        // if (!userMap.has(post.userId)) {
-        //   const user = await getPostUser(post.userId);
-        //   userMap.set(post.userId, user);
-        // }
+        if (!userMap.has(post.userId)) {
+          const user = await getPostUser(post.userId);
+          userMap.set(post.userId, user);
+        }
         postList.push(post);
       }
       setPosts(postList);
@@ -167,9 +167,13 @@ const Home = () => {
         const post = docs[i].data();
         post.id = docs[i].id;
 
-        const user = await getPostUser(post.userId);
-        post.displayName = user.displayName;
-        post.photoURL = user.photoURL;
+        // const user = await getPostUser(post.userId);
+        // post.displayName = user.displayName;
+        // post.photoURL = user.photoURL;
+        if (!userMap.has(post.userId)) {
+          const user = await getPostUser(post.userId);
+          userMap.set(post.userId, user);
+        }
 
         postList.push(post);
       }
@@ -252,12 +256,12 @@ const Home = () => {
                       avatar={
                         <Avatar
                           sx={{ width: 56, height: 56 }}
-                          alt={post.displayName}
-                          src={post.photoURL}
+                          alt={userMap.get(post.userId).displayName}
+                          src={userMap.get(post.userId).photoURL}
                         />
                       }
                       subheader={post.postDate.toDate().toLocaleString()}
-                      title={post.displayName}
+                      title={userMap.get(post.userId).displayName}
                     />
                     <Box px={6} pb={2}>
                       <CardContent sx={{ paddingTop: 0 }} component={"article"}>

@@ -44,7 +44,7 @@ const Profile = () => {
   const [value, setValue] = useState("1");
   const [posts, setPosts] = useState([]);
   const [likes, setLikes] = useState([]);
-  const [post, setPost] = useState(null);
+  // const [post, setPost] = useState(null);
   const [profileDialog, setProfileDialog] = useState(false);
   const [operations, setOperations] = useState(0);
 
@@ -255,7 +255,7 @@ const Profile = () => {
             <TabPanel value="1">
               <Stack spacing={2} divider={<Divider variant={"middle"} />}>
                 {posts.map((post) => {
-                  const user = getPostUser(post.userId);
+                  // const user = getPostUser(post.userId);
                   return (
                     <Card key={post.id} elevation={0} square>
                       <CardActionArea
