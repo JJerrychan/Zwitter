@@ -30,6 +30,10 @@ import {
   Grid,
   Stack,
   Typography,
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogActions
 } from "@mui/material";
 import { Refresh, ThumbUpAlt, ThumbUpOffAlt } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
@@ -41,6 +45,8 @@ const Home = () => {
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(false);
   const [last, setLast] = useState();
+  const [errorDialog, setErrorDialog] = useState(false);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,35 +57,36 @@ const Home = () => {
 
   async function getPosts() {
     let postList = [];
-    try {
-      const q = query(
-        collection(db, "posts"),
-        orderBy("postDate", "desc"),
-        limit(10)
-      );
-      const querySnapshot = await getDocs(q);
-      setLast(querySnapshot.docs[querySnapshot.docs.length - 1]);
+    // try {
+    //   const q = query(
+    //     collection(db, "posts"),
+    //     orderBy("postDate", "desc"),
+    //     limit(10)
+    //   );
+    //   const querySnapshot = await getDocs(q);
+    //   setLast(querySnapshot.docs[querySnapshot.docs.length - 1]);
 
-      const docs = querySnapshot.docs;
-      for (let i = 0; i < docs.length; i++) {
-        const post = docs[i].data();
-        post.id = docs[i].id;
+    //   const docs = querySnapshot.docs;
+    //   for (let i = 0; i < docs.length; i++) {
+    //     const post = docs[i].data();
+    //     post.id = docs[i].id;
 
-        post.user = await getPostUser(post.userId);
+    //     post.user = await getPostUser(post.userId);
 
-        postList.push(post);
-      }
-      setPosts(postList);
-    } catch (e) {
-      console.log(e);
-    }
+    //     postList.push(post);
+    //   }
+    //   setPosts(postList);
+    // } catch (e) {
+    //   console.log(e);
+    // }
   }
 
   async function addLike(e, post) {
     e.stopPropagation();
     //check login
     if (currentUser == null) {
-      throw "Please login first";
+      setErrorDialog(true)
+      throw new Error("Please login first").message;
     }
 
     //check already like
@@ -94,7 +101,8 @@ const Home = () => {
     e.stopPropagation();
     //check login
     if (currentUser == null) {
-      throw "Please login first";
+      setErrorDialog(true)
+      throw new Error("Please login first").message;
     }
 
     //check already like
@@ -155,6 +163,26 @@ const Home = () => {
 
   return (
     <Container>
+
+      <Dialog open={errorDialog} onClose={() => setErrorDialog(false)}>
+        <Box maxWidth={400}>
+          <DialogContent sx={{ display: "flex", justifyContent: "center" }}>
+            <DialogContentText
+              fontSize="large"
+              letterSpacing=".1rem"
+              fontWeight="bold"
+            >
+              Please Login first.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions sx={{ justifyContent: "center" }}>
+            <Button color="warning" onClick={() => setErrorDialog(false)}>
+              Confirm
+            </Button>
+          </DialogActions>
+        </Box>
+      </Dialog>
+
       {!post && (
         <Box>
           <Grid container>
@@ -162,7 +190,7 @@ const Home = () => {
               <Typography component={"h1"} variant={"h5"} fontWeight={"bold"}>
                 Home
               </Typography>
-              <NewPost refresh={getPosts} />
+              <NewPost refresh={getPosts} onChange={() => setErrorDialog(true)}/>
             </Grid>
             <Grid item xs={1}>
               <LoadingButton

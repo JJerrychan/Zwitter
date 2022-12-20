@@ -15,9 +15,9 @@ import {
   IconButton,
   TextField,
 } from "@mui/material";
-import { DeleteForever, PhotoCamera } from "@mui/icons-material";
+import { DeleteForever, Login, PhotoCamera } from "@mui/icons-material";
 
-const NewPost = ({ refresh }) => {
+const NewPost = ({ refresh, onChange }) => {
   const { currentUser } = useContext(AuthContext);
   const [show, setShow] = useState(false);
   const [imgUrl, setImgUrl] = useState("");
@@ -30,7 +30,8 @@ const NewPost = ({ refresh }) => {
 
     try {
       if (currentUser == null) {
-        throw "Please login first";
+        onChange()
+        throw new Error("Please login first").message;
       }
 
       //null validation
@@ -82,6 +83,10 @@ const NewPost = ({ refresh }) => {
   }
 
   function newPostBtn() {
+    if (currentUser == null) {
+      onChange()
+      throw new Error("Please login first").message;
+    }
     setShow(true);
   }
 
