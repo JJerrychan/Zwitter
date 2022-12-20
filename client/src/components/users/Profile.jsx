@@ -72,7 +72,7 @@ const Profile = () => {
 
         post.id = docs[i].id;
 
-        post.user = await getPostUser(post.userId);
+        // post.user = await getPostUser(post.userId);
         if (post.userId === currentUser.uid) {
           postList.push(post);
         }
@@ -103,7 +103,7 @@ const Profile = () => {
 
         post.id = docs[i].id;
 
-        post.user = await getPostUser(post.userId);
+        // post.user = await getPostUser(post.userId);
         if (post.like.includes(currentUser.uid)) {
           postList.push(post);
         }
@@ -252,6 +252,7 @@ const Profile = () => {
                 divider={<Divider variant={"middle"} />}
               >
                 {posts.map((post) => {
+                  const user = getPostUser(post.userId)
                   return (
                     <Card key={post.id} elevation={0} square>
                       <CardActionArea
@@ -261,12 +262,12 @@ const Profile = () => {
                           avatar={
                             <Avatar
                               sx={{ width: 44, height: 44 }}
-                              alt={post.user.displayName}
-                              src={post.user.photoURL}
+                              alt={user.displayName}
+                              src={user.photoURL}
                             />
                           }
                           subheader={post.postDate.toDate().toLocaleString()}
-                          title={post.user.displayName}
+                          title={user.displayName}
                         />
                         <Box px={6} pb={2}>
                           <CardContent
@@ -327,6 +328,7 @@ const Profile = () => {
                 divider={<Divider variant={"middle"} />}
               >
                 {likes.map((post) => {
+                  const user = getPostUser(post.userId)
                   return (
                     <Card key={post.id} elevation={0} square>
                       <CardActionArea
@@ -336,12 +338,12 @@ const Profile = () => {
                           avatar={
                             <Avatar
                               sx={{ width: 44, height: 44 }}
-                              alt={post.user.displayName}
-                              src={post.user.photoURL}
+                              alt={user.displayName}
+                              src={user.photoURL}
                             />
                           }
                           subheader={post.postDate.toDate().toLocaleString()}
-                          title={post.user.displayName}
+                          title={user.displayName}
                         />
                         <Box px={6} pb={2}>
                           <CardContent
