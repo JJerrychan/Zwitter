@@ -57,28 +57,28 @@ const Home = () => {
 
   async function getPosts() {
     let postList = [];
-    // try {
-    //   const q = query(
-    //     collection(db, "posts"),
-    //     orderBy("postDate", "desc"),
-    //     limit(10)
-    //   );
-    //   const querySnapshot = await getDocs(q);
-    //   setLast(querySnapshot.docs[querySnapshot.docs.length - 1]);
+    try {
+      const q = query(
+        collection(db, "posts"),
+        orderBy("postDate", "desc"),
+        limit(10)
+      );
+      const querySnapshot = await getDocs(q);
+      setLast(querySnapshot.docs[querySnapshot.docs.length - 1]);
 
-    //   const docs = querySnapshot.docs;
-    //   for (let i = 0; i < docs.length; i++) {
-    //     const post = docs[i].data();
-    //     post.id = docs[i].id;
+      const docs = querySnapshot.docs;
+      for (let i = 0; i < docs.length; i++) {
+        const post = docs[i].data();
+        post.id = docs[i].id;
 
-    //     post.user = await getPostUser(post.userId);
+        post.user = await getPostUser(post.userId);
 
-    //     postList.push(post);
-    //   }
-    //   setPosts(postList);
-    // } catch (e) {
-    //   console.log(e);
-    // }
+        postList.push(post);
+      }
+      setPosts(postList);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async function addLike(e, post) {
