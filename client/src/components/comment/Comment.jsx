@@ -85,6 +85,7 @@ const Comment = ({ closeDetail, post, onChange }) => {
   }
 
   function closeAddComment() {
+    setComment()
     setShow(false);
   }
 
