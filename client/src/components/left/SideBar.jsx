@@ -34,7 +34,7 @@ export default function SideBar() {
             <NavItem title="chatRoom" to="/chatRoom" Icon={Chat} />
           )}
           {currentUser && <NavItem title="profile" to="/user" Icon={Person} />}
-          <NewPost />
+          {/*<NewPost />*/}
           <FormControlLabel
             style={{ marginTop: "auto" }}
             onChange={() => {

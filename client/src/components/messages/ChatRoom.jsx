@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
-import "./Messenger.scss";
 //import Password from "./users/resetPassword";
 // import Add from "../img/addAvatar.png";
 import { db } from "../../firebase";
@@ -24,6 +23,7 @@ import {
   ListItemIcon,
   ListItemText,
   ListSubheader,
+  Paper,
   Snackbar,
   Stack,
   TextField,
@@ -259,10 +259,9 @@ const Chatroom1 = () => {
     }
   };
 
-  const leaveTheChatRoom = async (e) => {
+  const leaveTheChatRoom = async () => {
     try {
-      e.preventDefault();
-      const roomName = e.target[0].value;
+      const roomName = stateMessage.roomNum;
       //setIsLeave(true);
       userLeave(currentUser.displayName, roomName);
       setStateMessage({
@@ -292,97 +291,114 @@ const Chatroom1 = () => {
 
   const renderChat = (currentRoom) => {
     return chat.map(({ name, message, roomNum }, index) => (
-      <div key={index}>
-        {currentRoom === roomNum ? (
-          <div>
-            <h3>
-              {name}: <span>{message}</span>
-            </h3>
-          </div>
-        ) : (
-          <></>
+      <Box key={index}>
+        {currentRoom === roomNum && (
+          <Typography variant={"h6"}>
+            {name}: {message}
+          </Typography>
         )}
-      </div>
+      </Box>
     ));
   };
 
   return (
-    <Container>
+    <Container
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "97vh",
+      }}
+    >
       <Snackbar
         open={alertOpen}
         autoHideDuration={5000}
         onClose={handleAlertClose}
         message={alertMessage}
       />
-      <Typography component={"h1"} variant={"h5"} fontWeight={"bold"}>
-        Chat Room
-      </Typography>
+
       {currentUser ? (
         <>
-          {stateMessage.name && (
-            <div className="card">
-              <div className="render-chat">
-                <h1>Room: {stateMessage.roomNum} Chat Log</h1>
-                {renderChat(stateMessage.roomNum)}
-              </div>
-              <form onSubmit={onMessageSubmit}>
-                <h1>Messenger</h1>
-                <div>
-                  <input
+          {stateMessage.name ? (
+            <>
+              <Typography component={"h1"} variant={"h4"} fontWeight={"bold"}>
+                Chat Room in{"  "}
+                <Typography
+                  variant={"h4"}
+                  fontWeight={"bold"}
+                  component={"span"}
+                  color={"secondary"}
+                  fontStyle={"italic"}
+                >
+                  {stateMessage.roomNum}
+                </Typography>
+              </Typography>
+              {renderChat(stateMessage.roomNum)}
+
+              <Paper
+                component={"form"}
+                onSubmit={onMessageSubmit}
+                sx={{ p: 2, mt: "auto" }}
+              >
+                <Stack>
+                  <TextField
+                    fullWidth
                     name="message"
                     id="message"
                     variant="outlined"
                     label="Message"
+                    placeholder={"say something"}
                   />
-                </div>
-                <Button>Send Message</Button>
-              </form>
-
-              <form onSubmit={leaveTheChatRoom}>
-                <div>
-                  <input
-                    id="leave_room_name"
-                    hidden
-                    defaultValue={stateMessage.roomNum}
-                  />
-                </div>
-                <Button>Leave Room</Button>
-              </form>
-            </div>
-          )}
-
-          {!stateMessage.name && (
-            <Box my={2} p={2} component={"form"} onSubmit={onCreateRoomSubmit}>
-              <Typography component={"h2"} variant={"h6"}>
-                Create a new room?
+                  <Box my={2} alignSelf={"end"}>
+                    <Button onClick={leaveTheChatRoom}>Leave Room</Button>
+                    <Button variant={"contained"} type={"submit"}>
+                      Send Message
+                    </Button>
+                  </Box>
+                </Stack>
+              </Paper>
+            </>
+          ) : (
+            <>
+              <Typography component={"h1"} variant={"h5"} fontWeight={"bold"}>
+                Chat Room
               </Typography>
-              <Stack my={2} spacing={2} direction={"row"}>
-                <TextField
-                  // margin={"dense"}
-                  fullWidth
-                  id="roomNum"
-                  label="Room Name"
-                  variant="outlined"
-                  placeholder={"Room Name"}
-                />
-                <TextField
-                  // margin={"dense"}
-                  fullWidth
-                  id="room_Password"
-                  label="Room Password"
-                  variant="outlined"
-                  placeholder={"Room Password"}
-                />
-              </Stack>
-              <Button
-                sx={{}}
-                color={"secondary"}
-                variant={"outlined"}
-                type="submit"
+              <Box
+                my={2}
+                p={2}
+                component={"form"}
+                onSubmit={onCreateRoomSubmit}
               >
-                Create Room
-              </Button>
-            </Box>
+                <Typography component={"h2"} variant={"h6"}>
+                  Create a new room?
+                </Typography>
+                <Stack my={2} spacing={2} direction={"row"}>
+                  <TextField
+                    // margin={"dense"}
+                    fullWidth
+                    id="roomNum"
+                    label="Room Name"
+                    variant="outlined"
+                    placeholder={"Room Name"}
+                  />
+                  <TextField
+                    // margin={"dense"}
+                    fullWidth
+                    id="room_Password"
+                    label="Room Password"
+                    variant="outlined"
+                    placeholder={"Room Password"}
+                  />
+                </Stack>
+                <Button
+                  sx={{}}
+                  color={"secondary"}
+                  variant={"outlined"}
+                  type="submit"
+                >
+                  Create Room
+                </Button>
+              </Box>
+            </>
           )}
 
           {!stateMessage.name && chatRoomList !== [] && (
