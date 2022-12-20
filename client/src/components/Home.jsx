@@ -72,9 +72,10 @@ const Home = () => {
         const post = docs[i].data();
         post.id = docs[i].id;
 
-        const user = await getPostUser(post.userId);
-        userMap.set(post.userId, user)
-
+        if (!userMap.has(post.userId)) {
+          const user = await getPostUser(post.userId);
+          userMap.set(post.userId, user)
+        }
         postList.push(post);
       }
       setPosts(postList);
