@@ -45,6 +45,8 @@ const Home = () => {
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(false);
   const [last, setLast] = useState();
+  const map1 = new Map();
+  const [userMap, setUserMap] = useState(new Map())
   const [errorDialog, setErrorDialog] = useState(false);
 
   useEffect(() => {
@@ -70,11 +72,13 @@ const Home = () => {
         const post = docs[i].data();
         post.id = docs[i].id;
 
-        // const user = await getPostUser(post.userId);
+        const user = await getPostUser(post.userId);
+        userMap.set(post.userId, user)
 
         postList.push(post);
       }
       setPosts(postList);
+      console.log(userMap);
     } catch (e) {
       console.log(e);
     }
@@ -212,7 +216,7 @@ const Home = () => {
 
           <Stack my={2} spacing={2} divider={<Divider variant={"middle"} />}>
             {posts.map((post) => {
-              const user = getPostUser(post.userId)
+              // const user = getPostUser(post.userId)
               return (
                 <Card key={post.id} elevation={0} square>
                   <CardActionArea onClick={() => navigate("/post/" + post.id)}>
@@ -220,12 +224,12 @@ const Home = () => {
                       avatar={
                         <Avatar
                           sx={{ width: 56, height: 56 }}
-                          alt={user.displayName}
-                          src={user.photoURL}
+                          alt={userMap.get(post.userId).displayName}
+                          src={userMap.get(post.userId).photoURL}
                         />
                       }
                       subheader={post.postDate.toDate().toLocaleString()}
-                      title={user.displayName}
+                      title={userMap.get(post.userId).displayName}
                     />
                     <Box px={6} pb={2}>
                       <CardContent sx={{ paddingTop: 0 }} component={"article"}>
