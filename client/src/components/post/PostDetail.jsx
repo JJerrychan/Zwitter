@@ -115,7 +115,10 @@ const PostDetail = () => {
 
         post.id = docs[i].id;
 
-        post.user = await getPostUser(post.userId);
+        const user = await getPostUser(post.userId);
+        post.displayName = user.displayName;
+        post.photoURL = user.photoURL;
+
         if (post.userId === currentUser.uid) {
           postList.push(post);
         }
@@ -146,7 +149,10 @@ const PostDetail = () => {
 
         post.id = docs[i].id;
 
-        post.user = await getPostUser(post.userId);
+        const user = await getPostUser(post.userId);
+        post.displayName = user.displayName;
+        post.photoURL = user.photoURL;
+
         if (post.like.includes(currentUser.uid)) {
           postList.push(post);
         }
@@ -272,12 +278,12 @@ const PostDetail = () => {
             avatar={
               <Avatar
                 sx={{ width: 56, height: 56 }}
-                alt={post.user.displayName}
-                src={post.user.photoURL}
+                alt={post.displayName}
+                src={post.photoURL}
               />
             }
             subheader={post.postDate.toDate().toLocaleString()}
-            title={post.user.displayName}
+            title={post.displayName}
           />
           <Box px={6} pb={2}>
             <CardContent sx={{ paddingTop: 0 }} component={"article"}>
