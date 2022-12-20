@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useNavigate, useParams, Link, Navigate } from 'react-router-dom';
 import { AuthContext } from "../../context/AuthContext";
 import Comment from "../comment/Comment";
 import { db } from "../../firebase";
@@ -37,6 +37,7 @@ const PostDetail = () => {
   const [likes, setLikes] = useState([]);
   const { postId } = useParams();
   const [post, setPost] = useState();
+  const [back, setBack] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -176,13 +177,13 @@ const PostDetail = () => {
 
   return (
     <Card elevation={0}>
-      {/*{back && window.history.back(-1)}*/}
+      {back && <Navigate replace to="/" />}
       <Stack direction={"row"} alignItems={"center"}>
         <Tooltip title={"back"}>
           <IconButton
             sx={{ marginRight: "2rem" }}
             size={"small"}
-            onClick={() => navigate(-1)}
+            onClick={() => setBack(true)}
           // onClick={(closeDetail)}
           >
             <ArrowBack fontSize="large" />
