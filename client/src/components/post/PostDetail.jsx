@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate, useParams, Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import Comment from "../comment/Comment";
 import { db } from "../../firebase";
@@ -12,27 +12,26 @@ import {
   CardContent,
   CardHeader,
   CardMedia,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
   IconButton,
   Stack,
   Tooltip,
   Typography,
-  Dialog,
-  DialogContent,
-  DialogContentText,
-  DialogActions
 } from "@mui/material";
 import {
   collection,
+  deleteDoc,
   doc,
+  getDoc,
   getDocs,
   orderBy,
   query,
   setDoc,
-  getDoc,
-  deleteDoc
 } from "firebase/firestore";
-import { ArrowBack } from "@mui/icons-material";
-import { ThumbUpAlt, ThumbUpOffAlt } from "@mui/icons-material";
+import { ArrowBack, ThumbUpAlt, ThumbUpOffAlt } from "@mui/icons-material";
 
 // const PostDetail = async ({ closeDetail, post }) => {
 const PostDetail = () => {
@@ -41,7 +40,7 @@ const PostDetail = () => {
   const [likes, setLikes] = useState([]);
   const { postId } = useParams();
   const [post, setPost] = useState();
-  const [back, setBack] = useState(false);
+  // const [back, setBack] = useState(false);
   const [errorDialog, setErrorDialog] = useState(false);
   const navigate = useNavigate();
 
@@ -125,12 +124,13 @@ const PostDetail = () => {
       console.log(e);
     }
   }
+
   async function addLike(e, post) {
     e.stopPropagation();
     //check login
     if (currentUser == null) {
-      setErrorDialog(true)
-      throw new Error("Please login first").message
+      setErrorDialog(true);
+      throw new Error("Please login first").message;
     }
 
     //check already like
@@ -145,8 +145,8 @@ const PostDetail = () => {
     e.stopPropagation();
     //check login
     if (currentUser == null) {
-      setErrorDialog(true)
-      throw new Error("Please login first").message
+      setErrorDialog(true);
+      throw new Error("Please login first").message;
     }
 
     //check already like
@@ -161,14 +161,14 @@ const PostDetail = () => {
     e.stopPropagation();
     //check login
     if (currentUser == null) {
-      setErrorDialog(true)
-      throw new Error("Please login first").message
+      setErrorDialog(true);
+      throw new Error("Please login first").message;
     }
 
     //check already like
     if (post.userId === currentUser.uid) {
       await deleteDoc(doc(db, "posts", post.id));
-      await minusNumZwitter(currentUser.uid)
+      await minusNumZwitter(currentUser.uid);
       // console.log(post);
       alert("Post deleted!");
       // window.location.reload();
@@ -185,7 +185,6 @@ const PostDetail = () => {
 
   return (
     <Card elevation={0}>
-
       <Dialog open={errorDialog} onClose={() => setErrorDialog(false)}>
         <Box maxWidth={400}>
           <DialogContent sx={{ display: "flex", justifyContent: "center" }}>
@@ -205,14 +204,14 @@ const PostDetail = () => {
         </Box>
       </Dialog>
 
-      {back && <Navigate replace to="/" />}
+      {/*{back && <Navigate replace to="/" />}*/}
       <Stack direction={"row"} alignItems={"center"}>
         <Tooltip title={"back"}>
           <IconButton
             sx={{ marginRight: "2rem" }}
             size={"small"}
-            onClick={() => setBack(true)}
-          // onClick={(closeDetail)}
+            onClick={() => navigate(-1)}
+            // onClick={(closeDetail)}
           >
             <ArrowBack fontSize="large" />
           </IconButton>
@@ -279,7 +278,7 @@ const PostDetail = () => {
           </CardActions>
           <CardActions sx={{ flexDirection: "column", display: "contents" }}>
             {currentUser && post.userId.includes(currentUser.uid) && (
-              <Link to='/'>
+              <Link to="/">
                 <Button
                   sx={{ marginX: 2 }}
                   variant="contained"
@@ -292,7 +291,6 @@ const PostDetail = () => {
             )}
             <Comment post={post} onChange={() => setErrorDialog(true)} />
           </CardActions>
-
         </div>
       )}
     </Card>

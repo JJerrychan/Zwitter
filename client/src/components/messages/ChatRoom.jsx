@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
-import socket from "socket.io-client";
 import "./Messenger.css";
 //import Password from "./users/resetPassword";
 // import Add from "../img/addAvatar.png";
@@ -43,7 +42,9 @@ const Chatroom1 = () => {
       //socketRef.current = io(URL, { autoConnect: false });
       //socketRef.current.connect();
       //console.log(socketRef.current);
-      socketRef.current = io("ws://zwitter.herokuapp.com", { transports: ['websocket', 'polling', 'flashsocket'] });
+      socketRef.current = io("ws://zwitter.herokuapp.com", {
+        transports: ["websocket", "polling", "flashsocket"],
+      });
       socketRef.current.on("connect_error", (err) => {
         alert("something wrong with the server");
         console.log(`connect_error due to ${err.message}`);
@@ -64,11 +65,15 @@ const Chatroom1 = () => {
           console.log("The server has sent some data to all clients");
           setChat([...chat, { name, message, roomNum }]);
         });
-        socketRef.current.on("user_join", function (dataName,dataRoom) {
+        socketRef.current.on("user_join", function (dataName, dataRoom) {
           console.log(dataRoom);
           setChat([
             ...chat,
-            { name: "ChatBot", message: `${dataName} has joined the chat`, roomNum:dataRoom },
+            {
+              name: "ChatBot",
+              message: `${dataName} has joined the chat`,
+              roomNum: dataRoom,
+            },
           ]);
         });
         /*

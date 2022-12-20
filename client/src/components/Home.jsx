@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import NewPost from "./post/NewPost";
-import PostDetail from "./post/PostDetail";
 import {
   collection,
   doc,
@@ -26,19 +25,20 @@ import {
   CardHeader,
   CardMedia,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
   Divider,
   Grid,
   Stack,
   Typography,
-  Dialog,
-  DialogContent,
-  DialogContentText,
-  DialogActions
 } from "@mui/material";
 import { Refresh, ThumbUpAlt, ThumbUpOffAlt } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 
 const Home = () => {
+  const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
   const [posts, setPosts] = useState([]);
   // const [showDetail, setShowDetail] = useState(false)
@@ -46,7 +46,6 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
   const [last, setLast] = useState();
   const [errorDialog, setErrorDialog] = useState(false);
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -85,7 +84,7 @@ const Home = () => {
     e.stopPropagation();
     //check login
     if (currentUser == null) {
-      setErrorDialog(true)
+      setErrorDialog(true);
       throw new Error("Please login first").message;
     }
 
@@ -101,7 +100,7 @@ const Home = () => {
     e.stopPropagation();
     //check login
     if (currentUser == null) {
-      setErrorDialog(true)
+      setErrorDialog(true);
       throw new Error("Please login first").message;
     }
 
@@ -126,7 +125,6 @@ const Home = () => {
 
   function showPostDetail(post) {
     setPost(post);
-
   }
 
   async function loadMore() {
@@ -163,7 +161,6 @@ const Home = () => {
 
   return (
     <Container>
-
       <Dialog open={errorDialog} onClose={() => setErrorDialog(false)}>
         <Box maxWidth={400}>
           <DialogContent sx={{ display: "flex", justifyContent: "center" }}>
@@ -190,7 +187,10 @@ const Home = () => {
               <Typography component={"h1"} variant={"h5"} fontWeight={"bold"}>
                 Home
               </Typography>
-              <NewPost refresh={getPosts} onChange={() => setErrorDialog(true)}/>
+              <NewPost
+                refresh={getPosts}
+                onChange={() => setErrorDialog(true)}
+              />
             </Grid>
             <Grid item xs={1}>
               <LoadingButton
@@ -214,7 +214,7 @@ const Home = () => {
             {posts.map((post) => {
               return (
                 <Card key={post.id} elevation={0} square>
-                  <CardActionArea onClick={() => showPostDetail(post)}>
+                  <CardActionArea onClick={() => navigate("/post/" + post.id)}>
                     <CardHeader
                       avatar={
                         <Avatar
@@ -291,7 +291,7 @@ const Home = () => {
         </Box>
       )}
       {/* {post != null && <PostDetail closeDetail={closeDetail} post={post} />} */}
-      {post != null && <Navigate replace to={"/post/"+ post.id} />}
+      {/*{post != null && <Navigate replace to={"/post/" + post.id} />}*/}
     </Container>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import {
   Avatar,
@@ -10,35 +10,34 @@ import {
   CardActionArea,
   CardActions,
   CardContent,
-  CardMedia,
   CardHeader,
+  CardMedia,
   Container,
   Dialog,
+  Divider,
   IconButton,
   Stack,
   Tab,
-  Typography,
   Tooltip,
+  Typography,
 } from "@mui/material";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
-import { ArrowBack } from "@mui/icons-material";
+import { ArrowBack, ThumbUpAlt, ThumbUpOffAlt } from "@mui/icons-material";
 import { db } from "../../firebase";
 import {
   collection,
   doc,
+  getDoc,
   getDocs,
   orderBy,
   query,
   setDoc,
-  getDoc,
 } from "firebase/firestore";
 import ResetName from "./ResetName";
 import ResetPhoto from "./ResetPhoto";
 import ResetPassword from "./ResetPassword";
-import { ThumbUpAlt, ThumbUpOffAlt } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const { currentUser } = useContext(AuthContext);
@@ -119,7 +118,7 @@ const Profile = () => {
     e.stopPropagation();
     //check login
     if (currentUser == null) {
-      throw new Error("Please login first").message
+      throw new Error("Please login first").message;
     }
 
     //check already like
@@ -141,7 +140,7 @@ const Profile = () => {
     e.stopPropagation();
     //check login
     if (currentUser == null) {
-      throw new Error("Please login first")
+      throw new Error("Please login first");
     }
 
     //check already like
@@ -152,9 +151,9 @@ const Profile = () => {
     }
   }
 
-  function showPostDetail(post) {
-    setPost(post);
-  }
+  // function showPostDetail(post) {
+  //   setPost(post);
+  // }
 
   // function closeDetail() {
   //   setPost(null);
@@ -248,129 +247,161 @@ const Profile = () => {
               </TabList>
             </Box>
             <TabPanel value="1">
-              {posts.map((post) => {
-                return (
-                  <Card key={post.id} elevation={0} square>
-                    <CardActionArea onClick={() => showPostDetail(post)}>
-                      <CardHeader
-                        avatar={
-                          <Avatar
-                            sx={{ width: 56, height: 56 }}
-                            alt={post.user.displayName}
-                            src={post.user.photoURL}
-                          />
-                        }
-                        subheader={post.postDate.toDate().toLocaleString()}
-                        title={post.user.displayName}
-                      />
-                      <CardContent>
-                        <Typography variant={"h5"} component={"h2"}>
-                          {post.title}
-                        </Typography>
-                        {post.content}
-                      </CardContent>
-                      <Box marginX={6}>
-                        <CardMedia
-                          sx={{
-                            border: 0.1,
-                            borderColor: "#cfd9de",
-                            borderRadius: 3,
-                            borderStyle: "solid",
-                          }}
-                          component={"img"}
-                          src={post.imgUrl}
-                          alt={post.title}
+              <Stack
+                spacing={2}
+                divider={<Divider variant={"middle"} />}
+              >
+                {posts.map((post) => {
+                  return (
+                    <Card key={post.id} elevation={0} square>
+                      <CardActionArea
+                        onClick={() => navigate("/post/" + post.id)}
+                      >
+                        <CardHeader
+                          avatar={
+                            <Avatar
+                              sx={{ width: 44, height: 44 }}
+                              alt={post.user.displayName}
+                              src={post.user.photoURL}
+                            />
+                          }
+                          subheader={post.postDate.toDate().toLocaleString()}
+                          title={post.user.displayName}
                         />
-                      </Box>
-                    </CardActionArea>
-                    <CardActions>
-                      {currentUser && !post.like.includes(currentUser.uid) ? (
-                        <Button
-                          onClick={(e) => addLike(e, post)}
-                          color={"secondary"}
-                          startIcon={<ThumbUpOffAlt />}
-                        >
-                          {post.like.length}
-                        </Button>
-                      ) : (
-                        <Button
-                          onClick={(e) => delLike(e, post)}
-                          color={"secondary"}
-                          startIcon={<ThumbUpAlt />}
-                        >
-                          {post.like.length}
-                        </Button>
-                      )}
-                    </CardActions>
-                  </Card>
-                );
-              })}
+                        <Box px={6} pb={2}>
+                          <CardContent
+                            sx={{ paddingTop: 0 }}
+                            component={"article"}
+                          >
+                            <Typography
+                              variant={"h6"}
+                              component={"h2"}
+                              gutterBottom
+                            >
+                              {post.title}
+                            </Typography>
+                            <Typography variant={"body2"}>
+                              {post.content}
+                            </Typography>
+                          </CardContent>
+                          <CardMedia
+                            sx={{
+                              border: 0.1,
+                              borderColor: "#cfd9de",
+                              borderRadius: 3,
+                              borderStyle: "solid",
+                            }}
+                            component={"img"}
+                            src={post.imgUrl}
+                            alt={post.title}
+                          />
+                        </Box>
+                      </CardActionArea>
+                      <CardActions>
+                        {currentUser && !post.like.includes(currentUser.uid) ? (
+                          <Button
+                            onClick={(e) => addLike(e, post)}
+                            color={"secondary"}
+                            startIcon={<ThumbUpOffAlt />}
+                          >
+                            {post.like.length}
+                          </Button>
+                        ) : (
+                          <Button
+                            onClick={(e) => delLike(e, post)}
+                            color={"secondary"}
+                            startIcon={<ThumbUpAlt />}
+                          >
+                            {post.like.length}
+                          </Button>
+                        )}
+                      </CardActions>
+                    </Card>
+                  );
+                })}
+              </Stack>
             </TabPanel>
             <TabPanel value="2">
-              {likes.map((post) => {
-                return (
-                  <Card key={post.id} elevation={0} square>
-                    <CardActionArea onClick={() => showPostDetail(post)}>
-                      <CardHeader
-                        avatar={
-                          <Avatar
-                            sx={{ width: 56, height: 56 }}
-                            alt={post.user.displayName}
-                            src={post.user.photoURL}
-                          />
-                        }
-                        subheader={post.postDate.toDate().toLocaleString()}
-                        title={post.user.displayName}
-                      />
-                      <CardContent>
-                        <Typography variant={"h5"} component={"h2"}>
-                          {post.title}
-                        </Typography>
-                        {post.content}
-                      </CardContent>
-                      <Box marginX={6}>
-                        <CardMedia
-                          sx={{
-                            border: 0.1,
-                            borderColor: "#cfd9de",
-                            borderRadius: 3,
-                            borderStyle: "solid",
-                          }}
-                          component={"img"}
-                          src={post.imgUrl}
-                          alt={post.title}
+              <Stack
+                spacing={2}
+                divider={<Divider variant={"middle"} />}
+              >
+                {likes.map((post) => {
+                  return (
+                    <Card key={post.id} elevation={0} square>
+                      <CardActionArea
+                        onClick={() => navigate("/post/" + post.id)}
+                      >
+                        <CardHeader
+                          avatar={
+                            <Avatar
+                              sx={{ width: 44, height: 44 }}
+                              alt={post.user.displayName}
+                              src={post.user.photoURL}
+                            />
+                          }
+                          subheader={post.postDate.toDate().toLocaleString()}
+                          title={post.user.displayName}
                         />
-                      </Box>
-                    </CardActionArea>
-                    <CardActions>
-                      {currentUser && !post.like.includes(currentUser.uid) ? (
-                        <Button
-                          onClick={(e) => addLike(e, post)}
-                          color={"secondary"}
-                          startIcon={<ThumbUpOffAlt />}
-                        >
-                          {post.like.length}
-                        </Button>
-                      ) : (
-                        <Button
-                          onClick={(e) => delLike(e, post)}
-                          color={"secondary"}
-                          startIcon={<ThumbUpAlt />}
-                        >
-                          {post.like.length}
-                        </Button>
-                      )}
-                    </CardActions>
-                  </Card>
-                );
-              })}
+                        <Box px={6} pb={2}>
+                          <CardContent
+                            sx={{ paddingTop: 0 }}
+                            component={"article"}
+                          >
+                            <Typography
+                              variant={"h6"}
+                              component={"h2"}
+                              gutterBottom
+                            >
+                              {post.title}
+                            </Typography>
+                            <Typography variant={"body2"}>
+                              {post.content}
+                            </Typography>
+                          </CardContent>
+                          <CardMedia
+                            sx={{
+                              border: 0.1,
+                              borderColor: "#cfd9de",
+                              borderRadius: 3,
+                              borderStyle: "solid",
+                            }}
+                            component={"img"}
+                            src={post.imgUrl}
+                            alt={post.title}
+                          />
+                        </Box>
+                      </CardActionArea>
+                      <CardActions>
+                        {currentUser && !post.like.includes(currentUser.uid) ? (
+                          <Button
+                            onClick={(e) => addLike(e, post)}
+                            color={"secondary"}
+                            startIcon={<ThumbUpOffAlt />}
+                          >
+                            {post.like.length}
+                          </Button>
+                        ) : (
+                          <Button
+                            onClick={(e) => delLike(e, post)}
+                            color={"secondary"}
+                            startIcon={<ThumbUpAlt />}
+                          >
+                            {post.like.length}
+                          </Button>
+                        )}
+                      </CardActions>
+                    </Card>
+                  );
+                })}
+              </Stack>
             </TabPanel>
           </TabContext>
         </Card>
       ) : (
         <>Please login first!</>
       )}
-      {post != null && <Navigate replace to={"/post/"+ post.id} />}
+      {/*{post != null && <Navigate replace to={"/post/"+ post.id} />}*/}
     </Container>
   );
 };
