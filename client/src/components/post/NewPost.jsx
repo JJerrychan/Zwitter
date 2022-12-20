@@ -58,6 +58,11 @@ const NewPost = ({ refresh, onChange }) => {
         alert("Content cannot be empty!");
         return false;
       }
+      if (!imgUrl.trim()) {
+        alert("Please choose a Picture!");
+        return false;
+      }
+
 
       //upload img
       const storageRef = ref(storage, file.name + new Date());
@@ -196,7 +201,6 @@ const NewPost = ({ refresh, onChange }) => {
                   hidden
                   accept="image/*"
                   type="file"
-                  required
                   name="file"
                   id="file"
                 />
