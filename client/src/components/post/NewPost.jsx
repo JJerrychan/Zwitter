@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { v4 } from "uuid";
-import { doc, setDoc, Timestamp, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { db, storage } from "../../firebase";
 import {
@@ -13,9 +13,11 @@ import {
   CardMedia,
   Grow,
   IconButton,
+  Snackbar,
   TextField,
+  Tooltip,
 } from "@mui/material";
-import { DeleteForever, Login, PhotoCamera } from "@mui/icons-material";
+import { DeleteForever, PhotoCamera } from "@mui/icons-material";
 
 const NewPost = ({ refresh, onChange }) => {
   const { currentUser } = useContext(AuthContext);
@@ -24,26 +26,38 @@ const NewPost = ({ refresh, onChange }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [file, setFile] = useState();
+  const [alertbar, setAlertbar] = useState(false);
+
+  const handleAlertClick = () => {
+    setAlertbar(true);
+  };
+
+  const handleAlertbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlertbar(false);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       if (currentUser == null) {
-        onChange()
+        onChange();
         throw new Error("Please login first").message;
       }
 
       //null validation
       if (!title.trim()) {
-        alert("Titile cannot be empty!")
-        return false
+        alert("Titile cannot be empty!");
+        return false;
       }
       if (!content.trim()) {
-        alert("Content cannot be empty!")
-        return false
+        alert("Content cannot be empty!");
+        return false;
       }
-   
 
       //upload img
       const storageRef = ref(storage, file.name + new Date());
@@ -61,8 +75,9 @@ const NewPost = ({ refresh, onChange }) => {
             };
             cancelPost();
             await setDoc(doc(db, "posts", v4()), post);
-            await addNumZwitter(currentUser.uid)
-            alert("Post created!");
+            await addNumZwitter(currentUser.uid);
+            // alert("Post created!");
+            handleAlertClick();
             refresh();
           } catch (error) {
             console.error(error);
@@ -84,7 +99,7 @@ const NewPost = ({ refresh, onChange }) => {
 
   function newPostBtn() {
     if (currentUser == null) {
-      onChange()
+      onChange();
       throw new Error("Please login first").message;
     }
     setShow(true);
@@ -126,6 +141,12 @@ const NewPost = ({ refresh, onChange }) => {
 
   return (
     <>
+      <Snackbar
+        open={alertbar}
+        autoHideDuration={3000}
+        onClose={handleAlertbarClose}
+        message="Post created!"
+      />
       {!show ? (
         <Button
           fullWidth
@@ -199,15 +220,17 @@ const NewPost = ({ refresh, onChange }) => {
               <Box paddingX={3}>
                 <CardMedia
                   sx={{
-                    borderRadius: "1.5rem",
+                    borderRadius: 3,
                   }}
                   component={"img"}
                   src={imgUrl}
                   alt={"preview"}
                 />
-                <IconButton color={"error"} size={"small"} onClick={delImg}>
-                  <DeleteForever fontSize={"small"} />
-                </IconButton>
+                <Tooltip title={"remove photo"}>
+                  <IconButton color={"error"} size={"small"} onClick={delImg}>
+                    <DeleteForever fontSize={"small"} />
+                  </IconButton>
+                </Tooltip>
               </Box>
             )}
             <CardActions sx={{ justifyContent: "end" }}>

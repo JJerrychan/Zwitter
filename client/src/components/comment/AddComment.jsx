@@ -3,21 +3,35 @@ import { AuthContext } from "../../context/AuthContext";
 import { v4 } from "uuid";
 import { doc, setDoc, Timestamp } from "firebase/firestore";
 import { db } from "../../firebase";
-import { Box, Button, Grid, Stack, TextField } from "@mui/material";
+import { Button, Snackbar, Stack, TextField } from "@mui/material";
 
 const AddComment = ({ closeAddComment, post, refresh, parentComment }) => {
   const { currentUser } = useContext(AuthContext);
   const [content, setContent] = useState("");
+  const [alertbar, setAlertbar] = useState(false);
+
+  const handleAlertClick = () => {
+    setAlertbar(true);
+  };
+
+  const handleAlertbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlertbar(false);
+  };
 
   async function addComment() {
     if (currentUser == null) {
-      throw new Error("Please login first").message
+      throw new Error("Please login first").message;
     }
 
     //null validation
     if (!content.trim()) {
-      alert("Content cannot be empty!")
-      return false
+      handleAlertClick();
+      // alert("Content cannot be empty!");
+      return false;
     }
 
     try {
@@ -31,7 +45,8 @@ const AddComment = ({ closeAddComment, post, refresh, parentComment }) => {
         commentDate: Timestamp.fromDate(new Date()),
       };
       await setDoc(doc(db, "comments", v4()), comment);
-      alert("Comment published!");
+      // alert("Comment published!");
+      // handleAlertClick();
       closeAddComment();
       refresh();
     } catch (error) {
@@ -45,6 +60,12 @@ const AddComment = ({ closeAddComment, post, refresh, parentComment }) => {
 
   return (
     <Stack spacing={1}>
+      <Snackbar
+        open={alertbar}
+        autoHideDuration={3000}
+        onClose={handleAlertbarClose}
+        message="Cannot be empty!!"
+      />
       <TextField
         fullWidth
         multiline

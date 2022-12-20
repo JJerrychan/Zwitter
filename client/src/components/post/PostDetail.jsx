@@ -19,6 +19,7 @@ import {
   DialogContentText,
   IconButton,
   Popover,
+  Snackbar,
   Stack,
   Tooltip,
   Typography,
@@ -50,13 +51,26 @@ const PostDetail = () => {
   // const [back, setBack] = useState(false);
   const [errorDialog, setErrorDialog] = useState(false);
   const navigate = useNavigate();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [alertbar, setAlertbar] = useState(false);
+
+  const handleAlertClick = () => {
+    setAlertbar(true);
+  };
+
+  const handleAlertbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlertbar(false);
+  };
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handlePopoverClose = () => {
     setAnchorEl(null);
   };
 
@@ -188,7 +202,7 @@ const PostDetail = () => {
       await deleteDoc(doc(db, "posts", post.id));
       await minusNumZwitter(currentUser.uid);
       // console.log(post);
-      alert("Post deleted!");
+      handleAlertClick();
       // window.location.reload();
     }
   }
@@ -205,6 +219,13 @@ const PostDetail = () => {
 
   return (
     <Container>
+      <Snackbar
+        open={alertbar}
+        autoHideDuration={3000}
+        onClose={handleAlertbarClose}
+        message="Successfully deleted!"
+      />
+
       <Dialog open={errorDialog} onClose={() => setErrorDialog(false)}>
         <Box maxWidth={400}>
           <DialogContent sx={{ display: "flex", justifyContent: "center" }}>
@@ -282,7 +303,7 @@ const PostDetail = () => {
               sx={{ mt: 1 }}
               open={open}
               anchorEl={anchorEl}
-              onClose={handleClose}
+              onClose={handlePopoverClose}
               anchorOrigin={{
                 vertical: "bottom",
                 horizontal: "left",
@@ -299,7 +320,7 @@ const PostDetail = () => {
             </Popover>
             {currentUser && post.userId.includes(currentUser.uid) && (
               <IconButton color="error" onClick={(e) => handleClick(e)}>
-                <DeleteForever/>
+                <DeleteForever />
               </IconButton>
             )}
             {currentUser && post.like.includes(currentUser.uid) ? (

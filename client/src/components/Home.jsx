@@ -31,6 +31,7 @@ import {
   DialogContentText,
   Divider,
   Grid,
+  Snackbar,
   Stack,
   Tooltip,
   Typography,
@@ -47,8 +48,21 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
   const [last, setLast] = useState();
   const map1 = new Map();
-  const [userMap, setUserMap] = useState(new Map())
+  const [userMap, setUserMap] = useState(new Map());
   const [errorDialog, setErrorDialog] = useState(false);
+  const [alertbar, setAlertbar] = useState(false);
+
+  const handleAlertClick = () => {
+    setAlertbar(true);
+  };
+
+  const handleAlertbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlertbar(false);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -75,7 +89,7 @@ const Home = () => {
 
         if (!userMap.has(post.userId)) {
           const user = await getPostUser(post.userId);
-          userMap.set(post.userId, user)
+          userMap.set(post.userId, user);
         }
         postList.push(post);
       }
@@ -128,9 +142,9 @@ const Home = () => {
   //   setPost(null);
   // }
 
-  function showPostDetail(post) {
-    setPost(post);
-  }
+  // function showPostDetail(post) {
+  //   setPost(post);
+  // }
 
   async function loadMore() {
     let postList = [];
@@ -154,7 +168,8 @@ const Home = () => {
         postList.push(post);
       }
       if (postList.length === 0) {
-        alert("No more posts");
+        handleAlertClick();
+        // alert("No more posts");
       } else {
         setLast(querySnapshot.docs[querySnapshot.docs.length - 1]);
         setPosts(posts.concat(postList));
@@ -166,6 +181,12 @@ const Home = () => {
 
   return (
     <Container>
+      <Snackbar
+        open={alertbar}
+        autoHideDuration={3000}
+        onClose={handleAlertbarClose}
+        message="No more posts!"
+      />
       <Dialog open={errorDialog} onClose={() => setErrorDialog(false)}>
         <Box maxWidth={400}>
           <DialogContent sx={{ display: "flex", justifyContent: "center" }}>
