@@ -115,12 +115,12 @@ const Comment = ({ closeDetail, post, onChange }) => {
                 avatar={
                   <Avatar
                     sx={{ width: 42, height: 42 }}
-                    alt={comment.postUserName}
+                    alt={comment.user.displayName}
                     src={comment.user.photoURL}
                   />
                 }
                 subheader={comment.commentDate.toDate().toLocaleString()}
-                title={comment.postUserName}
+                title={comment.user.displayName}
               />
               <Box paddingX={2}>
                 <Typography variant={"body1"} gutterBottom>
@@ -144,12 +144,12 @@ const Comment = ({ closeDetail, post, onChange }) => {
                         avatar={
                           <Avatar
                             sx={{ width: 42, height: 42 }}
-                            alt={item.postUserName}
+                            alt={item.user.displayName}
                             src={item.user.photoURL}
                           />
                         }
                         subheader={item.commentDate.toDate().toLocaleString()}
-                        title={item.postUserName}
+                        title={item.user.displayName}
                       />
                       <Box paddingX={2}>
                         <Typography variant={"body1"} gutterBottom>
