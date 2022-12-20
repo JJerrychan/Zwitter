@@ -23,7 +23,7 @@ const AddComment = ({ closeAddComment, post, refresh, parentComment }) => {
     try {
       const parentId = parentComment ? parentComment.id : "";
       const comment = {
-        useId: currentUser.uid,
+        userId: currentUser.uid,
         postUserName: currentUser.displayName,
         postId: post.id,
         content: content.trim(),
