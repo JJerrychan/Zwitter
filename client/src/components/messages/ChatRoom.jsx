@@ -153,28 +153,35 @@ const Chatroom1 = () => {
   const onCreateRoomSubmit = async (e) => {
     try {
       e.preventDefault();
-      const q2 = query(
-        collection(db, "chatRoom"),
-        where("roomNum", "==", document.getElementById("roomNum").value)
-      );
-      let querySnapshot = await getDocs(q2);
-      querySnapshot.forEach((doc) => {
-        alert("chat room is already exist");
-        throw "chat room is already exist";
-      });
-      setState({
-        name: currentUser.displayName,
-        roomNum: document.getElementById("roomNum").value,
-        roomPassword: document.getElementById("room_Password").value,
-      });
-      await setDoc(doc(db, "chatRoom", v4()), {
-        uid: v4(),
-        name: currentUser.displayName,
-        roomNum: document.getElementById("roomNum").value,
-        roomPassword: document.getElementById("room_Password").value,
-        //isAdmin,
-      });
-      await getAllCreatedRoom();
+      if(document.getElementById("roomNum").value !== ""){
+        const q2 = query(
+            collection(db, "chatRoom"),
+            where("roomNum", "==", document.getElementById("roomNum").value)
+          );
+          let querySnapshot = await getDocs(q2);
+          querySnapshot.forEach((doc) => {
+            alert("chat room is already exist");
+            throw "chat room is already exist";
+          });
+          setState({
+            name: currentUser.displayName,
+            roomNum: document.getElementById("roomNum").value,
+            roomPassword: document.getElementById("room_Password").value,
+          });
+          await setDoc(doc(db, "chatRoom", v4()), {
+            uid: v4(),
+            name: currentUser.displayName,
+            roomNum: document.getElementById("roomNum").value,
+            roomPassword: document.getElementById("room_Password").value,
+            //isAdmin,
+          });
+          alert("chat room is created success");
+          await getAllCreatedRoom();
+      }
+      else{
+        alert("chat room name should not be empty");
+        throw "chat room name should not be empty";
+      }
     } catch (error) {
       console.log(error);
     }
