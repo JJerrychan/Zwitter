@@ -43,7 +43,7 @@ const Chatroom1 = () => {
       //socketRef.current = io(URL, { autoConnect: false });
       //socketRef.current.connect();
       //console.log(socketRef.current);
-      socketRef.current = io("ws://zwitter.herokuapp.com");
+      socketRef.current = io("ws://zwitter.herokuapp.com", { transports: ['websocket', 'polling', 'flashsocket'] });
       socketRef.current.on("connect_error", (err) => {
         alert("something wrong with the server");
         console.log(`connect_error due to ${err.message}`);
