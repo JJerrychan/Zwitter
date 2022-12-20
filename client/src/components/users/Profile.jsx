@@ -34,7 +34,6 @@ import {
   setDoc,
   getDoc,
 } from "firebase/firestore";
-import PostDetail from "../post/PostDetail";
 import ResetName from "./ResetName";
 import ResetPhoto from "./ResetPhoto";
 import ResetPassword from "./ResetPassword";
@@ -120,7 +119,7 @@ const Profile = () => {
     e.stopPropagation();
     //check login
     if (currentUser == null) {
-      new Error("Please login first")
+      throw new Error("Please login first").message
     }
 
     //check already like
@@ -142,7 +141,7 @@ const Profile = () => {
     e.stopPropagation();
     //check login
     if (currentUser == null) {
-      new Error("Please login first")
+      throw new Error("Please login first")
     }
 
     //check already like
@@ -157,9 +156,9 @@ const Profile = () => {
     setPost(post);
   }
 
-  function closeDetail() {
-    setPost(null);
-  }
+  // function closeDetail() {
+  //   setPost(null);
+  // }
 
   const handleTabChange = (event, newValue) => {
     setValue(newValue);

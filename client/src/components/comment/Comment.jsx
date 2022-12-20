@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
+import { collection, getDocs, orderBy, query, where, doc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import AddComment from "./AddComment";
 import {
@@ -42,6 +42,11 @@ const Comment = ({ closeDetail, post }) => {
 
       //get all reply
       for (let i = 0; i < commentList.length; i++) {
+
+        //user info
+        commentList[i].user = await getPostUser(commentList[i].userId);
+
+        //reply
         const q2 = query(
           collection(db, "comments"),
           where("parentId", "==", commentList[i].id),
@@ -49,9 +54,10 @@ const Comment = ({ closeDetail, post }) => {
         );
         const querySnapshot2 = await getDocs(q2);
         let subComments = [];
-        querySnapshot2.forEach((doc) => {
+        querySnapshot2.forEach(async (doc) => {
           const subComment = doc.data();
           subComment.id = doc.id;
+          subComment.user = await getPostUser(subComment.userId);
           subComments.push(subComment);
         });
         commentList[i].reply = subComments;
@@ -62,6 +68,12 @@ const Comment = ({ closeDetail, post }) => {
     } catch (e) {
       console.log(e);
     }
+  }
+
+  async function getPostUser(userId) {
+    const docRef = doc(db, "users", userId);
+    const docSnap = await getDoc(docRef);
+    return docSnap.data();
   }
 
   function showAddComment() {
@@ -100,7 +112,7 @@ const Comment = ({ closeDetail, post }) => {
                   <Avatar
                     sx={{ width: 42, height: 42 }}
                     alt={comment.postUserName}
-                    src={comment.postUserName}
+                    src={comment.user.photoURL}
                   />
                 }
                 subheader={comment.commentDate.toDate().toLocaleString()}
@@ -123,12 +135,24 @@ const Comment = ({ closeDetail, post }) => {
               {comment.reply.length > 0 &&
                 comment.reply.map((item) => {
                   return (
-                    <div key={item.id}>
-                      <p>
-                        <b>{item.postUserName}</b>
-                      </p>
-                      <p>{item.content}</p>
-                    </div>
+                    <Box pl={5} key={item.id}>
+                      <CardHeader
+                        avatar={
+                          <Avatar
+                            sx={{ width: 42, height: 42 }}
+                            alt={item.postUserName}
+                            src={item.user.photoURL}
+                          />
+                        }
+                        subheader={item.commentDate.toDate().toLocaleString()}
+                        title={item.postUserName}
+                      />
+                      <Box paddingX={2}>
+                        <Typography variant={"body1"} gutterBottom>
+                          {item.content}
+                        </Typography>
+                      </Box>
+                    </Box>
                   );
                 })}
             </Box>
