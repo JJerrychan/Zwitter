@@ -179,7 +179,9 @@ const PostDetail = () => {
     const docRef = doc(db, "users", userId);
     const docSnap = await getDoc(docRef);
     const data = docSnap.data();
+    // console.log(data);
     const num = data.numZwitter - 1;
+    // console.log(num);
     setDoc(docRef, { numZwitter: num }, { merge: true });
   }
 

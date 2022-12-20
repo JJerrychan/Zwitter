@@ -77,8 +77,8 @@ const NewPost = ({ refresh, onChange }) => {
   async function addNumZwitter(userId) {
     const docRef = doc(db, "users", userId);
     const docSnap = await getDoc(docRef);
-    const data = docSnap.data()
-    const num = data.numZwitter + 1
+    const data = docSnap.data();
+    const num = data.numZwitter + 1;
     setDoc(docRef, { numZwitter: num }, { merge: true });
   }
 

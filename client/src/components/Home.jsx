@@ -70,7 +70,7 @@ const Home = () => {
         const post = docs[i].data();
         post.id = docs[i].id;
 
-        post.user = await getPostUser(post.userId);
+        // const user = await getPostUser(post.userId);
 
         postList.push(post);
       }
@@ -119,9 +119,9 @@ const Home = () => {
     return docSnap.data();
   }
 
-  function closeDetail() {
-    setPost(null);
-  }
+  // function closeDetail() {
+  //   setPost(null);
+  // }
 
   function showPostDetail(post) {
     setPost(post);
@@ -144,7 +144,7 @@ const Home = () => {
         const post = docs[i].data();
         post.id = docs[i].id;
 
-        post.user = await getPostUser(post.userId);
+        // const user = await getPostUser(post.userId);
 
         postList.push(post);
       }
@@ -212,6 +212,7 @@ const Home = () => {
 
           <Stack my={2} spacing={2} divider={<Divider variant={"middle"} />}>
             {posts.map((post) => {
+              const user = getPostUser(post.userId)
               return (
                 <Card key={post.id} elevation={0} square>
                   <CardActionArea onClick={() => navigate("/post/" + post.id)}>
@@ -219,12 +220,12 @@ const Home = () => {
                       avatar={
                         <Avatar
                           sx={{ width: 56, height: 56 }}
-                          alt={post.user.displayName}
-                          src={post.user.photoURL}
+                          alt={user.displayName}
+                          src={user.photoURL}
                         />
                       }
                       subheader={post.postDate.toDate().toLocaleString()}
-                      title={post.user.displayName}
+                      title={user.displayName}
                     />
                     <Box px={6} pb={2}>
                       <CardContent sx={{ paddingTop: 0 }} component={"article"}>
