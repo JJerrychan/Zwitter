@@ -72,7 +72,10 @@ const Profile = () => {
 
         post.id = docs[i].id;
 
-        // post.user = await getPostUser(post.userId);
+        const user = await getPostUser(post.userId);
+        post.displayName = user.displayName;
+        post.photoURL = user.photoURL;
+
         if (post.userId === currentUser.uid) {
           postList.push(post);
         }
@@ -103,7 +106,10 @@ const Profile = () => {
 
         post.id = docs[i].id;
 
-        // post.user = await getPostUser(post.userId);
+        const user = await getPostUser(post.userId);
+        post.displayName = user.displayName;
+        post.photoURL = user.photoURL;
+
         if (post.like.includes(currentUser.uid)) {
           postList.push(post);
         }
@@ -252,7 +258,6 @@ const Profile = () => {
                 divider={<Divider variant={"middle"} />}
               >
                 {posts.map((post) => {
-                  const user = getPostUser(post.userId)
                   return (
                     <Card key={post.id} elevation={0} square>
                       <CardActionArea
@@ -262,12 +267,12 @@ const Profile = () => {
                           avatar={
                             <Avatar
                               sx={{ width: 44, height: 44 }}
-                              alt={user.displayName}
-                              src={user.photoURL}
+                              alt={post.displayName}
+                              src={post.photoURL}
                             />
                           }
                           subheader={post.postDate.toDate().toLocaleString()}
-                          title={user.displayName}
+                          title={post.displayName}
                         />
                         <Box px={6} pb={2}>
                           <CardContent
@@ -328,7 +333,6 @@ const Profile = () => {
                 divider={<Divider variant={"middle"} />}
               >
                 {likes.map((post) => {
-                  const user = getPostUser(post.userId)
                   return (
                     <Card key={post.id} elevation={0} square>
                       <CardActionArea
@@ -338,12 +342,12 @@ const Profile = () => {
                           avatar={
                             <Avatar
                               sx={{ width: 44, height: 44 }}
-                              alt={user.displayName}
-                              src={user.photoURL}
+                              alt={post.displayName}
+                              src={post.photoURL}
                             />
                           }
                           subheader={post.postDate.toDate().toLocaleString()}
-                          title={user.displayName}
+                          title={post.displayName}
                         />
                         <Box px={6} pb={2}>
                           <CardContent
