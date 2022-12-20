@@ -40,7 +40,6 @@ const ResetPhoto = ({ closeFunction }) => {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      console.log(1);
       if (e.target[0].value[0] == null) throw new Error("no image upload").message;
       const file = e.target[0].files[0];
       const date = new Date().getTime();
