@@ -62,7 +62,7 @@ const AddComment = ({ closeAddComment, post, refresh, parentComment }) => {
     <Stack spacing={1}>
       <Snackbar
         open={alertbar}
-        autoHideDuration={3000}
+        autoHideDuration={5000}
         onClose={handleAlertbarClose}
         message="Cannot be empty!!"
       />

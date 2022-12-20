@@ -193,7 +193,7 @@ const Home = () => {
     <Container>
       <Snackbar
         open={alertbar}
-        autoHideDuration={3000}
+        autoHideDuration={5000}
         onClose={handleAlertbarClose}
         message="No more posts!"
       />

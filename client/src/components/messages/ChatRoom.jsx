@@ -12,7 +12,6 @@ import {
   setDoc,
   where,
 } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { v4 } from "uuid";
 import {
@@ -25,6 +24,7 @@ import {
   ListItemIcon,
   ListItemText,
   ListSubheader,
+  Snackbar,
   Stack,
   TextField,
   Tooltip,
@@ -36,7 +36,22 @@ const Chatroom1 = () => {
   const { currentUser } = useContext(AuthContext);
   const [isJoin, setIsJoin] = useState(false);
   //const [isLeave, setIsLeave] = useState(false);
-  const navigate = useNavigate();
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertOpen, setAlertOpen] = useState(false);
+
+  const handleAlertOpen = (message) => {
+    setAlertMessage(message);
+    setAlertOpen(true);
+  };
+
+  const handleAlertClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlertOpen(false);
+  };
+
   const [state, setState] = useState({
     name: "",
     roomNum: "",
@@ -62,7 +77,7 @@ const Chatroom1 = () => {
         transports: ["websocket", "polling", "flashsocket"],
       });
       socketRef.current.on("connect_error", (err) => {
-        alert("something wrong with the server");
+        handleAlertOpen("something wrong with the server");
         console.log(`connect_error due to ${err.message}`);
         socketRef.current.disconnect();
       });
@@ -169,32 +184,36 @@ const Chatroom1 = () => {
   const onCreateRoomSubmit = async (e) => {
     try {
       e.preventDefault();
-      if (document.getElementById("roomNum").value !== "") {
+      const roomNum = document.getElementById("roomNum");
+      const roomPassword = document.getElementById("room_Password");
+      if (roomNum.value !== "") {
         const q2 = query(
           collection(db, "chatRoom"),
-          where("roomNum", "==", document.getElementById("roomNum").value)
+          where("roomNum", "==", roomNum.value)
         );
         let querySnapshot = await getDocs(q2);
         querySnapshot.forEach((doc) => {
-          alert("chat room is already exist");
+          handleAlertOpen("chat room is already exist");
           throw "chat room is already exist";
         });
         setState({
           name: currentUser.displayName,
-          roomNum: document.getElementById("roomNum").value,
-          roomPassword: document.getElementById("room_Password").value,
+          roomNum: roomNum.value,
+          roomPassword: roomPassword.value,
         });
         await setDoc(doc(db, "chatRoom", v4()), {
           uid: v4(),
           name: currentUser.displayName,
-          roomNum: document.getElementById("roomNum").value,
-          roomPassword: document.getElementById("room_Password").value,
+          roomNum: roomNum.value,
+          roomPassword: roomPassword.value,
           //isAdmin,
         });
-        alert("chat room is created success");
+        roomNum.value = "";
+        roomPassword.value = "";
+        handleAlertOpen("chat room is created success");
         await getAllCreatedRoom();
       } else {
-        alert("chat room name should not be empty");
+        handleAlertOpen("chat room name should not be empty");
         throw "chat room name should not be empty";
       }
     } catch (error) {
@@ -207,7 +226,7 @@ const Chatroom1 = () => {
       e.preventDefault();
       //console.log("check 1", socketRef.current.connected);
       if (socketRef.current.connected === false) {
-        alert("something wrong with the server");
+        handleAlertOpen("something wrong with the server");
         throw "something wrong with the server";
       }
       const roomName = e.target[0].value;
@@ -224,7 +243,7 @@ const Chatroom1 = () => {
         }
       });
       if (tempCheck === false) {
-        alert("chat room password is wrong");
+        handleAlertOpen("chat room password is wrong");
         throw "chat room password is wrong";
       } else {
         setIsJoin(true);
@@ -289,6 +308,12 @@ const Chatroom1 = () => {
 
   return (
     <Container>
+      <Snackbar
+        open={alertOpen}
+        autoHideDuration={5000}
+        onClose={handleAlertClose}
+        message={alertMessage}
+      />
       <Typography component={"h1"} variant={"h5"} fontWeight={"bold"}>
         Chat Room
       </Typography>
@@ -328,7 +353,9 @@ const Chatroom1 = () => {
 
           {!stateMessage.name && (
             <Box my={2} p={2} component={"form"} onSubmit={onCreateRoomSubmit}>
-              <Typography variant={"h6"}>Create a new room?</Typography>
+              <Typography component={"h2"} variant={"h6"}>
+                Create a new room?
+              </Typography>
               <Stack my={2} spacing={2} direction={"row"}>
                 <TextField
                   // margin={"dense"}
@@ -365,7 +392,10 @@ const Chatroom1 = () => {
             >
               {chatRoomList.map((chatRooms) => {
                 return (
-                  <ListItem sx={{justifyContent:"center"}} key={chatRooms.id}>
+                  <ListItem
+                    sx={{ justifyContent: "center" }}
+                    key={chatRooms.id}
+                  >
                     <Stack
                       direction={"row"}
                       spacing={2}
@@ -389,14 +419,6 @@ const Chatroom1 = () => {
                         label={"Room Password:"}
                         id="room_Password_Enter"
                       />
-
-                      {/*<Button*/}
-                      {/*  color={"secondary"}*/}
-                      {/*  variant={"contained"}*/}
-                      {/*  type="submit"*/}
-                      {/*>*/}
-                      {/*  Join Room*/}
-                      {/*</Button>*/}
                       <Tooltip title={`Join ${chatRooms.roomNum}`}>
                         <IconButton type={"submit"}>
                           <Login />
