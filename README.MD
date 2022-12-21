@@ -14,7 +14,9 @@ people like. Users can express their opinions and share and like the content the
 
 HTML, CSS, React, Firebase, AWS s3, Socket, Node.js.
 
-## Code resource
+## Resource
+
+- AWS s3 Images Fold URL: https://zwitter11.s3.amazonaws.com/image/
 
 Clone the repo 'git clone https://github.com/JJerrychan/Zwitter'
 
