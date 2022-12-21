@@ -31,6 +31,8 @@ import {
   where,
 } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import xss from "xss";
+
 
 export default function AuthCard() {
   const navigate = useNavigate();
@@ -60,8 +62,8 @@ export default function AuthCard() {
   const handleLogin = async (e) => {
     try {
       e.preventDefault();
-      const email = e.target[0].value;
-      const password = e.target[1].value;
+      const email = xss(e.target[0].value);
+      const password = xss(e.target[1].value);
       await signInWithEmailAndPassword(auth, email, password)
         .then(() => {
           navigate("/");
@@ -80,7 +82,7 @@ export default function AuthCard() {
   const handleResetPassword = async (e) => {
     e.preventDefault();
     try {
-      const email = e.target[0].value;
+      const email = xss(e.target[0].value);
       if (email == null) throw new Error("Please input an email").message;
 
       //send password reset email
@@ -101,9 +103,9 @@ export default function AuthCard() {
   const handleSignup = async (e) => {
     try {
       e.preventDefault();
-      const email = e.target[0].value;
-      const displayName = e.target[1].value;
-      const password = e.target[2].value;
+      const email = xss(e.target[0].value);
+      const displayName = xss(e.target[1].value);
+      const password = xss(e.target[2].value);
       // const file = e.target[3].files[0];
 
       // // Create user

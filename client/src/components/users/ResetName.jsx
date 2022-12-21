@@ -12,6 +12,7 @@ import {
   DialogContentText,
   TextField,
 } from "@mui/material";
+import xss from "xss";
 
 const ResetName = ({ closeFunction }) => {
   const { currentUser } = useContext(AuthContext);
@@ -21,7 +22,7 @@ const ResetName = ({ closeFunction }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const displayName = e.target[0].value;
+      const displayName = xss(e.target[0].value);
       if (currentUser == null) {
         throw "Please login first";
       }

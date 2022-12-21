@@ -10,6 +10,7 @@ import {
   DialogContentText,
 } from "@mui/material";
 import { AuthContext } from "../../context/AuthContext";
+import xss from "xss";
 
 const ResetPassword = ({ closeFunction }) => {
   const { currentUser } = useContext(AuthContext);
@@ -18,7 +19,7 @@ const ResetPassword = ({ closeFunction }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const email = e.target[0].value;
+      const email = xss(e.target[0].value);
       if (email == null) throw new Error("Please input an email").message;
 
       //send password reset email
