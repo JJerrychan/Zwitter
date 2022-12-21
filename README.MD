@@ -83,6 +83,9 @@ the users can communicate with each other.
 ## Resource
 
 - AWS s3 Images Fold URL: https://zwitter11.s3.amazonaws.com/image/
+- S3 console panle: https://woio.signin.aws.amazon.com/console
+- S3 console IAM user name: zwitter
+- S3 console password: Zwitter123
 
 ## Authors
 
