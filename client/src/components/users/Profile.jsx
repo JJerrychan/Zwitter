@@ -48,6 +48,10 @@ const Profile = () => {
   const [profileDialog, setProfileDialog] = useState(false);
   const [operations, setOperations] = useState(0);
 
+  if (currentUser == null) {
+    window.location.href = "/"
+  }
+
   const handleDialogOpen = () => {
     setProfileDialog(true);
   };
