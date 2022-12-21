@@ -108,16 +108,16 @@ const Chatroom1 = () => {
           ]);
         });
         /*
-        if(isLeave===false){
-          socketRef.current.on("leave_room", function (dataName, dataRoom){
-            setChat([
-              ...chat,
-              { name: "ChatBot", message: `${dataName} has leave the chat`, roomNum: dataRoom },
-            ]);
-            setIsLeave(true);
-          });
-        }
-        */
+                        if(isLeave===false){
+                          socketRef.current.on("leave_room", function (dataName, dataRoom){
+                            setChat([
+                              ...chat,
+                              { name: "ChatBot", message: `${dataName} has leave the chat`, roomNum: dataRoom },
+                            ]);
+                            setIsLeave(true);
+                          });
+                        }
+                        */
         return () => {
           socketRef.current.off("message");
           socketRef.current.off("user-join");
@@ -205,8 +205,7 @@ const Chatroom1 = () => {
           uid: v4(),
           name: currentUser.displayName,
           roomNum: roomNum.value,
-          roomPassword: roomPassword.value,
-          //isAdmin,
+          roomPassword: roomPassword.value, //isAdmin,
         });
         roomNum.value = "";
         roomPassword.value = "";
@@ -423,6 +422,7 @@ const Chatroom1 = () => {
                       </ListItemIcon>
                       <ListItemText>
                         <TextField
+                          InputLabelProps={{ sx: { color: "black" } }}
                           disabled
                           variant={"standard"}
                           label={"Room Name:"}
