@@ -3,7 +3,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { db } from "../../firebase";
 import { doc, updateDoc } from "firebase/firestore";
 import { updateProfile } from "firebase/auth";
-
+import { s3Config } from "../../config";
 // aws
 import AWS from "aws-sdk";
 import {
@@ -26,10 +26,7 @@ const ResetPhoto = ({ closeFunction }) => {
 
   // aws s3
   const S3_BUCKET = "zwitter11";
-  AWS.config.update({
-    accessKeyId: "AKIAYM2DSDH24MRABJNQ",
-    secretAccessKey: "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",
-  });
+  AWS.config.update(s3Config);
 
   const handlePreview = (e) => {
     e.preventDefault();

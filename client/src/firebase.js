@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 import { getFirestore } from "firebase/firestore";
-
+import { firebaseConfig } from "./config";
 // origin
 // const firebaseConfig = {
 //   apiKey: "AIzaSyBCRllccGiAVLNuiWJr43P1coaciKGU9p0",
@@ -14,15 +14,15 @@ import { getFirestore } from "firebase/firestore";
 // };
 
 //beta
-const firebaseConfig = {
-  apiKey: "AIzaSyCEEtQrpNnMPLaGjxvLwpCH0SDFVPL1Vzo",
-  authDomain: "zwitterbeta.firebaseapp.com",
-  projectId: "zwitterbeta",
-  storageBucket: "zwitterbeta.appspot.com",
-  messagingSenderId: "1012056886234",
-  appId: "1:1012056886234:web:ec4cc6499fc7c5ee134ee3",
-  measurementId: "G-25N6NX43K8",
-};
+// const firebaseConfig = {
+//   apiKey: "AIzaSyCEEtQrpNnMPLaGjxvLwpCH0SDFVPL1Vzo",
+//   authDomain: "zwitterbeta.firebaseapp.com",
+//   projectId: "zwitterbeta",
+//   storageBucket: "zwitterbeta.appspot.com",
+//   messagingSenderId: "1012056886234",
+//   appId: "1:1012056886234:web:ec4cc6499fc7c5ee134ee3",
+//   measurementId: "G-25N6NX43K8",
+// };
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
