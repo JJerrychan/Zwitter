@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { v4 } from "uuid";
+import xss from "xss"
 import { doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { db, storage } from "../../firebase";
@@ -127,13 +128,13 @@ const NewPost = ({ refresh, onChange }) => {
 
   function titleChange(e) {
     if (e.target.value) {
-      setTitle(e.target.value);
+      setTitle(xss(e.target.value));
     } else setTitle("");
   }
 
   function contentChange(e) {
     if (e.target.value) {
-      setContent(e.target.value);
+      setContent(xss(e.target.value));
     } else setContent("");
   }
 
@@ -141,7 +142,6 @@ const NewPost = ({ refresh, onChange }) => {
     e.preventDefault();
     setImgUrl("");
     setFile();
-    // e.target.reset();
   }
 
   return (

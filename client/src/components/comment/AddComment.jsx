@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { v4 } from "uuid";
+import xss from "xss";
 import { doc, setDoc, Timestamp } from "firebase/firestore";
 import { db } from "../../firebase";
 import { Button, Snackbar, Stack, TextField } from "@mui/material";
@@ -55,7 +56,7 @@ const AddComment = ({ closeAddComment, post, refresh, parentComment }) => {
   }
 
   function handleChange(e) {
-    setContent(e.target.value);
+    setContent(xss(e.target.value));
   }
 
   return (
