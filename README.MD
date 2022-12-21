@@ -47,7 +47,7 @@ npm install
 
 ## Configuration
 
-- modify the `client/src/firebase.js` file to your firebase configuration
+- modify the `client/src/config.js` file to your own firebase and AWS s3 configuration
 
 ## Launch Application
 
