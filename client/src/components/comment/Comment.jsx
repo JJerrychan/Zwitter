@@ -19,8 +19,8 @@ const Comment = ({ closeDetail, post, onChange }) => {
   const [comment, setComment] = useState(null);
   const [show, setShow] = useState(false);
 
-  useEffect(() => {
-    getComments();
+  useEffect( () => {
+     getComments();
   }, []);
 
   async function getComments() {
@@ -63,8 +63,11 @@ const Comment = ({ closeDetail, post, onChange }) => {
         commentList[i].reply = subComments;
       }
 
-      // console.log("comment: ", commentList);
-      setComments(commentList);
+      console.log("comment: ", commentList);
+      setTimeout(() => {
+        setComments(commentList);
+      }, "500")
+      // setComments(commentList);
     } catch (e) {
       console.log(e);
     }
@@ -137,8 +140,9 @@ const Comment = ({ closeDetail, post, onChange }) => {
                 </Button>
               </Box>
 
-              {comment.reply.length > 0 &&
-                comment.reply.map((item) => {
+              {/* {comment.reply.length > 0 && */}
+              {
+                comment?.reply.map((item) => {
                   return (
                     <Box pl={5} key={item.id}>
                       <CardHeader
