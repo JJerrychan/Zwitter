@@ -197,7 +197,10 @@ const Profile = () => {
               </Tooltip>
             }
             title={currentUser.displayName}
-            titleTypographyProps={{ fontSize: "1.2rem", fontWeight: "bold" }}
+            titleTypographyProps={{
+              fontSize: "1.2rem",
+              fontWeight: "bold",
+            }}
             subheader={`${currentUser.numZwitter} Posts`}
           />
           <CardContent>
@@ -207,7 +210,7 @@ const Profile = () => {
                 alt={currentUser.displayName}
                 src={currentUser.photoURL}
               />
-              <Typography variant={"h4"}>{currentUser.displayName}</Typography>
+              <Typography component={"h1"} variant={"h4"}>{currentUser.displayName}</Typography>
               <ButtonGroup
                 color={"secondary"}
                 disableElevation
